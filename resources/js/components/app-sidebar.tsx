@@ -4,7 +4,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { Building, ChartPie, FileSearch, FileText, Key, LayoutGrid, Medal, Send, UserCheck, UserRoundCog, Users } from 'lucide-react';
+import { Building, ChartPie, FileSearch, FileText, Key, LayoutGrid, Medal, MonitorCog, NotebookPen, Send, UserCheck, UserRoundCog, Users } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavDashboard: NavItem[] = [
@@ -75,6 +75,20 @@ const mainNavMaster: NavItem[] = [
         permission: 'pengguna-index',
     },
 ];
+const mainNavPengaturan: NavItem[] = [
+    {
+        title: "Baku Awal",
+        href: "pengaturan.baku-awal.index",
+        icon: NotebookPen,
+        permission: 'pengaturan-baku-awal',
+    },
+    {
+        title: "Aplikasi",
+        href: "pengaturan.aplikasi.index",
+        icon: MonitorCog,
+        permission: 'aplikasi-index',
+    },
+];
 const footerNavItems: NavItem[] = [
     {
         title: 'Role',
@@ -111,6 +125,7 @@ export function AppSidebar() {
                 <NavMain items={mainNavTransaksi} permissions={permissions} title="Transaksi" />
                 <NavMain items={mainNavSppt} permissions={permissions} title="SPPT" />
                 <NavMain items={mainNavMaster} permissions={permissions} title="Master" />
+                <NavMain items={mainNavPengaturan} permissions={permissions} title="Pengaturan" />
             </SidebarContent>
 
             <SidebarFooter>
