@@ -1,20 +1,21 @@
+import { Input } from '@/components/ui/input';
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { RefObject } from "react";
-import InputError from "./input-error";
-import { formLabel } from "./utils";
+import { RefObject } from 'react';
+import { NumericFormat } from 'react-number-format';
+import { formLabel } from './utils';
+import InputError from './input-error';
 
-interface props {
+interface Props {
     id: string;
     value: string | number;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onChange: (value: string, floatValue?: number) => void;
     error?: string;
     placeholder?: string;
     inputRef?: RefObject<HTMLInputElement> | ((el: HTMLInputElement | null) => void);
     [key: string]: any; // Menangani properti bebas seperti autoFocus, required, autocomplete
 }
 
-export default function FormInput({
+const FormInputCurrency = ({ 
     id,
     value,
     onChange,
@@ -22,22 +23,28 @@ export default function FormInput({
     placeholder,
     error,
     ...propss
-}: props) {
+}: Props) => {
     return (
         <div className="grid gap-2">
             <Label htmlFor={id} className="capitalize">
                 {formLabel(id)}
             </Label>
-            <Input
+            <NumericFormat
                 id={id}
-                className="block w-full"
                 value={value}
-                onChange={onChange}
-                ref={inputRef}
+                thousandSeparator="."
+                decimalSeparator=","
+                allowNegative={false}
+                onValueChange={(values) => onChange(values.value, values.floatValue)}
+                customInput={Input}
                 placeholder={placeholder}
+                getInputRef={inputRef}
+                className='text-end'
                 {...propss}
             />
             <InputError message={error} />
         </div>
-    );
+    )
 }
+
+export default FormInputCurrency

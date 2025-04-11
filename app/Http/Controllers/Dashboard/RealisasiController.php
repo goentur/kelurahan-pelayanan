@@ -24,7 +24,7 @@ class RealisasiController extends Controller implements HasMiddleware
 
     public function index()
     {
-        return inertia('Dashboard/Realisasi/Index');
+        return inertia('dashboard/realisasi/index');
     }
 
     public function data()

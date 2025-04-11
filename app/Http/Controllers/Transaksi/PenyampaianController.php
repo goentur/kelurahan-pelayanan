@@ -50,7 +50,7 @@ class PenyampaianController extends Controller implements HasMiddleware
     {
         $gate = $this->gate();
         $jenisBuku = $this->jenisBukuRepository->data();
-        return inertia('Transaksi/Penyampaian/Index', compact("gate", "jenisBuku"));
+        return inertia('transaksi/penyampaian/index', compact("gate", "jenisBuku"));
     }
 
     public function data(DataRequest $request)

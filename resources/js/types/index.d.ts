@@ -63,7 +63,7 @@ export interface InfoDataTabel {
     to: number | 0,
     total: number | 0,
     perPage: number | 25,
-    search: string | null,
+    search?: string | null,
 }
 
 export interface LinkPagination {

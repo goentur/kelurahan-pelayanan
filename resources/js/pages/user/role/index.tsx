@@ -13,8 +13,8 @@ import FormDialog from './components/form-dialog'
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Dashboard',
-        href: 'dashboard',
+        title: 'Beranda',
+        href: 'beranda',
     },
     {
         title: 'Role',
