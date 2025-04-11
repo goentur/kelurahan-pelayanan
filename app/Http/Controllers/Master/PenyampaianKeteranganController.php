@@ -45,7 +45,7 @@ class PenyampaianKeteranganController extends Controller implements HasMiddlewar
     public function index()
     {
         $gate = $this->gate();
-        return inertia('Master/PenyampaianKeterangan/Index', compact("gate"));
+        return inertia('master/penyampaian-keterangan/index', compact("gate"));
     }
 
     public function create()
