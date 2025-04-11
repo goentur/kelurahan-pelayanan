@@ -8,7 +8,7 @@ use App\Http\Controllers\Master\PenyampaianKeteranganController;
 use App\Http\Controllers\Master\SatuanKerjaController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('master')->name('master.')->group(function () {
+Route::middleware(['auth', 'verified'])->prefix('master')->name('master.')->group(function () {
     Route::prefix('satuan-kerja')->name('satuan-kerja.')->group(function () {
         Route::middleware('can:satuan-kerja-index')->post('data', [SatuanKerjaController::class, 'data'])->name('data');
         Route::post('list', [SatuanKerjaController::class, 'list'])->name('list');

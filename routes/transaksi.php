@@ -4,7 +4,7 @@ use App\Http\Controllers\Transaksi\LaporanPenyampaianController;
 use App\Http\Controllers\Transaksi\PenyampaianController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('transaksi')->name('transaksi.')->group(function () {
+Route::middleware(['auth', 'verified'])->prefix('transaksi')->name('transaksi.')->group(function () {
     Route::prefix('penyampaian')->name('penyampaian.')->group(function () {
         Route::middleware('can:penyampaian-index')->controller(PenyampaianController::class)->group(function () {
             Route::get('/', 'index')->name('index');
