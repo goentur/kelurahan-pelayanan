@@ -8,7 +8,7 @@ import { formLabel } from "./utils";
 import InputError from "./input-error";
 
 interface Props {
-	id?: string | null;
+	id?: string;
 	value: Date;
 	onChange: (value: string, floatValue?: number) => void;
 	error?: string;
@@ -18,12 +18,12 @@ interface Props {
 }
 
 export default function FormCalendar({
-	id,
-	value,
-	onChange,
-	inputRef,
-	placeholder,
-	error,
+    id,
+    value,
+    onChange,
+    inputRef,
+    placeholder,
+    error,
 	autoOpen,
 	tanggalSelanjutnya,
     ...propss }: Props) {
@@ -33,38 +33,37 @@ useEffect(() => {
 	setOpen(true);
 	}
 }, [autoOpen]);
-	return (
-		<div className="grid gap-2">
-			{id && (
-				<Label htmlFor={id} className="capitalize">
-					{formLabel(id)}
-				</Label>
-			)}
-			<Popover open={open} onOpenChange={setOpen}>
-				<PopoverTrigger asChild>
-					<Input
-						id={id ?? undefined}
-						type="text"
-						className="cursor-pointer text-end mt-1 block w-full"
-						value={value ? format(value, "dd-MM-yyyy") : ""}
-						placeholder={placeholder}
-						ref={inputRef}
-						{...propss}
-					/>
-				</PopoverTrigger>
-				<PopoverContent className="w-auto p-0">
-					<Calendar
-						mode="single"
-						selected={value}
-						onSelect={(date: any) => {
-							onChange(date);
-							setOpen(false);
-						}}
-						disabled={tanggalSelanjutnya ? false : (date) => date > new Date()}
-					/>
-				</PopoverContent>
-			</Popover>
-			<InputError message={error} />
-		</div>
-	);
+return (
+	<div className="grid gap-2">
+		{id && <Label htmlFor={id} className="capitalize">
+			{formLabel(id)}
+		</Label>
+		}
+		<Popover open={open} onOpenChange={setOpen}>
+			<PopoverTrigger asChild>
+				<Input
+					id={id}
+					type="text"
+					className="cursor-pointer text-end mt-1 block w-full"
+					value={value ? format(value, "dd-MM-yyyy") : ""}
+					placeholder={placeholder}
+					ref={inputRef}
+					{...propss}
+				/>
+			</PopoverTrigger>
+			<PopoverContent className="w-auto p-0">
+			<Calendar
+				mode="single"
+				selected={value}
+				onSelect={(date:any) => {
+					onChange(date);
+					setOpen(false);
+				}}
+				disabled={tanggalSelanjutnya ? false : (date) => date > new Date()}
+			/>
+			</PopoverContent>
+		</Popover>
+		<InputError message={error} />
+	</div>
+);
 }

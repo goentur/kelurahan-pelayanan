@@ -45,7 +45,7 @@ class SatuanKerjaController extends Controller implements HasMiddleware
     public function index()
     {
         $gate = $this->gate();
-        return inertia('Master/SatuanKerja/Index', compact("gate"));
+        return inertia('master/satuan-kerja/index', compact("gate"));
     }
 
     public function create()

@@ -92,7 +92,7 @@ export default function Index({ gate, jenisBuku }: IndexProps) {
                     page: response.data.current_page,
                     from: response.data.from,
                     to: response.data.to,
-                    totalRecords: response.data.total,
+                    total: response.data.total,
                     perPage: response.data.per_page,
                 }));
             } catch (error:any) {

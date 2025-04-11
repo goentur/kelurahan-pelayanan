@@ -64,7 +64,7 @@ export default function DataTable({
                             </td>
                             <td className="border text-center">
                                 <DropdownMenu>
-                                    <DropdownMenuTrigger className="px-2 py-1">
+                                    <DropdownMenuTrigger className="px-2 py-1 cursor-pointer">
                                         <Ellipsis />
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent>

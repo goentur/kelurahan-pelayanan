@@ -157,7 +157,7 @@ export default function DataTable({ gate, dataTable, loading, dataPenyampaianKet
                     </td>
                     <td className="px-1 py-1 border">
                         {selectedItemTabel[value.id] == true ? (
-                            <FormCalendar value={editedData[value.id]?.ya || null} onChange={(v) => handleChange(value.id, "ya", v, value.nama_wp, value.alamat_objek,value.pajak)} autoOpen={true}
+                            <FormCalendar value={editedData[value.id]?.ya || ""} onChange={(v) => handleChange(value.id, "ya", v, value.nama_wp, value.alamat_objek,value.pajak)} autoOpen={true}
                             />
                         ) : selectedItemTabel[value.id] == false ? (
                             <Combobox label="" selectedValue={editedData[value.id]?.tidak || ""} options={dataPenyampaianKeterangan} onSelect={(v) => handleChange(value.id, "tidak", v, value.nama_wp, value.alamat_objek,value.pajak)} autoOpen={true} />
