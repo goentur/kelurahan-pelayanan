@@ -18,23 +18,23 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
     {
         title: 'Master',
-        href: 'master.satuan-kerja.index',
+        href: 'master.jabatan.index',
     },
     {
-        title: 'Satuan Kerja',
-        href: 'master.satuan-kerja.index',
+        title: 'Jabatan',
+        href: 'master.jabatan.index',
     },
 ];
 
 export default function Index({ gate }: IndexGate) {
-    const title = 'Satuan Kerja'
+    const title = 'Jabatan'
     const [form, setForm] = useState(false)
     const [hapus, setHapus] = useState(false)
     const formRefs = useRef<Record<string, HTMLInputElement | null>>({})
     const [loading, setLoading] = useState(false)
     const [isEdit, setIsEdit] = useState(false)
     const [dataTable, setDataTable] = useState<[]>([])
-    const [dataAtasanSatuanKerja, setDataAtasanSatuanKerja] = useState<[]>([])
+    const [dataJenis, setDataJenis] = useState<[]>([])
     const [linksPagination, setLinksPagination] = useState([])
     const [infoDataTabel, setInfoDataTabel] = useState<InfoDataTabel>({
         page: 1,
@@ -61,14 +61,14 @@ export default function Index({ gate }: IndexGate) {
     }, [infoDataTabel.page, infoDataTabel.search, infoDataTabel.perPage])
 
     useEffect(() => {
-        getDataAtasanSatuanKerja()
+        getDataJenis()
     }, [])
 
     const getData = async () => {
         setLoading(true)
         try {
             const response = await axios.post(
-                route('master.satuan-kerja.data'),
+                route('master.jabatan.data'),
                 {
                     page: infoDataTabel.page,
                     search: infoDataTabel.search,
@@ -91,10 +91,10 @@ export default function Index({ gate }: IndexGate) {
             setLoading(false)
         }
     }
-    const getDataAtasanSatuanKerja = async () => {
+    const getDataJenis = async () => {
         try {
-            const response = await axios.post(route('master.satuan-kerja.list'))
-            setDataAtasanSatuanKerja(response.data)
+            const response = await axios.post(route('master.jabatan.data-jenis'))
+            setDataJenis(response.data)
         } catch (error: any) {
             alertApp(error.message, 'error')
         }
@@ -103,8 +103,8 @@ export default function Index({ gate }: IndexGate) {
         e.preventDefault()
         const action = isEdit ? patch : post
         const routeName = isEdit
-            ? (route('master.satuan-kerja.update', data) as string)
-            : (route('master.satuan-kerja.store') as string)
+            ? (route('master.jabatan.update', data) as string)
+            : (route('master.jabatan.store') as string)
 
         action(routeName, {
             preserveScroll: true,
@@ -124,7 +124,7 @@ export default function Index({ gate }: IndexGate) {
     }
     const handleHapus = (e: React.FormEvent) => {
         e.preventDefault()
-        destroy(route('master.satuan-kerja.destroy', data), {
+        destroy(route('master.jabatan.destroy', data), {
             preserveScroll: true,
             onSuccess: (e) => {
                 setHapus(false)
@@ -173,13 +173,12 @@ export default function Index({ gate }: IndexGate) {
                 setOpen={setForm}
                 title={title}
                 data={data}
-                isEdit={isEdit}
                 setData={setData}
                 errors={errors}
                 formRefs={formRefs}
                 processing={processing}
                 handleForm={handleForm}
-                dataAtasanSatuanKerja={dataAtasanSatuanKerja}
+                dataJenis={dataJenis}
             />
             <Delete
                 open={hapus}

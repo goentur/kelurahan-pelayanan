@@ -25,20 +25,20 @@ class JabatanController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('can:satuan-kerja-index', only: ['index', 'data']),
-            new Middleware('can:satuan-kerja-create', only: ['store']),
-            new Middleware('can:satuan-kerja-update', only: ['update']),
-            new Middleware('can:satuan-kerja-delete', only: ['destroy'])
+            new Middleware('can:jabatan-index', only: ['index', 'data']),
+            new Middleware('can:jabatan-create', only: ['store']),
+            new Middleware('can:jabatan-update', only: ['update']),
+            new Middleware('can:jabatan-delete', only: ['destroy'])
         ];
     }
     private function gate(): array
     {
         $user = auth()->user();
-        return Memo::forHour('satuan-kerja-gate-' . $user->getKey(), function () use ($user) {
+        return Memo::forHour('jabatan-gate-' . $user->getKey(), function () use ($user) {
             return [
-                'create' => $user->can('satuan-kerja-create'),
-                'update' => $user->can('satuan-kerja-update'),
-                'delete' => $user->can('satuan-kerja-delete'),
+                'create' => $user->can('jabatan-create'),
+                'update' => $user->can('jabatan-update'),
+                'delete' => $user->can('jabatan-delete'),
             ];
         });
     }
@@ -46,7 +46,7 @@ class JabatanController extends Controller implements HasMiddleware
     public function index()
     {
         $gate = $this->gate();
-        return inertia('Master/Jabatan/Index', compact("gate"));
+        return inertia('master/jabatan/index', compact("gate"));
     }
 
     public function create()
