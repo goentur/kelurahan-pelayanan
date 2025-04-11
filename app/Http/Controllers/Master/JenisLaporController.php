@@ -47,7 +47,7 @@ class JenisLaporController extends Controller implements HasMiddleware
     {
         $gate = $this->gate();
         $tipePenyampaian = PenyampaianTipe::toArray();
-        return inertia('Master/JenisLapor/Index', compact("gate", "tipePenyampaian"));
+        return inertia('master/jenis-lapor/index', compact("gate", "tipePenyampaian"));
     }
 
     public function create()

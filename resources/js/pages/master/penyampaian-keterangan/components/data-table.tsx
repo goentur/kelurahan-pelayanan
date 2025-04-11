@@ -1,6 +1,5 @@
 import LoadingData from '@/components/data-table/loading-data'
 import NoData from '@/components/data-table/no-data'
-import { Badge } from '@/components/ui/badge'
 import {
     DropdownMenu,
     DropdownMenuContent,

@@ -37,6 +37,9 @@ export default function DataTable({
                     <th className="p-2 border w-1">NO</th>
                     <th className="p-2 border">Nama</th>
                     <th className="p-2 border">Jenis</th>
+                    <th className="p-2 border">Keterangan</th>
+                    <th className="p-2 border">Tanggal Awal</th>
+                    <th className="p-2 border">Tanggal Akhir</th>
                     <th className="p-2 border w-1">Aksi</th>
                 </tr>
             </thead>
@@ -51,11 +54,14 @@ export default function DataTable({
                             <td className="px-2 py-1 border text-center">{from++}</td>
                             <td className="px-2 py-1 border">{value.nama}</td>
                             <td className="px-2 py-1 border">{value.jenis}</td>
+                            <td className="px-2 py-1 border">{value.keterangan}</td>
+                            <td className="px-2 py-1 border">{value.tanggal_awal.data}</td>
+                            <td className="px-2 py-1 border">{value.tanggal_akhir.data}</td>
                             <td className="border text-center">
                                 <DropdownMenu>
                                     <DropdownMenuTrigger className='px-2 py-1 cursor-pointer'><Ellipsis/></DropdownMenuTrigger>
                                     <DropdownMenuContent>
-                                        {gate.update && <DropdownMenuItem onClick={() => {setForm(true), setIsEdit(true), setData({ id:value.id, nama:value.nama, jenis:value.jenis})}}><Pencil/> Ubah</DropdownMenuItem>}
+                                        {gate.update && <DropdownMenuItem onClick={() => {setForm(true), setIsEdit(true), setData({ id:value.id, nama:value.nama, no_urut:value.no_urut, jenis:value.jenis, keterangan:value.keterangan, tanggal_awal:value.tanggal_awal.form, tanggal_akhir:value.tanggal_akhir.form})}}><Pencil/> Ubah</DropdownMenuItem>}
                                         {gate.delete && <DropdownMenuItem onClick={() => {setHapus(true), setData({id:value.id,})}}><BadgeX/> Hapus</DropdownMenuItem>}
                                     </DropdownMenuContent>
                                 </DropdownMenu>

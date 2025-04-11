@@ -1,6 +1,5 @@
 import Combobox from '@/components/combobox'
 import FormInput from '@/components/form-input'
-import InfoPassword from '@/components/info-password'
 import { Button } from '@/components/ui/button'
 import {
     Dialog,

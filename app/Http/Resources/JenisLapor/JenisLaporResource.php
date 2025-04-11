@@ -18,6 +18,7 @@ class JenisLaporResource extends JsonResource
                'id' => $this->id,
                'nama' => $this->nama,
                'jenis' => $this->jenis,
+               'no_urut' => $this->no_urut,
                'keterangan' => $this->keterangan,
                'tanggal_awal' => [
                     'data' => $this->tanggal_awal,

@@ -11,22 +11,22 @@ interface Props {
 	id?: string;
 	value: Date;
 	onChange: (value: string, floatValue?: number) => void;
-	error?: string;
-	placeholder?: string;
 	inputRef?: RefObject<HTMLInputElement> | ((el: HTMLInputElement | null) => void);
-	[key: string]: any; // Menangani properti bebas seperti autoFocus, required, autocomplete
+	placeholder?: string;
+	error?: string;
+	[key: string]: any;
 }
 
 export default function FormCalendar({
-    id,
-    value,
-    onChange,
-    inputRef,
-    placeholder,
-    error,
+	id,
+	value,
+	onChange,
+	inputRef,
+	placeholder,
+	error,
 	autoOpen,
 	tanggalSelanjutnya,
-    ...propss }: Props) {
+	...propss }: Props) {
 const [open, setOpen] = useState(false);
 useEffect(() => {
 	if (autoOpen) {
