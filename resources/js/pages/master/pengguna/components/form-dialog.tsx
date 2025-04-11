@@ -1,4 +1,3 @@
-import Combobox from '@/components/combobox'
 import FormInput from '@/components/form-input'
 import InfoPassword from '@/components/info-password'
 import { Button } from '@/components/ui/button'
@@ -22,7 +21,6 @@ type props = {
     formRefs: React.RefObject<Record<string, HTMLInputElement | null>>
     processing: boolean
     handleForm: (e: React.FormEvent) => void
-    dataAtasanSatuanKerja: { value: string; label: string }[]
 }
 export default function FormDialog({
     open,
@@ -35,11 +33,10 @@ export default function FormDialog({
     formRefs,
     processing,
     handleForm,
-    dataAtasanSatuanKerja,
 }: props) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className='w-10/12'>
+            <DialogContent className='w-5xl'>
                 <form onSubmit={handleForm}>
                     <DialogHeader>
                         <DialogTitle>Form {title}</DialogTitle>
@@ -107,23 +104,6 @@ export default function FormDialog({
                                 />
                                 <InfoPassword/>
                             </>)}
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <FormInput
-                                id="kode_ref_kelurahan"
-                                type="text"
-                                value={data.kode_ref_kelurahan}
-                                onChange={(e) => setData((prevData: any) => ({ ...prevData, kode_ref_kelurahan: e.target.value }))}
-                                inputRef={(el) => {
-                                    if (formRefs.current) {
-                                        formRefs.current['kode_ref_kelurahan'] = el;
-                                    }
-                                }}
-                                placeholder="Masukkan kode ref kelurahan"
-                                error={errors.name}
-                                required
-                            />
-                            <Combobox label="atasanSatuanKerja" selectedValue={data.atasan_satuan_kerja} options={dataAtasanSatuanKerja} onSelect={(value) => setData((prevData:any) => ({ ...prevData, atasan_satuan_kerja: value }))} error={errors.atasan_satuan_kerja} />
                         </div>
                     </div>
                     <DialogFooter>

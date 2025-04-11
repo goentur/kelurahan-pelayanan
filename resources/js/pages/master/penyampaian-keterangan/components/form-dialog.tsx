@@ -52,7 +52,7 @@ export default function FormDialog({
                                     }
                                 }}
                                 placeholder="Masukkan nama"
-                                error={errors.name}
+                                error={errors.nama}
                                 required
                             />
                             <FormInput
@@ -66,7 +66,7 @@ export default function FormDialog({
                                     }
                                 }}
                                 placeholder="Masukkan keterangan"
-                                error={errors.name}
+                                error={errors.keterangan}
                                 required
                             />
                         </div>

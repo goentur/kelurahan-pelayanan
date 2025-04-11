@@ -56,7 +56,7 @@ export default function FormDialog({
                                     }
                                 }}
                                 placeholder="Masukkan nama"
-                                error={errors.name}
+                                error={errors.nama}
                                 required
                             />
                             <FormInput
@@ -70,7 +70,7 @@ export default function FormDialog({
                                     }
                                 }}
                                 placeholder="Masukkan no urut"
-                                error={errors.name}
+                                error={errors.no_urut}
                                 required
                             />
                             <FormInput
@@ -84,7 +84,7 @@ export default function FormDialog({
                                     }
                                 }}
                                 placeholder="Masukkan keterangan"
-                                error={errors.name}
+                                error={errors.keterangan}
                                 required
                             />
                             <Combobox label="jenis" selectedValue={data.jenis} options={tipePenyampaian} onSelect={(value) => setData((prevData:any) => ({ ...prevData, jenis: value }))} error={errors.jenis} />

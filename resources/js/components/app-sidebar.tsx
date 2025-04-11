@@ -4,7 +4,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { Building, ChartPie, FileSearch, FileText, Key, LayoutGrid, Medal, Send, UserRoundCog, Users } from 'lucide-react';
+import { Building, ChartPie, FileSearch, FileText, Key, LayoutGrid, Medal, Send, UserCheck, UserRoundCog, Users } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavDashboard: NavItem[] = [
@@ -68,8 +68,13 @@ const mainNavMaster: NavItem[] = [
         icon: Send,
         permission: 'jenis-lapor-index',
     },
+    {
+        title: "Pengguna",
+        href: "master.pengguna.index",
+        icon: UserCheck,
+        permission: 'pengguna-index',
+    },
 ];
-
 const footerNavItems: NavItem[] = [
     {
         title: 'Role',

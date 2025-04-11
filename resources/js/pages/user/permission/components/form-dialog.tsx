@@ -59,7 +59,7 @@ export default function FormDialog({
                                     }
                                 }}
                                 placeholder="Masukkan nama permission"
-                                error={errors.name}
+                                error={errors.nama}
                                 readOnly={isEdit}
                                 autoFocus
                                 required
@@ -75,7 +75,7 @@ export default function FormDialog({
                                     }
                                 }}
                                 placeholder="Masukkan guard name permission"
-                                error={errors.name}
+                                error={errors.guard_name}
                                 required
                             />
                         </div>

@@ -55,7 +55,7 @@ export default function FormDialog({
                                     }
                                 }}
                                 placeholder="Masukkan nama"
-                                error={errors.name}
+                                error={errors.nama}
                                 required
                             />
                             <Combobox label="jenis" selectedValue={data.jenis} options={dataJenis} onSelect={(value) => setData((prevData:any) => ({ ...prevData, jenis: value }))} error={errors.jenis} />
