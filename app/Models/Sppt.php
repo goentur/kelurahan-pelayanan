@@ -31,4 +31,8 @@ class Sppt extends Model
             ['kd_propinsi', 'kd_dati2', 'kd_kecamatan', 'kd_kelurahan', 'kd_blok', 'no_urut', 'kd_jns_op']
         );
     }
+    public function pembayaranSppt()
+    {
+        return $this->hasMany(PembayaranSppt::class, $this->primaryKey, $this->primaryKey);
+    }
 }
