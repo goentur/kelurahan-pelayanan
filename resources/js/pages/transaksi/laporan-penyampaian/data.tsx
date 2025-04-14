@@ -1,9 +1,8 @@
 import DataTablePagination from '@/components/data-table/pagination';
+import PerPageSelect from '@/components/data-table/per-page-select';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { alertApp } from '@/components/utils';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
@@ -12,7 +11,6 @@ import axios from 'axios';
 import { Loader2, Send } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import DataTable from './component/data-table';
-import PerPageSelect from '@/components/data-table/per-page-select';
 
 type dataProps = {
     jenisLapor : any
@@ -24,11 +22,15 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
     {
         title: 'Transaksi',
-        href: 'transaksi.penyampaian.index',
+        href: 'transaksi.laporan-penyampaian.index',
     },
     {
-        title: 'Penyampaian',
-        href: 'transaksi.penyampaian.index',
+        title: 'Laporan Penyampaian',
+        href: 'transaksi.laporan-penyampaian.index',
+    },
+    {
+        title: 'Data Laporan Penyampaian',
+        href: 'transaksi.laporan-penyampaian.index',
     },
 ];
 

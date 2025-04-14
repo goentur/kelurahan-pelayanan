@@ -26,11 +26,11 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
     {
         title: 'Transaksi',
-        href: 'transaksi.penyampaian.index',
+        href: 'transaksi.laporan-penyampaian.index',
     },
     {
-        title: 'Penyampaian',
-        href: 'transaksi.penyampaian.index',
+        title: 'Laporan Penyampaian',
+        href: 'transaksi.laporan-penyampaian.index',
     },
 ];
 
