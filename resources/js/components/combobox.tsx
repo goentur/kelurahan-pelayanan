@@ -22,7 +22,7 @@ import InputError from './input-error'
 type props = {
     label: string
     selectedValue: string
-    options: { value: string; label: string }[]
+    options: { value: string; label: string, active?:boolean }[]
     onSelect: (value: string) => void
     error?: string
 	autoOpen?: boolean;
@@ -77,6 +77,7 @@ export default function Combobox({
                                     <CommandItem
                                         key={d.value}
                                         value={d.label}
+							            disabled={d.active}
                                         onSelect={() => {
                                             onSelect(d.value)
                                             setOpen(false)

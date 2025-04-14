@@ -61,13 +61,13 @@ class LaporanPenyampaianController extends Controller implements HasMiddleware
     public function index()
     {
         $gate = $this->gate();
-        return inertia('Transaksi/LaporanPenyampaian/Index', compact("gate"));
+        return inertia('transaksi/laporan-penyampaian/index', compact("gate"));
     }
 
     public function form(JenisLapor $jenisLapor)
     {
         if (now()->between(Carbon::parse($jenisLapor->tanggal_awal), Carbon::parse($jenisLapor->tanggal_akhir))) {
-            return inertia('Transaksi/LaporanPenyampaian/Data', compact('jenisLapor'));
+            return inertia('transaksi/laporan-penyampaian/data', compact('jenisLapor'));
         } else {
             return back();
         }
