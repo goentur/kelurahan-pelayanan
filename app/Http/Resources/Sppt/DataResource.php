@@ -17,6 +17,8 @@ class DataResource extends JsonResource
      {
           return [
                'id' => $this->kd_propinsi . '.' . $this->kd_dati2 . '.' . $this->kd_kecamatan . '.' . $this->kd_kelurahan . '.' . $this->kd_blok . '.' . $this->no_urut . '.' . $this->kd_jns_op,
+               'kecamatan' => $this->kd_kecamatan,
+               'kelurahan' => $this->kd_kelurahan,
                'blok' => $this->kd_blok,
                'jenis' => $this->kd_jns_op,
                'no' => $this->no_urut,

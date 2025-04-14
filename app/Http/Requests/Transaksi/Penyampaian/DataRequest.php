@@ -25,7 +25,7 @@ class DataRequest extends FormRequest
                'page' => 'required|numeric',
                'perPage' => 'required|numeric|max:100|min:25',
                'jenisBuku' => 'nullable|string',
-               'kelurahan' => 'required|string',
+               'kelurahan' => 'nullable|string',
                'kd_blok' => 'nullable|numeric|digits:3',
                'no_urut' => 'nullable|numeric|digits:4',
                'nama_wp' => 'nullable|string',

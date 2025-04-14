@@ -31,7 +31,7 @@ class DataController extends Controller implements HasMiddleware
     public function index()
     {
         $jenisBuku = $this->jenisBukuRepository->data();
-        return inertia('Sppt/Data/Index', compact("jenisBuku"));
+        return inertia('sppt/data/index', compact("jenisBuku"));
     }
 
     public function data(DataRequest $request)
