@@ -16,9 +16,17 @@ class SatuanKerjaRepository
      public function dataBerdasarkanUser($user)
      {
           $satuanKerja = $user?->satuanKerja;
-          return $satuanKerja && $satuanKerja->kelurahan->isNotEmpty()
-               ? SatuanKerjaLabelValueResource::collection($satuanKerja->kelurahan)
-               : false;
+          if ($satuanKerja && $satuanKerja->kelurahan->isNotEmpty()) {
+               return SatuanKerjaLabelValueResource::collection($satuanKerja->kelurahan);
+          }
+          $kelurahan = collect();
+          if ($satuanKerja && $satuanKerja->bawahan->isNotEmpty()) {
+               foreach ($satuanKerja->bawahan as $bawahan) {
+                    $kelurahan = $kelurahan->merge($bawahan->kelurahan);
+               }
+               return SatuanKerjaLabelValueResource::collection($kelurahan);
+          }
+          return false;
      }
      public function list()
      {
