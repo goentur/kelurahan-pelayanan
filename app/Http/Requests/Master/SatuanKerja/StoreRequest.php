@@ -29,7 +29,7 @@ class StoreRequest extends FormRequest
             'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
             'nama' => 'required|string|max:255',
             'password' => ['required', 'confirmed', Password::min(8)->letters()->mixedCase()->numbers()->symbols()->uncompromised()],
-            'kode_ref_kelurahan' => 'nullable|numeric',
+            'kode_ref' => 'nullable|numeric',
             'atasan_satuan_kerja' => 'nullable|string|uuid|' . Rule::exists(SatuanKerja::class, 'id'),
         ];
     }

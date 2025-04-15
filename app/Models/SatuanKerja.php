@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Ref\RefKecamatan;
 use App\Models\Ref\RefKelurahan;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +12,7 @@ class SatuanKerja extends Model
 {
     use HasUuids;
     use SoftDeletes;
-    protected $fillable = ['user_id', 'atasan_satuan_kerja_id', 'kode_ref_kelurahan', 'nama'];
+    protected $fillable = ['user_id', 'atasan_satuan_kerja_id', 'kode_ref', 'nama'];
 
     public function user()
     {
@@ -28,13 +29,18 @@ class SatuanKerja extends Model
         return $this->hasMany(SatuanKerja::class, 'atasan_satuan_kerja_id');
     }
 
+    public function kecamatan()
+    {
+        return $this->hasOne(RefKecamatan::class, 'kd_kecamatan', 'kode_ref');
+    }
+
     public function kelurahan()
     {
-        return $this->hasMany(RefKelurahan::class, 'kd_kel_br', 'kode_ref_kelurahan')->where('kd_kecamatan', $this->atasan->kode_ref_kelurahan);
+        return $this->hasMany(RefKelurahan::class, 'kd_kel_br', 'kode_ref')->where('kd_kecamatan', $this->atasan?->kode_ref);
     }
 
     public function pegawai()
     {
-        return $this->hasMany(Pegawai::class)->where('kd_kecamatan', $this->atasan->kode_ref_kelurahan);
+        return $this->hasMany(Pegawai::class)->where('kd_kecamatan', $this->atasan?->kode_ref);
     }
 }

@@ -5,7 +5,6 @@ namespace App\Repositories\Master\SatuanKerja;
 use App\Http\Resources\Common\LabelValueResource;
 use App\Http\Resources\SatuanKerja\LabelValueResource as SatuanKerjaLabelValueResource;
 use App\Http\Resources\SatuanKerja\SatuanKerjaResource;
-use App\Models\Pegawai;
 use App\Models\SatuanKerja;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -16,8 +15,10 @@ class SatuanKerjaRepository
      public function __construct(protected SatuanKerja $model) {}
      public function dataBerdasarkanUser($user)
      {
-          $satuanKerja = $user?->satuanKerja[0];
-          return SatuanKerjaLabelValueResource::collection($satuanKerja->kelurahan);
+          $satuanKerja = $user?->satuanKerja;
+          return $satuanKerja && $satuanKerja->kelurahan->isNotEmpty()
+               ? SatuanKerjaLabelValueResource::collection($satuanKerja->kelurahan)
+               : false;
      }
      public function list()
      {
@@ -25,7 +26,7 @@ class SatuanKerjaRepository
      }
      public function data($request)
      {
-          $query = $this->model::select('id', 'user_id', 'atasan_satuan_kerja_id', 'nama', 'kode_ref_kelurahan');
+          $query = $this->model::select('id', 'user_id', 'atasan_satuan_kerja_id', 'nama', 'kode_ref');
           if ($request->search) {
                $query->where('nama', 'like', "%{$request->search}%")
                     ->orWhereHas('atasan', fn($q) => $q->where('nama', 'like', "%{$request->search}%"));
@@ -45,7 +46,7 @@ class SatuanKerjaRepository
                $this->model::create([
                     'user_id' => $user->getKey(),
                     'atasan_satuan_kerja_id' => $request->atasan_satuan_kerja,
-                    'kode_ref_kelurahan' => $request->kode_ref_kelurahan,
+                    'kode_ref' => $request->kode_ref,
                     'nama' => $request->nama,
                ]);
                $user->assignRole("SATUAN-KERJA");
@@ -62,7 +63,7 @@ class SatuanKerjaRepository
                $satuanKerja = $this->model::find($id);
                $satuanKerja->update([
                     'atasan_satuan_kerja_id' => $request->atasan_satuan_kerja,
-                    'kode_ref_kelurahan' => $request->kode_ref_kelurahan,
+                    'kode_ref' => $request->kode_ref,
                     'nama' => $request->nama,
                ]);
                $user = User::findOrFail($satuanKerja->user_id);
@@ -81,12 +82,22 @@ class SatuanKerjaRepository
      }
      public function collectionData()
      {
-          $satuanKerja = $this->dataBerdasarkanUser(auth()->user());
-          return [
-               'propinsi' => $satuanKerja->pluck('kd_propinsi')->unique()->values(),
-               'dati2' => $satuanKerja->pluck('kd_dati2')->unique()->values(),
-               'kecamatan' => $satuanKerja->pluck('kd_kecamatan')->unique()->values(),
-               'kelurahan' => $satuanKerja->pluck('kd_kelurahan')->unique()->values(),
-          ];
+          $user = auth()->user();
+          $satuanKerja = $this->dataBerdasarkanUser($user);
+          if ($satuanKerja) {
+               return [
+                    'propinsi' => $satuanKerja->pluck('kd_propinsi')->unique()->values(),
+                    'dati2' => $satuanKerja->pluck('kd_dati2')->unique()->values(),
+                    'kecamatan' => $satuanKerja->pluck('kd_kecamatan')->unique()->values(),
+                    'kelurahan' => $satuanKerja->pluck('kd_kelurahan')->unique()->values(),
+               ];
+          } else {
+               $satuanKerja = $user?->satuanKerja;
+               return [
+                    'propinsi' => $satuanKerja->kecamatan->kd_propinsi,
+                    'dati2' => $satuanKerja->kecamatan->kd_dati2,
+                    'kecamatan' => $satuanKerja->kode_ref,
+               ];
+          }
      }
 }

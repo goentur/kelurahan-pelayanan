@@ -29,7 +29,7 @@ class SatuanKerjaResource extends JsonResource
                          });
                     }
                ),
-               'kode_ref_kelurahan' => $this->kode_ref_kelurahan,
+               'kode_ref' => $this->kode_ref,
                'nama' => $this->nama,
           ];
      }

@@ -110,16 +110,16 @@ export default function FormDialog({
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                             <FormInput
-                                id="kode_ref_kelurahan"
+                                id="kode_ref"
                                 type="text"
-                                value={data.kode_ref_kelurahan}
-                                onChange={(e) => setData((prevData: any) => ({ ...prevData, kode_ref_kelurahan: e.target.value }))}
+                                value={data.kode_ref}
+                                onChange={(e) => setData((prevData: any) => ({ ...prevData, kode_ref: e.target.value }))}
                                 inputRef={(el) => {
                                     if (formRefs.current) {
-                                        formRefs.current['kode_ref_kelurahan'] = el;
+                                        formRefs.current['kode_ref'] = el;
                                     }
                                 }}
-                                placeholder="Masukkan kode ref kelurahan"
+                                placeholder="Masukkan kode ref"
                                 error={errors.name}
                                 required
                             />

@@ -85,7 +85,7 @@ class PegawaiRepository
      public function pegawaiPetugasCollection($user)
      {
           $petugas = $this->model::select('nip', 'nama')->where([
-               'satuan_kerja_id' => $user?->satuanKerja[0]->id,
+               'satuan_kerja_id' => $user?->satuanKerja->id,
                'status' => PegawaiStatus::AKTIF,
           ])->limit(2)->whereHas('jabatan', fn($q) => $q->where('jenis', JabatanJenis::PETUGAS))->get();
           $namaPetugas = [];
@@ -102,7 +102,7 @@ class PegawaiRepository
      public function pegawaiLurah($user)
      {
           return $this->model::select('nip', 'nama')->where([
-               'satuan_kerja_id' => $user?->satuanKerja[0]->id,
+               'satuan_kerja_id' => $user?->satuanKerja->id,
                'status' => PegawaiStatus::AKTIF,
           ])->whereHas('jabatan', fn($q) => $q->where([
                'nama' => 'LURAH',
@@ -112,7 +112,7 @@ class PegawaiRepository
      public function pegawaiCamat($user)
      {
           return $this->model::select('nip', 'nama')->where([
-               'satuan_kerja_id' => $user?->satuanKerja[0]->atasan?->id,
+               'satuan_kerja_id' => $user?->satuanKerja->atasan?->id,
                'status' => PegawaiStatus::AKTIF,
           ])->whereHas('jabatan', fn($q) => $q->where([
                'nama' => 'CAMAT',

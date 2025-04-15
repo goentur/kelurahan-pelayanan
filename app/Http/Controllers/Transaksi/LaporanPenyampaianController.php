@@ -100,7 +100,7 @@ class LaporanPenyampaianController extends Controller implements HasMiddleware
             'kd_kelurahan' => $nop[3],
         ])->first();
         $satuanKerja = [
-            'kecamatan' => $user?->satuanKerja[0]->atasan->nama,
+            'kecamatan' => $user?->satuanKerja->atasan->nama,
             'kelurahan' => $refKelurahan->nm_kelurahan
         ];
         $this->cetak($user, JenisLapor::find($request->jenisLapor), $satuanKerja, $kelurahan);
@@ -109,7 +109,7 @@ class LaporanPenyampaianController extends Controller implements HasMiddleware
     {
         $user = auth()->user();
         $satuanKerja = [
-            'kecamatan' => $user?->satuanKerja[0]->atasan->nama,
+            'kecamatan' => $user?->satuanKerja->atasan->nama,
             'kelurahan' => $user->name
         ];
         $this->cetak($user, $jenisLapor, $satuanKerja, $this->satuanKerja->collectionData());

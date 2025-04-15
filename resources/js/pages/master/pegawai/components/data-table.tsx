@@ -76,7 +76,7 @@ export default function DataTable({
                 </tr>
             </thead>
             <tbody className="font-light">
-                {loading && <LoadingData colSpan={5}/>}
+                {loading && <LoadingData colSpan={8}/>}
                 {data.length > 0 ? (
                     data.map((value: any, index: number) => (
                         <tr
@@ -107,7 +107,7 @@ export default function DataTable({
                             </td>
                         </tr>
                     ))
-                ) : (!loading ?<NoData colSpan={5}/>: null)}
+                ) : (!loading ?<NoData colSpan={8}/>: null)}
             </tbody>
         </table>
     )

@@ -50,6 +50,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function satuanKerja()
     {
-        return $this->hasMany(SatuanKerja::class);
+        return $this->hasOne(SatuanKerja::class);
     }
 }

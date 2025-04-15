@@ -15,7 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->uuid('user_id')->nullable()->comment('id user');
             $table->string('atasan_satuan_kerja_id')->nullable();
-            $table->string('kode_ref_kelurahan')->nullable();
+            $table->string('kode_ref')->nullable();
             $table->string('nama')->nullable();
             $table->timestamps();
             $table->softDeletes();

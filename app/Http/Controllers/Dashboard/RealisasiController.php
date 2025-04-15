@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Repositories\Dashboard\RealisasiRepository;
-use App\Repositories\Master\SatuanKerja\SatuanKerjaRepository;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 
@@ -13,7 +12,6 @@ class RealisasiController extends Controller implements HasMiddleware
 
     public function __construct(
         protected RealisasiRepository $repository,
-        protected SatuanKerjaRepository $satuanKerja,
     ) {}
     public static function middleware(): array
     {
@@ -29,7 +27,6 @@ class RealisasiController extends Controller implements HasMiddleware
 
     public function data()
     {
-        $satuanKerja = $this->satuanKerja->collectionData();
-        return response()->json($this->repository->data([1, 2, 3, 4, 5], $satuanKerja), 200);
+        return response()->json($this->repository->data([1, 2, 3, 4, 5]), 200);
     }
 }

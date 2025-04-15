@@ -57,8 +57,8 @@ export default function Index() {
                                 <tr className="uppercase leading-normal">
                                     <th className="p-2 border w-1" rowSpan={2}>BUKU</th>
                                     <th className="p-2 border" colSpan={2}>BAKU AWAL</th>
-                                    <th className="p-2 border" colSpan={2}>BAKU JALAN</th>
                                     <th className="p-2 border" colSpan={2}>REALISASI PENYAMPAIAN</th>
+                                    <th className="p-2 border" colSpan={2}>BAKU JALAN</th>
                                     <th className="p-2 border" colSpan={2}>REALISASI PEMBAYARAN</th>
                                 </tr>
                                 <tr className="uppercase leading-normal">
@@ -79,10 +79,10 @@ export default function Index() {
                                     <td className="px-2 py-1 border text-center">{key}</td>
                                     <td className="px-2 py-1 border text-end">{value.bakuAwal?.sppt}</td>
                                     <td className="px-2 py-1 border text-end">{value.bakuAwal?.jumlah}</td>
-                                    <td className="px-2 py-1 border text-end">{value.sppt?.sppt}</td>
-                                    <td className="px-2 py-1 border text-end">{value.sppt?.jumlah}</td>
                                     <td className="px-2 py-1 border text-end">{value.penyampaian?.sppt}</td>
                                     <td className="px-2 py-1 border text-end">{value.penyampaian?.jumlah}</td>
+                                    <td className="px-2 py-1 border text-end">{value.sppt?.sppt}</td>
+                                    <td className="px-2 py-1 border text-end">{value.sppt?.jumlah}</td>
                                     <td className="px-2 py-1 border text-end">{value.pembayaran?.sppt}</td>
                                     <td className="px-2 py-1 border text-end">{value.pembayaran?.jumlah}</td>
                                 </tr>

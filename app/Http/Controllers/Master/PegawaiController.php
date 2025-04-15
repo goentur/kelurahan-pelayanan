@@ -46,7 +46,7 @@ class PegawaiController extends Controller implements HasMiddleware
     public function index()
     {
         $gate = $this->gate();
-        $satuanKerja = auth()->user()?->satuanKerja[0] ?? null;
+        $satuanKerja = auth()->user()?->satuanKerja ?? null;
         return inertia('master/pegawai/index', compact("gate", "satuanKerja"));
     }
 
