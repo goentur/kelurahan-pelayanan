@@ -39,6 +39,24 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: 'transaksi.penyampaian.index',
     },
 ];
+const filterTipe = [
+    {
+        label : 'SEMUA',
+        class : 'bg-cyan-500 hover:bg-cyan-600',
+    },
+    {
+        label : 'BELUM',
+        class : 'bg-orange-500 hover:bg-orange-600',
+    },
+    {
+        label : 'TERSAMPAIKAN',
+        class : 'bg-green-500 hover:bg-green-600',
+    },
+    {
+        label : 'TIDAK',
+        class : 'bg-red-500 hover:bg-red-600',
+    },
+]
 
 export default function Index({ gate, jenisBuku }: IndexProps) {
     const title = 'Penyampaian'
@@ -54,6 +72,7 @@ export default function Index({ gate, jenisBuku }: IndexProps) {
         to: 1,
         total: 0,
         perPage: 25,
+        tipe: 'semua',
     });
     const { data, setData, errors} = useForm({
         jenisBuku : '',
@@ -71,7 +90,7 @@ export default function Index({ gate, jenisBuku }: IndexProps) {
         if (data.kelurahan) {
             getData();
         }
-    }, [infoDataTabel.page, infoDataTabel.perPage]);
+    }, [infoDataTabel.page, infoDataTabel.perPage, infoDataTabel.tipe]);
 
     const getData = async () => {
         if (data.kelurahan) {
@@ -80,6 +99,7 @@ export default function Index({ gate, jenisBuku }: IndexProps) {
                 const response = await axios.post(route('transaksi.penyampaian.data'), {
                     page: infoDataTabel.page,
                     perPage: infoDataTabel.perPage,
+                    tipe: infoDataTabel.tipe,
                     jenisBuku: data.jenisBuku,
                     kelurahan: data.kelurahan,
                     kd_blok: data.kd_blok,
@@ -146,7 +166,7 @@ export default function Index({ gate, jenisBuku }: IndexProps) {
                                     </div>
                                 </div>
                                 <div>
-                                    <div className='mb-3'>
+                                    <div className='grid gap-4 lg:grid-cols-2 md:grid-cols-2 mb-3'>
                                         <FormInput
                                             id="kd_blok"
                                             type="text"
@@ -160,25 +180,39 @@ export default function Index({ gate, jenisBuku }: IndexProps) {
                                             placeholder="Masukkan kd blok"
                                             error={errors.kd_blok}
                                         />
+                                        <FormInput
+                                            id="no_urut"
+                                            type="text"
+                                            value={data.no_urut}
+                                            onChange={(e) => setData((prevData: any) => ({ ...prevData, no_urut: e.target.value }))}
+                                            inputRef={(el) => {
+                                                if (formRefs.current) {
+                                                    formRefs.current['no_urut'] = el;
+                                                }
+                                            }}
+                                            placeholder="Masukkan no urut"
+                                            error={errors.no_urut}
+                                        />
                                     </div>
-                                    <FormInput
-                                        id="no_urut"
-                                        type="text"
-                                        value={data.no_urut}
-                                        onChange={(e) => setData((prevData: any) => ({ ...prevData, no_urut: e.target.value }))}
-                                        inputRef={(el) => {
-                                            if (formRefs.current) {
-                                                formRefs.current['no_urut'] = el;
+                                    <br />
+                                    {filterTipe.map((item: any, index: number) => (
+                                        <button
+                                            type='button'
+                                            onClick={() =>
+                                                setInfoDataTabel((prev: any) => ({ ...prev, page: 1, tipe: item.label }))
                                             }
-                                        }}
-                                        placeholder="Masukkan no urut"
-                                        error={errors.no_urut}
-                                    />
+                                            disabled={loading}
+                                            key={index}
+                                            className={`${item.class} m-0.5 p-1 text-xs rounded cursor-pointer disabled:cursor-not-allowed`}
+                                        >
+                                            {item.label}
+                                        </button>
+                                    ))}
                                 </div>
                                 <div>
                                     <div className='grid gap-2 mb-3'>
                                         <Label htmlFor='halaman'>Jumlah Perhalaman</Label>
-                                        <PerPageSelect className='w-full'  onChange={(value) =>setInfoDataTabel((prev:any) => ({...prev,page: 1,perPage: value}))}/>
+                                        <PerPageSelect className='w-full' onChange={(value) =>setInfoDataTabel((prev:any) => ({...prev,page: 1,perPage: value}))}/>
                                     </div>
                                     <div className='grid gap-2'>
                                         <Label>&nbsp;</Label>

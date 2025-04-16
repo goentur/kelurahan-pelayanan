@@ -24,6 +24,7 @@ class DataRequest extends FormRequest
           return [
                'page' => 'required|numeric',
                'perPage' => 'required|numeric|max:100|min:25',
+               'tipe' => 'required|string',
                'jenisBuku' => 'nullable|string',
                'kelurahan' => 'nullable|string',
                'kd_blok' => 'nullable|numeric|digits:3',

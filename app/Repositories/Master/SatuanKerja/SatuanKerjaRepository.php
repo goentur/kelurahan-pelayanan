@@ -101,11 +101,18 @@ class SatuanKerjaRepository
                ];
           } else {
                $satuanKerja = $user?->satuanKerja;
-               return [
-                    'propinsi' => $satuanKerja->kecamatan->kd_propinsi,
-                    'dati2' => $satuanKerja->kecamatan->kd_dati2,
-                    'kecamatan' => $satuanKerja->kode_ref,
-               ];
+               if ($satuanKerja) {
+                    return [
+                         'propinsi' => $satuanKerja->kecamatan->kd_propinsi,
+                         'dati2' => $satuanKerja->kecamatan->kd_dati2,
+                         'kecamatan' => $satuanKerja->kode_ref,
+                    ];
+               } else {
+                    return [
+                         'propinsi' => 33,
+                         'dati2' => 75,
+                    ];
+               }
           }
      }
 }

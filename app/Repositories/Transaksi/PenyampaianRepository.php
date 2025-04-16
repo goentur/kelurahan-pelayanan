@@ -29,25 +29,46 @@ class PenyampaianRepository
     public function data($request)
     {
         $nop = explode('.', $request->kelurahan);
-        $query = BakuAwal::with('datObjekPajak', 'penyampaian')->select('kd_propinsi', 'kd_dati2', 'kd_kecamatan', 'kd_kelurahan', 'kd_blok', 'no_urut', 'kd_jns_op', 'thn_pajak_sppt', 'nm_wp_sppt', 'pbb_yg_harus_dibayar_sppt')
+        $query = BakuAwal::with('datObjekPajak', 'penyampaian')
+            ->select('kd_propinsi', 'kd_dati2', 'kd_kecamatan', 'kd_kelurahan', 'kd_blok', 'no_urut', 'kd_jns_op', 'thn_pajak_sppt', 'nm_wp_sppt', 'pbb_yg_harus_dibayar_sppt')
             ->where([
                 'kd_propinsi' => $nop[0],
                 'kd_dati2' => $nop[1],
                 'kd_kecamatan' => $nop[2],
                 'kd_kelurahan' => $nop[3],
                 'thn_pajak_sppt' => date('Y'),
-            ]);
-        if (!empty($request->jenisBuku)) {
-            $nominal = $this->jenisBuku->dataNominal($request->jenisBuku);
-            $query->whereBetween('pbb_yg_harus_dibayar_sppt', [$nominal['min'], $nominal['max']]);
-        }
-        if (!empty($request->kd_blok)) {
-            $query->where('kd_blok', $request->kd_blok);
-        }
-        if (!empty($request->no_urut)) {
-            $query->where('no_urut', $request->no_urut);
-        }
-        $query->orderBy('kd_propinsi')->orderBy('kd_dati2')->orderBy('kd_kecamatan')->orderBy('kd_kelurahan')->orderBy('kd_blok')->orderBy('no_urut')->orderBy('kd_jns_op');
+            ])
+            ->when(!empty($request->jenisBuku), function ($query) use ($request) {
+                $nominal = $this->jenisBuku->dataNominal($request->jenisBuku);
+                $query->whereBetween('pbb_yg_harus_dibayar_sppt', [$nominal['min'], $nominal['max']]);
+            })
+            ->when(!empty($request->tipe), function ($query) use ($request) {
+                if ($request->tipe == 'BELUM') {
+                    $query->whereNotExists(function ($query) {
+                        $query->select(DB::raw(1))
+                            ->from('penyampaians')
+                            ->whereRaw('penyampaians.kd_propinsi = baku_awal.kd_propinsi')
+                            ->whereRaw('penyampaians.kd_dati2 = baku_awal.kd_dati2')
+                            ->whereRaw('penyampaians.kd_kecamatan = baku_awal.kd_kecamatan')
+                            ->whereRaw('penyampaians.kd_kelurahan = baku_awal.kd_kelurahan')
+                            ->whereRaw('penyampaians.kd_blok = baku_awal.kd_blok')
+                            ->whereRaw('penyampaians.no_urut = baku_awal.no_urut')
+                            ->whereRaw('penyampaians.kd_jns_op = baku_awal.kd_jns_op')
+                            ->whereRaw('penyampaians.tahun = baku_awal.thn_pajak_sppt');
+                    });
+                }
+                if ($request->tipe == 'TERSAMPAIKAN' || $request->tipe == 'TIDAK') {
+                    $query->whereHas('penyampaian', function ($query) use ($request) {
+                        $query->where('tipe', $request->tipe);
+                    });
+                }
+            })
+            ->when(!empty($request->kd_blok), function ($query) use ($request) {
+                $query->where('kd_blok', $request->kd_blok);
+            })
+            ->when(!empty($request->no_urut), function ($query) use ($request) {
+                $query->where('no_urut', $request->no_urut);
+            })->orderBy('kd_propinsi')->orderBy('kd_dati2')->orderBy('kd_kecamatan')->orderBy('kd_kelurahan')->orderBy('kd_blok')->orderBy('no_urut')->orderBy('kd_jns_op');
         $result = DataResource::collection($query->paginate($request->perPage ?? 25))->response()->getData(true);
         return $result['meta'] + ['data' => $result['data']];
     }

@@ -100,9 +100,11 @@ class RealisasiRepository
                ->where([
                     'kd_propinsi' => $satuanKerja['propinsi'],
                     'kd_dati2' => $satuanKerja['dati2'],
-                    'kd_kecamatan' => $satuanKerja['kecamatan'],
                     $tahunColumn => date('Y'),
                ])
+               ->when(!empty($satuanKerja['kecamatan']), function ($q) use ($satuanKerja) {
+                    $q->where('kd_kecamatan', $satuanKerja['kecamatan']);
+               })
                ->when(!empty($satuanKerja['kelurahan']), function ($q) use ($satuanKerja) {
                     $q->whereIn('kd_kelurahan', $satuanKerja['kelurahan']);
                });

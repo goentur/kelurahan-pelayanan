@@ -3,7 +3,7 @@ import LoadingData from "@/components/data-table/loading-data";
 import NoData from "@/components/data-table/no-data";
 import FormCalendar from "@/components/form-calendar";
 import axios from "axios";
-import { Check, DatabaseBackup, Loader2, X } from 'lucide-react';
+import { Check, Loader2, X } from 'lucide-react';
 import { useEffect, useState } from "react";
 
 type DataTableProps = {
@@ -97,84 +97,83 @@ export default function DataTable({ gate, dataTable, loading, dataPenyampaianKet
                     </ul>
                 </li>
             </ul>
-        <table className="w-full text-left border-collapse border">
-            <thead className="text-center text-sm">
-            <tr className="uppercase leading-normal">
-                <th rowSpan={2} colSpan={3} className="px-2 border w-1">NOP</th>
-                <th rowSpan={2} className="px-2 border w-1/6">Nama wajib pajak</th>
-                <th rowSpan={2} className="px-2 border w-1/5">Alamat objek</th>
-                <th rowSpan={2} className="px-2 border w-1">Pajak</th>
-                <th rowSpan={2} className="px-2 border w-1">Tipe</th>
-                <th colSpan={2} className="px-2 border text-center">TERSAMPAIKAN</th>
-                <th rowSpan={2} className="px-2 border">Keterangan</th>
-                <th rowSpan={2} className="px-2 border w-1">Status</th>
-            </tr>
-            <tr className="uppercase leading-normal">
-                <th className="px-2 border w-1 text-center">Y</th>
-                <th className="px-2 border w-1 text-center">T</th>
-            </tr>
-            </thead>
-            <tbody className="font-light text-xs">
-            {loading && <LoadingData colSpan={11}/>}
-            {dataTable.length > 0 ? (
-                dataTable.map((value: any, index: number) => (
-                <tr key={index} className="hover:bg-gray-100 dark:hover:bg-slate-900">
-                    <td className="px-2 py-1 border w-1">{value.blok}</td>
-                    <td className="px-2 py-1 border w-1">{value.no}</td>
-                    <td className="px-2 py-1 border w-1">{value.jenis}</td>
-                    <td className="px-2 py-1 border">{value.nama_wp}</td>
-                    <td className="px-2 py-1 border">{value.alamat_objek}</td>
-                    <td className="px-2 py-1 border text-end">{value.pajak}</td>
-                    <td className="px-2 py-1 border text-center">
-                        {tipe[value.id] && tipe[value.id]?.type!=null && (
-                            <span className={`px-1 rounded text-white ${tipe[value.id]?.type ? "bg-green-500" : "bg-red-500"}`}>
-                                {tipe[value.id]?.message}
-                            </span>
-                        )}
-                    </td>
-                    <td className="px-2 py-1 border text-center">
-                        { gate.create && gate.update && value.penyampaian && !value.penyampaian.status.status ? null : 
-                            <button
-                                onClick={() => handleSelectItem(value.id, true)}
-                                className="p-0 bg-green-500 text-white m-0 rounded hover:bg-green-600 cursor-pointer"
-                                disabled={loadingState[value.id]}
-                            >
-                                {loadingState[value.id] ? <Loader2 className="animate-spin p-1" size={20} /> : <Check size={20} />}
-                            </button>
-                        }
-                    </td>
-
-                    <td className="px-2 py-1 border text-center">
-                        { gate.create && gate.update && value.penyampaian && !value.penyampaian.status.status ? null : 
-                            <button
-                                onClick={() => handleSelectItem(value.id, false)}
-                                className="p-0 bg-red-500 text-white m-0 rounded hover:bg-red-600 cursor-pointer"
-                                disabled={loadingState[value.id]}
-                            >
-                                {loadingState[value.id] ? <Loader2 className="animate-spin p-1" size={20} /> : <X size={20} />}
-                            </button>
-                        }
-                    </td>
-                    <td className="px-1 py-1 border">
-                        {selectedItemTabel[value.id] == true ? (
-                            <FormCalendar value={editedData[value.id]?.ya || ""} onChange={(v) => handleChange(value.id, "ya", v, value.nama_wp, value.alamat_objek,value.pajak)} autoOpen={true}
-                            />
-                        ) : selectedItemTabel[value.id] == false ? (
-                            <Combobox label="" selectedValue={editedData[value.id]?.tidak || ""} options={dataPenyampaianKeterangan} onSelect={(v) => handleChange(value.id, "tidak", v, value.nama_wp, value.alamat_objek,value.pajak)} autoOpen={true} />
-                        ) : value.penyampaian?.tipe.value}
-                    </td>
-                    <td className="px-2 py-1 border text-center">
-                        {messages[value.id] && (
-                            <span className={`px-1 rounded text-white ${messages[value.id]?.type ? "bg-green-500" : "bg-red-500"}`}>
-                                {messages[value.id]?.message}
-                            </span>
-                        )}
-                    </td>
+            <table className="w-full text-left border-collapse border">
+                <thead className="text-center text-sm">
+                <tr className="uppercase leading-normal">
+                    <th rowSpan={2} colSpan={3} className="px-2 border w-1">NOP</th>
+                    <th rowSpan={2} className="px-2 border w-1/6">Nama wajib pajak</th>
+                    <th rowSpan={2} className="px-2 border w-1/5">Alamat objek</th>
+                    <th rowSpan={2} className="px-2 border w-1">Pajak</th>
+                    <th rowSpan={2} className="px-2 border w-1">Tipe</th>
+                    <th colSpan={2} className="px-2 border text-center">TERSAMPAIKAN</th>
+                    <th rowSpan={2} className="px-2 border">Keterangan</th>
+                    <th rowSpan={2} className="px-2 border w-1">Status</th>
                 </tr>
-                ))
-            ) : (!loading ?<NoData colSpan={11}/>: null)}
-            </tbody>
-        </table>
+                <tr className="uppercase leading-normal">
+                    <th className="px-2 border w-1 text-center">Y</th>
+                    <th className="px-2 border w-1 text-center">T</th>
+                </tr>
+                </thead>
+                <tbody className="font-light text-xs">
+                {loading && <LoadingData colSpan={11}/>}
+                {dataTable.length > 0 ? (dataTable.map((value: any, index: number) => (
+                    <tr key={index} className="hover:bg-gray-100 dark:hover:bg-slate-900">
+                        <td className="px-1 py-1 border w-1">{value.blok}</td>
+                        <td className="px-1 py-1 border w-1">{value.no}</td>
+                        <td className="px-1 py-1 border w-1">{value.jenis}</td>
+                        <td className="px-2 py-1 border">{value.nama_wp}</td>
+                        <td className="px-2 py-1 border">{value.alamat_objek}</td>
+                        <td className="px-2 py-1 border text-end">{value.pajak}</td>
+                        <td className="px-2 py-1 border text-center">
+                            {tipe[value.id] && tipe[value.id]?.type!=null && (
+                                <span className={`px-1 rounded text-white ${tipe[value.id]?.type ? "bg-green-500" : "bg-red-500"}`}>
+                                    {tipe[value.id]?.message}
+                                </span>
+                            )}
+                        </td>
+                        <td className="px-2 py-1 border text-center">
+                            { gate.create && gate.update && value.penyampaian && !value.penyampaian.status.status ? null : 
+                                <button
+                                    onClick={() => handleSelectItem(value.id, true)}
+                                    className="p-0 bg-green-500 text-white m-0 rounded hover:bg-green-600 cursor-pointer"
+                                    disabled={loadingState[value.id]}
+                                >
+                                    {loadingState[value.id] ? <Loader2 className="animate-spin p-1" size={20} /> : <Check size={20} />}
+                                </button>
+                            }
+                        </td>
+
+                        <td className="px-2 py-1 border text-center">
+                            { gate.create && gate.update && value.penyampaian && !value.penyampaian.status.status ? null : 
+                                <button
+                                    onClick={() => handleSelectItem(value.id, false)}
+                                    className="p-0 bg-red-500 text-white m-0 rounded hover:bg-red-600 cursor-pointer"
+                                    disabled={loadingState[value.id]}
+                                >
+                                    {loadingState[value.id] ? <Loader2 className="animate-spin p-1" size={20} /> : <X size={20} />}
+                                </button>
+                            }
+                        </td>
+                        <td className="px-1 py-1 border">
+                            {selectedItemTabel[value.id] == true ? (
+                                <FormCalendar value={editedData[value.id]?.ya || ""} onChange={(v) => handleChange(value.id, "ya", v, value.nama_wp, value.alamat_objek,value.pajak)} autoOpen={true}
+                                />
+                            ) : selectedItemTabel[value.id] == false ? (
+                                <Combobox label="" selectedValue={editedData[value.id]?.tidak || ""} options={dataPenyampaianKeterangan} onSelect={(v) => handleChange(value.id, "tidak", v, value.nama_wp, value.alamat_objek,value.pajak)} autoOpen={true} />
+                            ) : value.penyampaian?.tipe.value}
+                        </td>
+                        <td className="px-2 py-1 border text-center">
+                            {messages[value.id] && (
+                                <span className={`px-1 rounded text-white ${messages[value.id]?.type ? "bg-green-500" : "bg-red-500"}`}>
+                                    {messages[value.id]?.message}
+                                </span>
+                            )}
+                        </td>
+                    </tr>
+                    ))
+                ) : (!loading ?<NoData colSpan={11}/>: null)}
+                </tbody>
+            </table>
         </div>
     );
 }
