@@ -10,7 +10,7 @@ export default function AppLogo() {
                 <span className="mb-0.5 truncate leading-none font-semibold">
                     {name}
                     <br />
-                    KOTA PEKALONGAN
+                    <span className='text-xs'>KOTA PEKALONGAN</span>
                 </span>
             </div>
         </>

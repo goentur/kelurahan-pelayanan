@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Transaksi\Penyampaian;
+namespace App\Http\Requests\Sppt\Data;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -24,11 +24,11 @@ class DataRequest extends FormRequest
           return [
                'page' => 'required|numeric',
                'perPage' => 'required|numeric|max:100|min:25',
-               'tipe' => 'required|string',
                'jenisBuku' => 'nullable|string',
                'kelurahan' => 'nullable|string',
                'kd_blok' => 'nullable|numeric|digits:3',
                'no_urut' => 'nullable|numeric|digits:4',
+               'nama_wp' => 'nullable|string',
           ];
      }
 }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Sppt;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Transaksi\Penyampaian\DataRequest;
+use App\Http\Requests\Sppt\Data\DataRequest;
 use App\Repositories\Common\JenisBukuRepository;
 use App\Repositories\Sppt\SpptRepository;
 use Illuminate\Routing\Controllers\HasMiddleware;
