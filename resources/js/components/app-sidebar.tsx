@@ -4,7 +4,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { Building, ChartPie, FileSearch, FileText, Key, LayoutGrid, Medal, MonitorCog, NotebookPen, Send, UserCheck, UserRoundCog, Users } from 'lucide-react';
+import { Building, ChartPie, FileSearch, FileText, Key, LayoutDashboard, Medal, MonitorCog, NotebookPen, Send, UserCheck, UserRoundCog } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavDashboard: NavItem[] = [
@@ -13,6 +13,12 @@ const mainNavDashboard: NavItem[] = [
         href: "dashboard.realisasi.index",
         icon: ChartPie,
         permission: 'dashboard-realisasi',
+    },
+    {
+        title: "Penyampaian SPPT",
+        href: "dashboard.penyampaian-sppt.index",
+        icon: LayoutDashboard,
+        permission: 'dashboard-penyampaian-sppt',
     },
 ];
 const mainNavTransaksi: NavItem[] = [

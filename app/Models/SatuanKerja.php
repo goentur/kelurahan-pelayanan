@@ -26,7 +26,7 @@ class SatuanKerja extends Model
 
     public function bawahan()
     {
-        return $this->hasMany(SatuanKerja::class, 'atasan_satuan_kerja_id');
+        return $this->hasMany(SatuanKerja::class, 'atasan_satuan_kerja_id')->orderBy('kode_ref');
     }
 
     public function kecamatan()
@@ -36,7 +36,7 @@ class SatuanKerja extends Model
 
     public function kelurahan()
     {
-        return $this->hasMany(RefKelurahan::class, 'kd_kel_br', 'kode_ref')->where('kd_kecamatan', $this->atasan?->kode_ref);
+        return $this->hasMany(RefKelurahan::class, 'kd_kel_br', 'kode_ref')->where('kd_kecamatan', $this->atasan?->kode_ref)->orderBy('kd_propinsi')->orderBy('kd_dati2')->orderBy('kd_kecamatan')->orderBy('kd_kelurahan');
     }
 
     public function pegawai()
