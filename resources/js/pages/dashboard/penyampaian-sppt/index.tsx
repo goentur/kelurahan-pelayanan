@@ -43,7 +43,6 @@ export default function Index({jenisLapor} : any) {
             setLoading(false);
         }
     };
-    console.log(jenisLapor)
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={title} />
