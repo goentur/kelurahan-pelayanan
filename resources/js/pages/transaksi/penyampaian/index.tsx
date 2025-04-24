@@ -125,6 +125,7 @@ export default function Index({ gate }: IndexProps) {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         infoDataTabel.page = 1
+        infoDataTabel.tipe = 'SEMUA',
         getData()
     };
     return (
