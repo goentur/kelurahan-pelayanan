@@ -9,6 +9,7 @@ Route::middleware(['auth', 'verified'])->prefix('transaksi')->name('transaksi.')
         Route::get('/', 'index')->name('index');
         Route::post('data', 'data')->name('data');
         Route::post('store', 'store')->name('store');
+        Route::post('delete', 'delete')->name('delete');
     });
     Route::prefix('laporan-penyampaian')->name('laporan-penyampaian.')->middleware('can:laporan-penyampaian-index')->controller(LaporanPenyampaianController::class)->group(function () {
         Route::get('/', 'index')->name('index');

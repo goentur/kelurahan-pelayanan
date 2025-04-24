@@ -48,6 +48,7 @@ return (
 					value={value ? format(value, "dd-MM-yyyy") : ""}
 					placeholder={placeholder}
 					ref={inputRef}
+					readOnly
 					{...propss}
 				/>
 			</PopoverTrigger>

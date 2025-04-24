@@ -39,26 +39,7 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: 'transaksi.penyampaian.index',
     },
 ];
-const filterTipe = [
-    {
-        label : 'SEMUA',
-        class : 'bg-cyan-500 hover:bg-cyan-600',
-    },
-    {
-        label : 'BELUM',
-        class : 'bg-orange-500 hover:bg-orange-600',
-    },
-    {
-        label : 'TERSAMPAIKAN',
-        class : 'bg-green-500 hover:bg-green-600',
-    },
-    {
-        label : 'TIDAK',
-        class : 'bg-red-500 hover:bg-red-600',
-    },
-]
-
-export default function Index({ gate, jenisBuku }: IndexProps) {
+export default function Index({ gate }: IndexProps) {
     const title = 'Penyampaian'
     const [loading, setLoading] = useState(false);
     const formRefs = useRef<Record<string, HTMLInputElement | null>>({})
@@ -72,13 +53,13 @@ export default function Index({ gate, jenisBuku }: IndexProps) {
         to: 1,
         total: 0,
         perPage: 25,
-        tipe: 'semua',
+        tipe: 'SEMUA',
     });
     const { data, setData, errors} = useForm({
-        jenisBuku : '',
         kelurahan : '',
         kd_blok : '',
         no_urut : '',
+        nama : '',
     });
 
     useEffect(() => {
@@ -100,10 +81,10 @@ export default function Index({ gate, jenisBuku }: IndexProps) {
                     page: infoDataTabel.page,
                     perPage: infoDataTabel.perPage,
                     tipe: infoDataTabel.tipe,
-                    jenisBuku: data.jenisBuku,
                     kelurahan: data.kelurahan,
                     kd_blok: data.kd_blok,
                     no_urut: data.no_urut,
+                    nama: data.nama,
                 });
                 setDataTable(response.data.data);
                 setLinksPagination(response.data.links);
@@ -158,9 +139,6 @@ export default function Index({ gate, jenisBuku }: IndexProps) {
                         <form onSubmit={handleSubmit} className="mb-4 mx-auto">
                             <div className="grid gap-4 lg:grid-cols-3 md:grid-cols-3">
                                 <div>
-                                    <div className='mb-3'>
-                                        <Combobox label="jenisBuku" selectedValue={data.jenisBuku} options={jenisBuku} onSelect={(value) => setData((prevData:any) => ({ ...prevData, jenisBuku: value }))} error={errors.jenisBuku} />
-                                    </div>
                                     <div>
                                         <Combobox label="kelurahan" selectedValue={data.kelurahan} options={dataBerdasarkanUser} onSelect={(value) => setData((prevData:any) => ({ ...prevData, kelurahan: value }))} error={errors.kelurahan} />
                                     </div>
@@ -171,20 +149,35 @@ export default function Index({ gate, jenisBuku }: IndexProps) {
                                             id="kd_blok"
                                             type="text"
                                             value={data.kd_blok}
-                                            onChange={(e) => setData((prevData: any) => ({ ...prevData, kd_blok: e.target.value }))}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                setData((prevData: any) => ({ ...prevData, kd_blok: value }));
+        
+                                                if (value.length === 3 && formRefs.current?.no_urut) {
+                                                        formRefs.current.no_urut.focus();
+                                                }
+                                            }}
                                             inputRef={(el) => {
                                                 if (formRefs.current) {
-                                                    formRefs.current['kd_blok'] = el;
+                                                        formRefs.current['kd_blok'] = el;
                                                 }
                                             }}
                                             placeholder="Masukkan kd blok"
                                             error={errors.kd_blok}
+                                            maxLength={3}
                                         />
                                         <FormInput
                                             id="no_urut"
                                             type="text"
                                             value={data.no_urut}
-                                            onChange={(e) => setData((prevData: any) => ({ ...prevData, no_urut: e.target.value }))}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                setData((prevData: any) => ({ ...prevData, no_urut: value }));
+        
+                                                if (value.length === 4 && formRefs.current?.nama) {
+                                                        formRefs.current.nama.focus();
+                                                }
+                                            }}
                                             inputRef={(el) => {
                                                 if (formRefs.current) {
                                                     formRefs.current['no_urut'] = el;
@@ -192,38 +185,34 @@ export default function Index({ gate, jenisBuku }: IndexProps) {
                                             }}
                                             placeholder="Masukkan no urut"
                                             error={errors.no_urut}
+                                            maxLength={4}
                                         />
                                     </div>
-                                    <br />
-                                    {filterTipe.map((item: any, index: number) => (
-                                        <button
-                                            type='button'
-                                            onClick={() =>
-                                                setInfoDataTabel((prev: any) => ({ ...prev, page: 1, tipe: item.label }))
-                                            }
-                                            disabled={loading}
-                                            key={index}
-                                            className={`${item.class} m-0.5 p-1 text-xs rounded cursor-pointer disabled:cursor-not-allowed`}
-                                        >
-                                            {item.label}
-                                        </button>
-                                    ))}
                                 </div>
                                 <div>
-                                    <div className='grid gap-2 mb-3'>
-                                        <Label htmlFor='halaman'>Jumlah Perhalaman</Label>
-                                        <PerPageSelect className='w-full' onChange={(value) =>setInfoDataTabel((prev:any) => ({...prev,page: 1,perPage: value}))}/>
-                                    </div>
+                                    <FormInput
+                                        id="nama_wajib_pajak"
+                                        type="text"
+                                        value={data.nama}
+                                        onChange={(e) => setData((prevData: any) => ({ ...prevData, nama: e.target.value }))}
+                                        inputRef={(el) => {
+                                            if (formRefs.current) {
+                                                formRefs.current['nama'] = el;
+                                            }
+                                        }}
+                                        placeholder="Masukkan nama wajib pajak"
+                                        error={errors.nama}
+                                    />
                                     <div className='grid gap-2'>
                                         <Label>&nbsp;</Label>
-                                        <Button type="submit" className='w-full' disabled={loading}>
-                                            {loading ? <Loader2 className="animate-spin" /> : <Search/>} Cari
-                                        </Button>
                                     </div>
                                 </div>
                             </div>
+                            <Button type="submit" disabled={loading}>
+                                {loading ? <Loader2 className="animate-spin" /> : <Search/>} Cari
+                            </Button>
                         </form>
-                        <DataTable gate={gate} dataTable={dataTable} loading={loading} dataPenyampaianKeterangan={dataPenyampaianKeterangan} />
+                        <DataTable gate={gate} dataTable={dataTable} setDataTable={setDataTable} infoDataTabel={infoDataTabel} setInfoDataTabel={setInfoDataTabel} loading={loading} dataPenyampaianKeterangan={dataPenyampaianKeterangan} />
                         <DataTablePagination infoDataTabel={infoDataTabel} setInfoDataTabel={setInfoDataTabel} linksPagination={linksPagination} />
                     </CardContent>
                 </Card>

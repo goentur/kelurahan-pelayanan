@@ -4,7 +4,7 @@ namespace App\Http\Requests\Transaksi\Penyampaian;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class DataRequest extends FormRequest
+class DeleteRequest extends FormRequest
 {
      /**
       * Determine if the user is authorized to make this request.
@@ -22,13 +22,7 @@ class DataRequest extends FormRequest
      public function rules(): array
      {
           return [
-               'page' => 'required|numeric',
-               'perPage' => 'required|numeric|max:100|min:25',
-               'tipe' => 'required|string',
-               'kelurahan' => 'nullable|string',
-               'kd_blok' => 'nullable|numeric|digits:3',
-               'no_urut' => 'nullable|numeric|digits:4',
-               'nama' => 'nullable|string',
+               'id' => 'required|string',
           ];
      }
 }

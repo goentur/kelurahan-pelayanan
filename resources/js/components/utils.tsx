@@ -14,3 +14,28 @@ export const formLabel = (id: string) => {
 export const truncateText = (title: string, status = true,maxLength = 18) => {
     return status && title.length > maxLength ? title.slice(0, maxLength) + ' ...' : title;
 };
+
+export type YearOption = {
+  label: number;
+  value: number;
+};
+
+export const getYearOptions = (
+    maxLength: number = 3,
+    baseYear: number = 2025
+): YearOption[] => {
+    const currentYear = new Date().getFullYear();
+    const years: YearOption[] = [];
+    if (currentYear >= baseYear) {
+        const startYear = Math.max(baseYear, currentYear - maxLength + 1);
+        for (let year = startYear; year <= currentYear; year++) {
+        years.push({
+            label: year,
+            value: year
+        });
+        }
+    }
+    return years;
+};
+
+

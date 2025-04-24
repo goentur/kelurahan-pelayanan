@@ -23,8 +23,8 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Index() {
-    const title = "Realisasi"
+export default function Index({tahun}:any) {
+    const title = "Rekap SPPT PBB-P2 Tahun "+tahun
     const [loading, setLoading] = useState(false);
     const [dataTable, setDataTable] = useState<[]>([]);
     
@@ -55,21 +55,21 @@ export default function Index() {
                         <table className="w-full text-left text-sm border-collapse border">
                             <thead className='text-center'>
                                 <tr className="uppercase leading-normal">
-                                    <th className="p-2 border w-1" rowSpan={2}>BUKU</th>
-                                    <th className="p-2 border" colSpan={2}>BAKU AWAL</th>
-                                    <th className="p-2 border" colSpan={2}>REALISASI PENYAMPAIAN</th>
-                                    <th className="p-2 border" colSpan={2}>BAKU JALAN</th>
-                                    <th className="p-2 border" colSpan={2}>REALISASI PEMBAYARAN</th>
+                                    <th className="p-1 border w-1" rowSpan={2}>BUKU</th>
+                                    <th className="p-1 border" colSpan={2}>KETETAPAN AWAL</th>
+                                    <th className="p-1 border" colSpan={2}>REALISASI PENYAMPAIAN</th>
+                                    <th className="p-1 border" colSpan={2}>SPPT PBB-P2</th>
+                                    <th className="p-1 border" colSpan={2}>REALISASI PEMBAYARAN<br/>BERDASARKAN KETETAPAN</th>
                                 </tr>
-                                <tr className="uppercase leading-normal">
-                                    <th className="p-2 border">OBJEK PAJAK</th>
-                                    <th className="p-2 border w-1">KETETAPAN</th>
-                                    <th className="p-2 border">OBJEK PAJAK</th>
-                                    <th className="p-2 border w-1">KETETAPAN</th>
-                                    <th className="p-2 border">OBJEK PAJAK</th>
-                                    <th className="p-2 border w-1">KETETAPAN</th>
-                                    <th className="p-2 border">OBJEK PAJAK</th>
-                                    <th className="p-2 border w-1">KETETAPAN</th>
+                                <tr className="leading-normal">
+                                    <th className="p-1 border">JUMLAH<br/>OBJEK PAJAK</th>
+                                    <th className="p-1 border w-1">NOMINAL (Rp)</th>
+                                    <th className="p-1 border">JUMLAH<br/>OBJEK PAJAK</th>
+                                    <th className="p-1 border w-1">NOMINAL (Rp)</th>
+                                    <th className="p-1 border">JUMLAH<br/>OBJEK PAJAK</th>
+                                    <th className="p-1 border w-1">NOMINAL (Rp)</th>
+                                    <th className="p-1 border">JUMLAH<br/>OBJEK PAJAK</th>
+                                    <th className="p-1 border w-1">NOMINAL (Rp)</th>
                                 </tr>
                             </thead>
                             <tbody className="font-light">

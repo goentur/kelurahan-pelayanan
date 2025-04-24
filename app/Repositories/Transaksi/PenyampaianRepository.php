@@ -38,9 +38,8 @@ class PenyampaianRepository
                 'kd_kelurahan' => $nop[3],
                 'thn_pajak_sppt' => date('Y'),
             ])
-            ->when(!empty($request->jenisBuku), function ($query) use ($request) {
-                $nominal = $this->jenisBuku->dataNominal($request->jenisBuku);
-                $query->whereBetween('pbb_yg_harus_dibayar_sppt', [$nominal['min'], $nominal['max']]);
+            ->when(!empty($request->nama), function ($query) use ($request) {
+                $query->whereLike('nm_wp_sppt', "%$request->nama%", caseSensitive: false);
             })
             ->when(!empty($request->tipe), function ($query) use ($request) {
                 if ($request->tipe == 'BELUM') {
@@ -140,6 +139,21 @@ class PenyampaianRepository
                 'message' => "GAGAL",
             ];
         }
+    }
+    public function delete($request)
+    {
+        $tahun = date('Y');
+        $nop = explode('.', $request->id);
+        $this->model::select('id')->where([
+            'kd_propinsi' => $nop[0],
+            'kd_dati2' => $nop[1],
+            'kd_kecamatan' => $nop[2],
+            'kd_kelurahan' => $nop[3],
+            'kd_blok' => $nop[4],
+            'no_urut' => $nop[5],
+            'kd_jns_op' => $nop[6],
+            'tahun' => $tahun,
+        ])?->delete();
     }
     public function queryLaporan($request)
     {

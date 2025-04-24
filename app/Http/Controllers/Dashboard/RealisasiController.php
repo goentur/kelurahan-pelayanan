@@ -22,7 +22,8 @@ class RealisasiController extends Controller implements HasMiddleware
 
     public function index()
     {
-        return inertia('dashboard/realisasi/index');
+        $tahun = date('Y');
+        return inertia('dashboard/realisasi/index', compact('tahun'));
     }
 
     public function data()

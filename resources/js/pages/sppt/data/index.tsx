@@ -35,13 +35,13 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: 'sppt.data.index',
     },
     {
-        title: 'SPPT Data',
+        title: 'Data SPPT',
         href: 'sppt.data.index',
     },
 ];
 
-export default function Index({ gate, jenisBuku }: IndexProps) {
-    const title = 'SPPT'
+export default function Index({ gate }: IndexProps) {
+    const title = 'Data SPPT'
     const [loading, setLoading] = useState(false);
     const formRefs = useRef<Record<string, HTMLInputElement | null>>({})
     const [dataTable, setDataTable] = useState<[]>([]);
@@ -126,25 +126,19 @@ export default function Index({ gate, jenisBuku }: IndexProps) {
                         <form onSubmit={handleSubmit} className="mb-4 mx-auto">
                             <div className="grid gap-4 lg:grid-cols-3 md:grid-cols-3">
                                 <div>
-                                    <div className='mb-3'>
-                                        <Combobox label="jenisBuku" selectedValue={data.jenisBuku} options={jenisBuku} onSelect={(value) => setData((prevData:any) => ({ ...prevData, jenisBuku: value }))} error={errors.jenisBuku} />
-                                    </div>
-                                    <div>
-                                        <Combobox
-                                            label="Kelurahan"
-                                            selectedValue={data.kelurahan}
-                                            options={dataBerdasarkanUser}
-                                            onSelect={(value) => {
-                                                setData((prev: any) => ({ ...prev, kelurahan: value }));
-                                                formRefs.current.kd_blok?.focus();
-                                            }}
-                                            error={errors.kelurahan}
-                                        />
-
-                                    </div>
+                                    <Combobox
+                                        label="Kelurahan"
+                                        selectedValue={data.kelurahan}
+                                        options={dataBerdasarkanUser}
+                                        onSelect={(value) => {
+                                            setData((prev: any) => ({ ...prev, kelurahan: value }));
+                                            formRefs.current.kd_blok?.focus();
+                                        }}
+                                        error={errors.kelurahan}
+                                    />
                                 </div>
                                 <div>
-                                    <div className='grid gap-2 lg:grid-cols-2 md:grid-cols-2 mb-3'>
+                                    <div className='grid gap-4 lg:grid-cols-2 md:grid-cols-2 mb-3'>
                                         <FormInput
                                             id="kd_blok"
                                             type="text"
@@ -170,7 +164,14 @@ export default function Index({ gate, jenisBuku }: IndexProps) {
                                             id="no_urut"
                                             type="text"
                                             value={data.no_urut}
-                                            onChange={(e) => setData((prevData: any) => ({ ...prevData, no_urut: e.target.value }))}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                setData((prevData: any) => ({ ...prevData, no_urut: value }));
+        
+                                                if (value.length === 4 && formRefs.current?.nama_wp) {
+                                                        formRefs.current.nama_wp.focus();
+                                                }
+                                            }}
                                             inputRef={(el) => {
                                                 if (formRefs.current) {
                                                     formRefs.current['no_urut'] = el;
@@ -181,6 +182,8 @@ export default function Index({ gate, jenisBuku }: IndexProps) {
                                             maxLength={4}
                                         />
                                     </div>
+                                </div>
+                                <div>
                                     <FormInput
                                         id="nama_wajib_pajak"
                                         type="text"
@@ -195,20 +198,20 @@ export default function Index({ gate, jenisBuku }: IndexProps) {
                                         error={errors.nama_wp}
                                     />
                                 </div>
-                                <div>
-                                    <div className='grid gap-2 mb-3'>
-                                        <Label htmlFor='halaman'>Jumlah Perhalaman</Label>
-                                        <PerPageSelect className='w-full'  onChange={(value) =>setInfoDataTabel((prev:any) => ({...prev,page: 1,perPage: value}))}/>
-                                    </div>
-                                    <div className='grid gap-2'>
-                                        <Label>&nbsp;</Label>
-                                        <Button type="submit" className='w-full' disabled={loading}>
-                                            {loading ? <Loader2 className="animate-spin" /> : <Search/>} Cari
-                                        </Button>
-                                    </div>
-                                </div>
                             </div>
+                            <Button type="submit" disabled={loading}>
+                                {loading ? <Loader2 className="animate-spin" /> : <Search/>} Cari
+                            </Button>
                         </form>
+                        <hr className='mb-2' />
+                        <div className="mb-2 flex justify-end items-center flex-wrap gap-4">
+                            <PerPageSelect
+                                className="w-auto"
+                                onChange={(value) =>
+                                    setInfoDataTabel((prev: any) => ({ ...prev, page: 1, perPage: value }))
+                                }
+                            />
+                        </div>
                         <DataTable dataTable={dataTable} loading={loading} />
                         <DataTablePagination infoDataTabel={infoDataTabel} setInfoDataTabel={setInfoDataTabel} linksPagination={linksPagination} />
                     </CardContent>

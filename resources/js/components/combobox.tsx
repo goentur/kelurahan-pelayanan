@@ -26,6 +26,7 @@ type props = {
     onSelect: (value: string) => void
     error?: string
 	autoOpen?: boolean;
+	[key: string]: any;
 }
 
 export default function Combobox({
@@ -35,6 +36,7 @@ export default function Combobox({
     onSelect,
     error,
     autoOpen,
+    ...propss
 }: props) {
     const [open, setOpen] = useState(false)
 

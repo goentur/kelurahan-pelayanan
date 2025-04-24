@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Transaksi;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Transaksi\Penyampaian\DataRequest;
+use App\Http\Requests\Transaksi\Penyampaian\DeleteRequest;
 use App\Http\Requests\Transaksi\Penyampaian\StoreRequest;
-use App\Repositories\Common\JenisBukuRepository;
-use App\Repositories\Master\SatuanKerja\SatuanKerjaRepository;
+use App\Models\Penyampaian;
 use App\Repositories\Transaksi\PenyampaianRepository;
 use App\Support\Facades\Memo;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -14,19 +14,9 @@ use Illuminate\Routing\Controllers\Middleware;
 
 class PenyampaianController extends Controller implements HasMiddleware
 {
-    protected SatuanKerjaRepository $satKerjrepository;
-    protected PenyampaianRepository $repository;
-    protected JenisBukuRepository $jenisBukuRepository;
-
     public function __construct(
-        SatuanKerjaRepository $satKerjrepository,
-        PenyampaianRepository $repository,
-        JenisBukuRepository $jenisBukuRepository,
-    ) {
-        $this->satKerjrepository = $satKerjrepository;
-        $this->repository = $repository;
-        $this->jenisBukuRepository = $jenisBukuRepository;
-    }
+        protected PenyampaianRepository $repository,
+    ) {}
     public static function middleware(): array
     {
         return [
@@ -49,8 +39,7 @@ class PenyampaianController extends Controller implements HasMiddleware
     public function index()
     {
         $gate = $this->gate();
-        $jenisBuku = $this->jenisBukuRepository->data();
-        return inertia('transaksi/penyampaian/index', compact("gate", "jenisBuku"));
+        return inertia('transaksi/penyampaian/index', compact("gate"));
     }
 
     public function data(DataRequest $request)
@@ -61,5 +50,22 @@ class PenyampaianController extends Controller implements HasMiddleware
     public function store(StoreRequest $request)
     {
         return response()->json($this->repository->simpan($request));
+    }
+
+    public function delete(DeleteRequest $request)
+    {
+        try {
+            $this->repository->delete($request);
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Data berhasil dihapus',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal menghapus data : ' . $e->getMessage(),
+            ], 500);
+        }
     }
 }
