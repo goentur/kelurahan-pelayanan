@@ -205,7 +205,7 @@ export default function DataTable({ gate, dataTable, infoDataTabel, setInfoDataT
                         }
                         disabled={loading || infoDataTabel.tipe == item.label}
                         key={index}
-                        className={`${item.class} p-1 text-xs rounded cursor-pointer disabled:cursor-not-allowed`}
+                        className={`${item.class} p-1 text-xs text-white rounded cursor-pointer disabled:cursor-not-allowed`}
                     >
                         {item.label}
                     </button>
