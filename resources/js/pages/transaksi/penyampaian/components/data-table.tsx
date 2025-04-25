@@ -184,10 +184,10 @@ export default function DataTable({ gate, dataTable, infoDataTabel, setInfoDataT
             <ul className="mb-2 list-disc list-inside bg-blue-200 p-2 text-black rounded">
                 <li>Pilih data yang ingin diperbarui.</li>
                 <li>
-                    Tentukan status penyampaian dengan memilih <button className="p-0 bg-green-500 text-white m-0 rounded hover:bg-green-600"><Check size={18} /></button> atau <button className="p-0 bg-red-500 text-white m-0 rounded hover:bg-red-600"><X size={18} /></button>:
+                    Tentukan status penyampaian dengan memilih <button className="p-0.5 text-[12px] bg-green-500 text-white m-0 rounded hover:bg-green-600">YA</button> atau <button className="p-0.5 text-[12px] bg-red-500 text-white m-0 rounded hover:bg-red-600">TIDAK</button>:
                     <ul className="ml-4 list-disc list-inside">
-                        <li>Jika memilih <button className="p-0 bg-green-500 text-white m-0 rounded hover:bg-green-600"><Check size={18} /></button>, pilih tanggal penyampaian pada kolom keterangan.</li>
-                        <li>Jika memilih <button className="p-0 bg-red-500 text-white m-0 rounded hover:bg-red-600"><X size={18} /></button>, pilih alasan yang sesuai pada kolom keterangan.</li>
+                        <li>Jika memilih <button className="p-0.5 text-[12px] bg-green-500 text-white m-0 rounded hover:bg-green-600">YA</button>, pilih tanggal penyampaian pada kolom keterangan.</li>
+                        <li>Jika memilih <button className="p-0.5 text-[12px] bg-red-500 text-white m-0 rounded hover:bg-red-600">TIDAK</button>, pilih alasan yang sesuai pada kolom keterangan.</li>
                     </ul>
                 </li>
             </ul>
