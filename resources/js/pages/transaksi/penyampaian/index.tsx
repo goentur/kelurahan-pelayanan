@@ -213,7 +213,7 @@ export default function Index({ gate }: IndexProps) {
                                 {loading ? <Loader2 className="animate-spin" /> : <Search/>} Cari
                             </Button>
                         </form>
-                        <DataTable gate={gate} dataTable={dataTable} setDataTable={setDataTable} infoDataTabel={infoDataTabel} setInfoDataTabel={setInfoDataTabel} loading={loading} dataPenyampaianKeterangan={dataPenyampaianKeterangan} />
+                        <DataTable gate={gate} dataTable={dataTable} infoDataTabel={infoDataTabel} setInfoDataTabel={setInfoDataTabel} loading={loading} dataPenyampaianKeterangan={dataPenyampaianKeterangan} />
                         <DataTablePagination infoDataTabel={infoDataTabel} setInfoDataTabel={setInfoDataTabel} linksPagination={linksPagination} />
                     </CardContent>
                 </Card>

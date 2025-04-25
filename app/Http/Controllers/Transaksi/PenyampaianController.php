@@ -56,7 +56,6 @@ class PenyampaianController extends Controller implements HasMiddleware
     {
         try {
             $this->repository->delete($request);
-
             return response()->json([
                 'status' => true,
                 'message' => 'Data berhasil dihapus',
