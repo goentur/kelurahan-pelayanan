@@ -70,7 +70,6 @@ export default function FormDialog({
                                 }}
                                 placeholder="Masukkan nip"
                                 error={errors.nip}
-                                required
                             />
                             <FormInput
                                 id="nama"
