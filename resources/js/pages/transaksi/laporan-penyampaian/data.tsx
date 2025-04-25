@@ -43,8 +43,8 @@ export default function Data({jenisLapor}:dataProps) {
     const [linksPagination, setLinksPagination] = useState([]);
     const [infoDataTabel, setInfoDataTabel] = useState({
         page: 1,
-        from: 1,
-        to: 1,
+        from: 0,
+        to: 0,
         total: 0,
         perPage: 25,
     });

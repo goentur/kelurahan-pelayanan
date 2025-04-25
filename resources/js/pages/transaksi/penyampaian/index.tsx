@@ -49,8 +49,8 @@ export default function Index({ gate }: IndexProps) {
     const [linksPagination, setLinksPagination] = useState([]);
     const [infoDataTabel, setInfoDataTabel] = useState({
         page: 1,
-        from: 1,
-        to: 1,
+        from: 0,
+        to: 0,
         total: 0,
         perPage: 25,
         tipe: 'SEMUA',
