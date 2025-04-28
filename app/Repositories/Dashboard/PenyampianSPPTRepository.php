@@ -17,71 +17,71 @@ class PenyampianSPPTRepository
      public function data()
      {
           $user = auth()->user();
-          // return Memo::for3min('tabel-dashboard-penyampaian-sppt-' . $user->id, function () {
-          $satuanKerjas = SatuanKerja::with('bawahan')->whereNull('atasan_satuan_kerja_id')->get();
-          $jenisLapor = JenisLapor::select('id', 'nama')->where('jenis', PenyampaianTipe::TERSAMPAIKAN)->orderBy('no_urut')->get();
+          return Memo::for3min('tabel-dashboard-penyampaian-sppt-' . $user->id, function () {
+               $satuanKerjas = SatuanKerja::with('bawahan')->whereNull('atasan_satuan_kerja_id')->get();
+               $jenisLapor = JenisLapor::select('id', 'nama')->where('jenis', PenyampaianTipe::TERSAMPAIKAN)->orderBy('no_urut')->get();
 
-          $jenisLaporFields = [];
-          foreach ($jenisLapor as $lapor) {
-               $jenisLaporFields[$lapor->id] = 0;
-          }
-
-          $dataAtasan = [];
-
-          foreach ($satuanKerjas as $satuanKerja) {
-               $dataBawahan = [];
-               $baku = 0;
-
-               $rekapLaporAtasan = $jenisLaporFields;
-               $n = 1;
-               foreach ($satuanKerja->bawahan as $bawahan) {
-                    $dataBawahanBaku = $this->baku($bawahan->kelurahan);
-
-                    $rekapLaporBawahan = $jenisLaporFields;
-                    $jenisLaporIds = $jenisLapor->pluck('id')->toArray();
-                    $penyampaianData = $this->penyampaian($jenisLaporIds, $bawahan->user_id);
-
-                    $rekapLaporBawahan = [];
-                    foreach ($jenisLaporIds as $id) {
-                         $rekapLaporBawahan[$id] = $penyampaianData[$id] ?? 0;
-                    }
-
-                    $totalBawahan = array_sum($rekapLaporBawahan);
-                    $sisaBawahan = $dataBawahanBaku - $totalBawahan;
-                    $persenBawahan = $dataBawahanBaku > 0 ? round(($totalBawahan / $dataBawahanBaku) * 100, 2) : 0;
-
-                    $dataBawahan[] = array_merge([
-                         'kode' => $n++,
-                         'nama' => $bawahan->nama,
-                         'baku' => $dataBawahanBaku,
-                         'total' => $totalBawahan,
-                         'sisa' => $sisaBawahan,
-                         'persen' => $persenBawahan,
-                    ], $rekapLaporBawahan);
-
-                    foreach ($rekapLaporBawahan as $key => $val) {
-                         $rekapLaporAtasan[$key] += $val;
-                    }
-
-                    $baku += $dataBawahanBaku;
+               $jenisLaporFields = [];
+               foreach ($jenisLapor as $lapor) {
+                    $jenisLaporFields[$lapor->id] = 0;
                }
 
-               $totalAtasan = array_sum($rekapLaporAtasan);
-               $sisaAtasan = $baku - $totalAtasan;
-               $persenAtasan = $baku > 0 ? round(($totalAtasan / $baku) * 100, 2) : 0;
+               $dataAtasan = [];
 
-               $dataAtasan[] = array_merge([
-                    'kode' => $satuanKerja->kode_ref,
-                    'nama' => $satuanKerja->nama,
-                    'baku' => $baku,
-                    'total' => $totalAtasan,
-                    'sisa' => $sisaAtasan,
-                    'persen' => $persenAtasan,
-                    'bawahan' => $dataBawahan,
-               ], $rekapLaporAtasan);
-          }
-          return $dataAtasan;
-          // });
+               foreach ($satuanKerjas as $satuanKerja) {
+                    $dataBawahan = [];
+                    $baku = 0;
+
+                    $rekapLaporAtasan = $jenisLaporFields;
+                    $n = 1;
+                    foreach ($satuanKerja->bawahan as $bawahan) {
+                         $dataBawahanBaku = $this->baku($bawahan->kelurahan);
+
+                         $rekapLaporBawahan = $jenisLaporFields;
+                         $jenisLaporIds = $jenisLapor->pluck('id')->toArray();
+                         $penyampaianData = $this->penyampaian($jenisLaporIds, $bawahan->user_id);
+
+                         $rekapLaporBawahan = [];
+                         foreach ($jenisLaporIds as $id) {
+                              $rekapLaporBawahan[$id] = $penyampaianData[$id] ?? 0;
+                         }
+
+                         $totalBawahan = array_sum($rekapLaporBawahan);
+                         $sisaBawahan = $dataBawahanBaku - $totalBawahan;
+                         $persenBawahan = $dataBawahanBaku > 0 ? round(($totalBawahan / $dataBawahanBaku) * 100, 2) : 0;
+
+                         $dataBawahan[] = array_merge([
+                              'kode' => $n++,
+                              'nama' => $bawahan->nama,
+                              'baku' => $dataBawahanBaku,
+                              'total' => $totalBawahan,
+                              'sisa' => $sisaBawahan,
+                              'persen' => $persenBawahan,
+                         ], $rekapLaporBawahan);
+
+                         foreach ($rekapLaporBawahan as $key => $val) {
+                              $rekapLaporAtasan[$key] += $val;
+                         }
+
+                         $baku += $dataBawahanBaku;
+                    }
+
+                    $totalAtasan = array_sum($rekapLaporAtasan);
+                    $sisaAtasan = $baku - $totalAtasan;
+                    $persenAtasan = $baku > 0 ? round(($totalAtasan / $baku) * 100, 2) : 0;
+
+                    $dataAtasan[] = array_merge([
+                         'kode' => $satuanKerja->kode_ref,
+                         'nama' => $satuanKerja->nama,
+                         'baku' => $baku,
+                         'total' => $totalAtasan,
+                         'sisa' => $sisaAtasan,
+                         'persen' => $persenAtasan,
+                         'bawahan' => $dataBawahan,
+                    ], $rekapLaporAtasan);
+               }
+               return $dataAtasan;
+          });
      }
      protected function baku($kelurahans)
      {

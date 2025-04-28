@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Repositories\Dashboard;
+namespace App\Repositories\Dashboard\Realisasi;
 
 use App\Models\BakuAwal;
 use App\Models\Penyampaian;
+use App\Models\SatuanKerja;
 use App\Models\Sppt;
 use App\Repositories\Common\JenisBukuRepository;
 use App\Repositories\Master\SatuanKerja\SatuanKerjaRepository;

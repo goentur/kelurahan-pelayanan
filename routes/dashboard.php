@@ -9,6 +9,7 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard.')
         Route::middleware('can:dashboard-realisasi')->controller(RealisasiController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::post('/', 'data')->name('data');
+            Route::post('data/per-kelurahan', 'dataPerKelurahan')->name('data-per-kelurahan');
         });
     });
     Route::prefix('penyampaian-sppt')->name('penyampaian-sppt.')->group(function () {
