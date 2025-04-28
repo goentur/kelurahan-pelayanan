@@ -6,7 +6,7 @@ import FormCalendar from "@/components/form-calendar";
 import { alertApp } from "@/components/utils";
 import { InfoDataTabel } from "@/types";
 import axios from "axios";
-import { Check, Loader2, Trash2, X } from 'lucide-react';
+import { Loader2, Trash2 } from 'lucide-react';
 import { useEffect, useState } from "react";
 import Delete from "./delete";
 
@@ -211,7 +211,6 @@ export default function DataTable({ gate, dataTable, infoDataTabel, setInfoDataT
                 </div>
                 <div className="flex flex-col gap-2">
                     <PerPageSelect
-                        className="w-auto"
                         onChange={(value) =>
                             setInfoDataTabel((prev: any) => ({ ...prev, page: 1, perPage: value }))
                         }

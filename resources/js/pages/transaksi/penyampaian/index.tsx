@@ -1,6 +1,5 @@
 import Combobox from '@/components/combobox'
 import DataTablePagination from '@/components/data-table/pagination'
-import PerPageSelect from '@/components/data-table/per-page-select'
 import FormInput from '@/components/form-input'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -18,6 +17,7 @@ type IndexProps = {
     gate: {
         create : boolean,
         update : boolean,
+        delete : boolean,
     };
     jenisBuku : {
         value : string,

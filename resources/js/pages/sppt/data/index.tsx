@@ -4,7 +4,6 @@ import PerPageSelect from '@/components/data-table/per-page-select'
 import FormInput from '@/components/form-input'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
 import { alertApp } from '@/components/utils'
 import AppLayout from '@/layouts/app-layout'
 import { BreadcrumbItem } from '@/types'
@@ -206,7 +205,6 @@ export default function Index({ gate }: IndexProps) {
                         <hr className='mb-2' />
                         <div className="mb-2 flex justify-end items-center flex-wrap gap-4">
                             <PerPageSelect
-                                className="w-auto"
                                 onChange={(value) =>
                                     setInfoDataTabel((prev: any) => ({ ...prev, page: 1, perPage: value }))
                                 }
