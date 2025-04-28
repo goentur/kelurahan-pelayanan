@@ -34,7 +34,7 @@ class SatuanKerjaRepository
      }
      public function data($request)
      {
-          $query = $this->model::select('id', 'user_id', 'atasan_satuan_kerja_id', 'nama', 'kode_ref');
+          $query = $this->model::with('user')->select('id', 'user_id', 'atasan_satuan_kerja_id', 'nama', 'kode_ref');
           if ($request->search) {
                $query->where('nama', 'like', "%{$request->search}%")
                     ->orWhereHas('atasan', fn($q) => $q->where('nama', 'like', "%{$request->search}%"));
@@ -57,7 +57,7 @@ class SatuanKerjaRepository
                     'kode_ref' => $request->kode_ref,
                     'nama' => $request->nama,
                ]);
-               $user->assignRole("SATUAN-KERJA");
+               $user->assignRole($request->role);
                DB::commit();
           } catch (\Exception $e) {
                DB::rollBack();
@@ -78,6 +78,7 @@ class SatuanKerjaRepository
                $user->update([
                     'name' => $request->nama,
                ]);
+               $user->syncRoles($request->role);
                DB::commit();
           } catch (\Exception $e) {
                DB::rollBack();

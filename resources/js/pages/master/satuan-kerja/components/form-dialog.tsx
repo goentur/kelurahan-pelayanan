@@ -1,6 +1,7 @@
 import Combobox from '@/components/combobox'
 import FormInput from '@/components/form-input'
 import InfoPassword from '@/components/info-password'
+import InputError from '@/components/input-error'
 import { Button } from '@/components/ui/button'
 import {
     Dialog,
@@ -10,7 +11,16 @@ import {
     DialogHeader,
     DialogTitle
 } from '@/components/ui/dialog'
+import { Label } from '@/components/ui/label'
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 import { Loader2, Save } from 'lucide-react'
+
 type props = {
     open: boolean
     setOpen: (open: boolean) => void
@@ -24,6 +34,16 @@ type props = {
     handleForm: (e: React.FormEvent) => void
     dataAtasanSatuanKerja: { value: string; label: string }[]
 }
+const dataRoles = [
+    {
+        'value' : 'KECAMATAN',
+        'label' : 'KECAMATAN',
+    },
+    {
+        'value' : 'KELURAHAN',
+        'label' : 'KELURAHAN',
+    },
+]
 export default function FormDialog({
     open,
     setOpen,
@@ -124,7 +144,26 @@ export default function FormDialog({
                                 required
                             />
                             <Combobox label="atasanSatuanKerja" selectedValue={data.atasan_satuan_kerja} options={dataAtasanSatuanKerja} onSelect={(value) => setData((prevData:any) => ({ ...prevData, atasan_satuan_kerja: value }))} error={errors.atasan_satuan_kerja} />
+                            <div className="grid">
+                                <Label htmlFor="role" className="capitalize mb-2">
+                                    role
+                                </Label>
+                                <Select value={data.role} onValueChange={(value) => setData({ ...data, role: value })}>
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Pilih role" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {dataRoles.map((role) => (
+                                        <SelectItem key={role.value} value={role.value}>
+                                            {role.label}
+                                        </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <InputError message={errors.role} />
+                            </div>
                         </div>
+                        
                     </div>
                     <DialogFooter>
                         <div className="flex items-center mt-5">

@@ -44,7 +44,7 @@ return (
 				<Input
 					id={id}
 					type="text"
-					className="cursor-pointer text-end mt-1 block w-full"
+					className="text-end mt-1 block w-full"
 					value={value ? format(value, "dd-MM-yyyy") : ""}
 					placeholder={placeholder}
 					ref={inputRef}

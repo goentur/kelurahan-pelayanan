@@ -59,7 +59,7 @@ export default function DataTable({
                                 <DropdownMenu>
                                     <DropdownMenuTrigger className='px-2 py-1 cursor-pointer'><Ellipsis/></DropdownMenuTrigger>
                                     <DropdownMenuContent align='end'>
-                                        {gate.update && <DropdownMenuItem onClick={() => {setForm(true), setIsEdit(true), setData({ id:value.id, email:value.email, nama:value.nama, kode_ref:value.kode_ref, atasan_satuan_kerja:value.atasan_satuan_kerja?.id})}}><Pencil/> Ubah</DropdownMenuItem>}
+                                        {gate.update && <DropdownMenuItem onClick={() => {setForm(true), setIsEdit(true), setData({ id:value.id, email:value.email, nama:value.nama, kode_ref:value.kode_ref, atasan_satuan_kerja:value.atasan_satuan_kerja?.id,role:value.role})}}><Pencil/> Ubah</DropdownMenuItem>}
                                         {gate.delete && <DropdownMenuItem onClick={() => {setHapus(true), setData({id:value.id,})}}><BadgeX/> Hapus</DropdownMenuItem>}
                                     </DropdownMenuContent>
                                 </DropdownMenu>

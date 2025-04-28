@@ -22,7 +22,8 @@ class PenyampaianController extends Controller implements HasMiddleware
         return [
             new Middleware('can:penyampaian-index', only: ['index', 'data']),
             new Middleware('can:penyampaian-create', only: ['store']),
-            new Middleware('can:penyampaian-update', only: ['update'])
+            new Middleware('can:penyampaian-update', only: ['store']),
+            new Middleware('can:penyampaian-delete', only: ['delete'])
         ];
     }
     private function gate(): array
@@ -32,6 +33,7 @@ class PenyampaianController extends Controller implements HasMiddleware
             return [
                 'create' => $user->can('penyampaian-create'),
                 'update' => $user->can('penyampaian-update'),
+                'delete' => $user->can('penyampaian-delete'),
             ];
         });
     }

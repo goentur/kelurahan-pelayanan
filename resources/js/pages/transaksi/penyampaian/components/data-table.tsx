@@ -14,6 +14,7 @@ type DataTableProps = {
     gate: {
         create: boolean;
         update: boolean;
+        delete: boolean;
     };
     dataTable: any[];
     infoDataTabel: InfoDataTabel;
@@ -102,53 +103,51 @@ export default function DataTable({ gate, dataTable, infoDataTabel, setInfoDataT
     }
 
     const deleteItem = async () => {
-    if (!dataYangDihapus) return;
+        if (!dataYangDihapus) return;
+        const id = dataYangDihapus;
+        setLoadingDeletePerItem((prev) => ({ ...prev, [id]: true }));
+        setLoadingDelete(true)
+        try {
+            const response = await axios.post(route('transaksi.penyampaian.delete'), { id });
 
-    const id = dataYangDihapus;
-    setLoadingDeletePerItem((prev) => ({ ...prev, [id]: true }));
-    setLoadingDelete(true)
+            if (response.data.status) {
+                setDeleteData((prev) => ({ ...prev, [id]: true }));
 
-    try {
-        const response = await axios.post(route('transaksi.penyampaian.delete'), { id });
+                setEditedData((prev) => {
+                    const newData = { ...prev };
+                    delete newData[id];
+                    return newData;
+                });
 
-        if (response.data.status) {
-            setDeleteData((prev) => ({ ...prev, [id]: true }));
+                setTipe((prev) => {
+                    const newTipe = { ...prev };
+                    delete newTipe[id];
+                    return newTipe;
+                });
 
-            setEditedData((prev) => {
-                const newData = { ...prev };
-                delete newData[id];
-                return newData;
-            });
+                setMessages((prev) => {
+                    const newMessages = { ...prev };
+                    delete newMessages[id];
+                    return newMessages;
+                });
 
-            setTipe((prev) => {
-                const newTipe = { ...prev };
-                delete newTipe[id];
-                return newTipe;
-            });
+                setSelectedItemTabel((prev) => {
+                    const newSelection = { ...prev };
+                    delete newSelection[id];
+                    return newSelection;
+                });
 
-            setMessages((prev) => {
-                const newMessages = { ...prev };
-                delete newMessages[id];
-                return newMessages;
-            });
-
-            setSelectedItemTabel((prev) => {
-                const newSelection = { ...prev };
-                delete newSelection[id];
-                return newSelection;
-            });
-
-            alertApp(response.data.message);
+                alertApp(response.data.message);
+            }
+        } catch (error: any) {
+            alertApp(error.message, "error");
+        } finally {
+            setLoadingDelete(false)
+            setLoadingDeletePerItem((prev) => ({ ...prev, [id]: false }));
+            setHapus(false);
+            setDataYangDihapus(undefined);
         }
-    } catch (error: any) {
-        alertApp(error.message, "error");
-    } finally {
-        setLoadingDelete(false)
-        setLoadingDeletePerItem((prev) => ({ ...prev, [id]: false }));
-        setHapus(false);
-        setDataYangDihapus(undefined);
-    }
-};
+    };
 
     useEffect(() => {
         dataTable.forEach((value: any) => {
@@ -178,7 +177,6 @@ export default function DataTable({ gate, dataTable, infoDataTabel, setInfoDataT
             }
         });
     }, [dataTable]);
-
     return (
         <div>
             <ul className="mb-2 list-disc list-inside bg-blue-200 p-2 text-black rounded">
@@ -252,7 +250,7 @@ export default function DataTable({ gate, dataTable, infoDataTabel, setInfoDataT
                             )}
                         </td>
                         <td className="border w-1 text-center">
-                            { gate.create && gate.update && value.penyampaian && !value.penyampaian.status.status && !deleteData[value.id] ? null : 
+                            { (gate.create || gate.update) && value.penyampaian && value.penyampaian.status.status && !deleteData[value.id] && (
                                 <button
                                     type="button"
                                     onClick={() => handleSelectItem(value.id, true)}
@@ -261,10 +259,10 @@ export default function DataTable({ gate, dataTable, infoDataTabel, setInfoDataT
                                 >
                                     {loadingState[value.id] ? <Loader2 className="animate-spin p-1" size={20} /> : 'YA'}
                                 </button>
-                            }
+                            )}
                         </td>
                         <td className="border w-1 text-center">
-                            { gate.create && gate.update && value.penyampaian && !value.penyampaian.status.status && !deleteData[value.id] ? null : 
+                            { (gate.create || gate.update) && value.penyampaian && value.penyampaian.status.status && !deleteData[value.id] && ( 
                                 <button
                                     type="button"
                                     onClick={() => handleSelectItem(value.id, false)}
@@ -273,15 +271,29 @@ export default function DataTable({ gate, dataTable, infoDataTabel, setInfoDataT
                                 >
                                     {loadingState[value.id] ? <Loader2 className="animate-spin p-1" size={20} /> : 'TIDAK'}
                                 </button>
-                            }
+                            )}
                         </td>
                         <td className="px-1 py-1 border">
                             {selectedItemTabel[value.id] == true ? (
-                                <FormCalendar value={editedData[value.id]?.ya || ""} onChange={(v) => handleChange(value.id, "ya", v, value.nama_wp, value.alamat_objek,value.pajak)} autoOpen={true} disabled={loadingDeletePerItem[value.id]} placeholder="Pilih tanggal"
+                                <FormCalendar
+                                    value={editedData[value.id]?.ya || ""}
+                                    onChange={(v) => handleChange(value.id, "ya", v, value.nama_wp, value.alamat_objek, value.pajak)}
+                                    autoOpen={true}
+                                    disabled={!gate.create || !gate.update || loadingDeletePerItem[value.id]}
+                                    placeholder="Pilih tanggal"
                                 />
                             ) : selectedItemTabel[value.id] == false ? (
-                                <Combobox label="" selectedValue={editedData[value.id]?.tidak || ""} options={dataPenyampaianKeterangan} onSelect={(v) => handleChange(value.id, "tidak", v, value.nama_wp, value.alamat_objek,value.pajak)} autoOpen={true} disabled={loadingDeletePerItem[value.id]} />
-                            ) : (!deleteData[value.id] && value.penyampaian?.tipe.value)}
+                                <Combobox
+                                    label=""
+                                    selectedValue={editedData[value.id]?.tidak || ""}
+                                    options={dataPenyampaianKeterangan}
+                                    onSelect={(v) => handleChange(value.id, "tidak", v, value.nama_wp, value.alamat_objek, value.pajak)}
+                                    autoOpen={true}
+                                    disabled={!gate.create || !gate.update || loadingDeletePerItem[value.id]}
+                                />
+                            ) : (
+                                !deleteData[value.id] && value.penyampaian?.tipe.value
+                            )}
                         </td>
                         <td className="px-2 py-1 border text-center">
                             {messages[value.id] && (
@@ -291,7 +303,7 @@ export default function DataTable({ gate, dataTable, infoDataTabel, setInfoDataT
                             )}
                         </td>
                         <td className="px-2 py-1 border text-center">
-                            {messages[value.id] && messages[value.id]?.type && (
+                            {gate.delete && messages[value.id] && messages[value.id]?.type && (
                                 <button
                                     type="button"
                                     onClick={() => handleDeleteItem(value.id)}

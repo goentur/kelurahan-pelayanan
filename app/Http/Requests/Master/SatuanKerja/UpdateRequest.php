@@ -25,8 +25,9 @@ class UpdateRequest extends FormRequest
     {
         return [
             'nama' => 'required|string|max:255',
-            'kode_ref' => 'nullable|numeric',
+            'kode_ref' => 'required|numeric',
             'atasan_satuan_kerja' => 'nullable|string|uuid|' . Rule::exists(SatuanKerja::class, 'id'),
+            'role' => 'required|in:KECAMATAN,KELURAHAN',
         ];
     }
 }

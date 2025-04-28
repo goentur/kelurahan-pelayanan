@@ -31,6 +31,7 @@ class SatuanKerjaResource extends JsonResource
                ),
                'kode_ref' => $this->kode_ref,
                'nama' => $this->nama,
+               'role' => $this->user->getRoleNames()[0],
           ];
      }
 }
