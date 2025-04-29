@@ -22,57 +22,56 @@ class RealisasiPerKelurahanRepository
      public function data()
      {
           $user = auth()->user();
-          // return Memo::for3min('tabel-dashboard-realisasi-perkelurahan-' . $user->id, function () {
-          $satuanKerjas = SatuanKerja::with('bawahan')->when(
-               $user->satuanKerja,
-               fn($query) => $query->where('user_id', $user->id),
-               fn($query) => $query->whereNull('atasan_satuan_kerja_id')
-          )->get();
+          return Memo::for3min('tabel-dashboard-realisasi-perkelurahan-' . $user->id, function () use ($user) {
+               $satuanKerjas = SatuanKerja::with('bawahan')->when(
+                    $user->satuanKerja,
+                    fn($query) => $query->where('user_id', $user->id),
+                    fn($query) => $query->whereNull('atasan_satuan_kerja_id')
+               )->get();
 
-          $dataAtasan = [];
+               $dataAtasan = [];
 
-          foreach ($satuanKerjas as $satuanKerja) {
-               $dataBawahan = [];
-               $totalsAtasan = $this->initTotals();
+               foreach ($satuanKerjas as $satuanKerja) {
+                    $dataBawahan = [];
+                    $totalsAtasan = $this->initTotals();
 
-               foreach ($satuanKerja->bawahan as $bawahan) {
-                    $dataKelurahan = [];
-                    $totalsBawahan = $this->initTotals();
+                    foreach ($satuanKerja->bawahan as $bawahan) {
+                         $dataKelurahan = [];
+                         $totalsBawahan = $this->initTotals();
 
-                    foreach ($bawahan->kelurahan as $kelurahan) {
-                         $data = [
-                              'bakuAwal' => $this->bakuAwal($kelurahan),
-                              'sppt' => $this->sppt($kelurahan),
-                              'penyampaian' => $this->penyampaian($kelurahan),
-                              'pembayaran' => $this->pembayaran($kelurahan),
-                         ];
+                         foreach ($bawahan->kelurahan as $kelurahan) {
+                              $data = [
+                                   'bakuAwal' => $this->bakuAwal($kelurahan),
+                                   'sppt' => $this->sppt($kelurahan),
+                                   'penyampaian' => $this->penyampaian($kelurahan),
+                                   'pembayaran' => $this->pembayaran($kelurahan),
+                              ];
 
-                         foreach ($data as $key => $value) {
-                              $totalsBawahan[$key]['jumlah'] += $value->jumlah;
-                              $totalsBawahan[$key]['sppt'] += $value->sppt;
+                              foreach ($data as $key => $value) {
+                                   $totalsBawahan[$key]['jumlah'] += $value->jumlah;
+                                   $totalsBawahan[$key]['sppt'] += $value->sppt;
+                              }
+
+                              $dataKelurahan[$kelurahan->kd_kecamatan . '-' . $kelurahan->kd_kelurahan] = $this->formatData($kelurahan->nm_kelurahan, $data);
                          }
 
-                         $dataKelurahan[$kelurahan->kd_kecamatan . '-' . $kelurahan->kd_kelurahan] = $this->formatData($kelurahan->nm_kelurahan, $data);
+                         $this->sumTotals($totalsAtasan, $totalsBawahan);
+
+                         $dataBawahan[$bawahan->id] = [
+                              'nama' => $bawahan->nama,
+                              ...$this->formatTotals($totalsBawahan),
+                              'kelurahan' => $dataKelurahan,
+                         ];
                     }
 
-                    $this->sumTotals($totalsAtasan, $totalsBawahan);
-
-                    $dataBawahan[$bawahan->id] = [
-                         'nama' => $bawahan->nama,
-                         ...$this->formatTotals($totalsBawahan),
-                         'kelurahan' => $dataKelurahan,
+                    $dataAtasan[$satuanKerja->id] = [
+                         'nama' => $satuanKerja->nama,
+                         ...$this->formatTotals($totalsAtasan),
+                         'bawahan' => $dataBawahan,
                     ];
                }
-
-               $dataAtasan[$satuanKerja->id] = [
-                    'nama' => $satuanKerja->nama,
-                    ...$this->formatTotals($totalsAtasan),
-                    'bawahan' => $dataBawahan,
-               ];
-          }
-
-          return $dataAtasan;
-          // });
+               return $dataAtasan;
+          });
      }
 
      protected function whereNOP($query, $satuanKerja, $tahunColumn = 'thn_pajak_sppt')
@@ -154,6 +153,14 @@ class RealisasiPerKelurahanRepository
           }
      }
 
+     function calculatePercentage($current, $total)
+     {
+          if ($total == 0) {
+               return 0;
+          }
+          return round(($current / $total) * 100, 2);
+     }
+
      function formatTotals($totals)
      {
           return [
@@ -173,6 +180,8 @@ class RealisasiPerKelurahanRepository
                     'jumlah' => Helpers::ribuan($totals['pembayaran']['jumlah']),
                     'sppt' => Helpers::ribuan($totals['pembayaran']['sppt']),
                ],
+               'persenPenyampaian' => $this->calculatePercentage($totals['penyampaian']['jumlah'], $totals['bakuAwal']['jumlah']),
+               'persenSppt' => $this->calculatePercentage($totals['pembayaran']['sppt'], $totals['sppt']['sppt']),
           ];
      }
 
@@ -196,6 +205,8 @@ class RealisasiPerKelurahanRepository
                     'jumlah' => Helpers::ribuan($data['pembayaran']->jumlah),
                     'sppt' => Helpers::ribuan($data['pembayaran']->sppt),
                ],
+               'persenPenyampaian' => $this->calculatePercentage($data['penyampaian']->jumlah, $data['bakuAwal']->jumlah),
+               'persenSppt' => $this->calculatePercentage($data['pembayaran']->sppt, $data['sppt']->sppt),
           ];
      }
 }
