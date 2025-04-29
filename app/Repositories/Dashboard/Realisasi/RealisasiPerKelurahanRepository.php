@@ -30,6 +30,7 @@ class RealisasiPerKelurahanRepository
                )->get();
 
                $dataAtasan = [];
+               $finalTotals = $this->initTotals();
 
                foreach ($satuanKerjas as $satuanKerja) {
                     $dataBawahan = [];
@@ -64,12 +65,18 @@ class RealisasiPerKelurahanRepository
                          ];
                     }
 
+                    $this->sumTotals($finalTotals, $totalsAtasan);
+
                     $dataAtasan[$satuanKerja->id] = [
                          'nama' => $satuanKerja->nama,
                          ...$this->formatTotals($totalsAtasan),
                          'bawahan' => $dataBawahan,
                     ];
                }
+               $dataAtasan['_total'] = [
+                    'nama' => 'TOTAL KESELURUHAN',
+                    ...$this->formatTotals($finalTotals),
+               ];
                return $dataAtasan;
           });
      }
@@ -163,6 +170,14 @@ class RealisasiPerKelurahanRepository
 
      function formatTotals($totals)
      {
+          $penyampaianPersen = $totals['bakuAwal']['jumlah'] > 0
+               ? round(($totals['penyampaian']['jumlah'] / $totals['bakuAwal']['jumlah']) * 100, 2)
+               : 0;
+
+          $pembayaranPersen = $totals['sppt']['sppt'] > 0
+               ? round(($totals['pembayaran']['sppt'] / $totals['sppt']['sppt']) * 100, 2)
+               : 0;
+
           return [
                'bakuAwal' => [
                     'jumlah' => Helpers::ribuan($totals['bakuAwal']['jumlah']),
@@ -171,6 +186,7 @@ class RealisasiPerKelurahanRepository
                'penyampaian' => [
                     'jumlah' => Helpers::ribuan($totals['penyampaian']['jumlah']),
                     'sppt' => Helpers::ribuan($totals['penyampaian']['sppt']),
+                    'persen' => $penyampaianPersen,
                ],
                'sppt' => [
                     'jumlah' => Helpers::ribuan($totals['sppt']['jumlah']),
@@ -179,14 +195,21 @@ class RealisasiPerKelurahanRepository
                'pembayaran' => [
                     'jumlah' => Helpers::ribuan($totals['pembayaran']['jumlah']),
                     'sppt' => Helpers::ribuan($totals['pembayaran']['sppt']),
+                    'persen' => $pembayaranPersen,
                ],
-               'persenPenyampaian' => $this->calculatePercentage($totals['penyampaian']['jumlah'], $totals['bakuAwal']['jumlah']),
-               'persenSppt' => $this->calculatePercentage($totals['pembayaran']['sppt'], $totals['sppt']['sppt']),
           ];
      }
 
      function formatData($namaKelurahan, $data)
      {
+          $penyampaianPersen = $data['bakuAwal']->jumlah > 0
+               ? round(($data['penyampaian']->jumlah / $data['bakuAwal']->jumlah) * 100, 2)
+               : 0;
+
+          $pembayaranPersen = $data['sppt']->sppt > 0
+               ? round(($data['pembayaran']->sppt / $data['sppt']->sppt) * 100, 2)
+               : 0;
+
           return [
                'nama' => $namaKelurahan,
                'bakuAwal' => [
@@ -196,6 +219,7 @@ class RealisasiPerKelurahanRepository
                'penyampaian' => [
                     'jumlah' => Helpers::ribuan($data['penyampaian']->jumlah),
                     'sppt' => Helpers::ribuan($data['penyampaian']->sppt),
+                    'persen' => $penyampaianPersen,
                ],
                'sppt' => [
                     'jumlah' => Helpers::ribuan($data['sppt']->jumlah),
@@ -204,9 +228,8 @@ class RealisasiPerKelurahanRepository
                'pembayaran' => [
                     'jumlah' => Helpers::ribuan($data['pembayaran']->jumlah),
                     'sppt' => Helpers::ribuan($data['pembayaran']->sppt),
+                    'persen' => $pembayaranPersen,
                ],
-               'persenPenyampaian' => $this->calculatePercentage($data['penyampaian']->jumlah, $data['bakuAwal']->jumlah),
-               'persenSppt' => $this->calculatePercentage($data['pembayaran']->sppt, $data['sppt']->sppt),
           ];
      }
 }

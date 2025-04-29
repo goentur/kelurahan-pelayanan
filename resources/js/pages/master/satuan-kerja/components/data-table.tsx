@@ -39,6 +39,7 @@ export default function DataTable({
                         <th className="p-2 border">Atasan</th>
                         <th className="p-2 border">Nama</th>
                         <th className="p-2 border w-1">Kode</th>
+                        <th className="p-2 border w-1">Role</th>
                         <th className="p-2 border w-1">Aksi</th>
                 </tr>
             </thead>
@@ -55,6 +56,7 @@ export default function DataTable({
                             <td className="px-2 py-1 border">{value.atasan_satuan_kerja?.nama}</td>
                             <td className="px-2 py-1 border">{value.nama}</td>
                             <td className="px-2 py-1 border">{value.kode_ref}</td>
+                            <td className="px-2 py-1 border">{value.role}</td>
                             <td className="border text-center">
                                 <DropdownMenu>
                                     <DropdownMenuTrigger className='px-2 py-1 cursor-pointer'><Ellipsis/></DropdownMenuTrigger>
