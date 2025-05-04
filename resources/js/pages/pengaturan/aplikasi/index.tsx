@@ -3,6 +3,7 @@ import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 import OptimizeClear from './components/optimize-clear';
+import LogViewer from './components/log-viewer';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -31,6 +32,7 @@ export default function Index({gate}:any) {
                     </CardHeader>
                     <CardContent>
                          {gate.optimizeClear && <OptimizeClear/>}
+                         {gate.optimizeClear && <LogViewer/>}
                     </CardContent>
                 </Card>
             </div>

@@ -122,7 +122,13 @@ class PegawaiRepository
      public function pegawaiKepalaCollection($user)
      {
           $pegawaiLurah = $this->pegawaiLurah($user);
+          if (!$pegawaiLurah) {
+               throw new \Exception('Pegawai dengan jabatan Lurah tidak ada, silakan masukkan data pegawai dengan jabatan Lurah.');
+          }
           $pegawaiCamat = $this->pegawaiCamat($user);
+          if (!$pegawaiCamat) {
+               throw new \Exception('Pegawai dengan jabatan camat tidak ada, silakan hubungi kecamatan untuk menambahkan data pegawai dengan jabatan Camat.');
+          }
           return [
                'nama' => [
                     $pegawaiLurah->nama,

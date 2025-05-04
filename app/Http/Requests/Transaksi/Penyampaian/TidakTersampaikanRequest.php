@@ -4,7 +4,7 @@ namespace App\Http\Requests\Transaksi\Penyampaian;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreRequest extends FormRequest
+class TidakTersampaikanRequest extends FormRequest
 {
      /**
       * Determine if the user is authorized to make this request.
@@ -23,8 +23,8 @@ class StoreRequest extends FormRequest
      {
           return [
                'id' => 'required|string',
-               'type' => 'required|in:ya,tidak',
                'value' => 'required|string',
+               'keterangan' => 'required|string|min:10',
                'nama_wp' => 'required|string',
                'alamat_objek' => 'required|string',
                'nominal' => 'required|string',

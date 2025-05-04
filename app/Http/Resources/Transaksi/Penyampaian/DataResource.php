@@ -42,10 +42,11 @@ class DataResource extends JsonResource
                               'status' => $this->penyampaian->tipe == PenyampaianTipe::TERSAMPAIKAN->value ? true : false,
                               'label' => $this->penyampaian->tipe,
                               'value' => $this->penyampaian->status == PenyampaianStatus::SIMPAN->value ? ($this->penyampaian->tipe == PenyampaianTipe::TERSAMPAIKAN->value ? $this->penyampaian->keterangan : $this->penyampaian->penyampaian_keterangan_id) : ($this->penyampaian->tipe == PenyampaianTipe::TERSAMPAIKAN->value ? Carbon::parse($this->penyampaian->keterangan)->format('d-m-Y') : $this->penyampaian->keterangan),
+                              'catatan' => $this->penyampaian->catatan,
                          ],
                          'status' => [
                               'status' => $this->penyampaian->status == PenyampaianStatus::SIMPAN->value ? true : false,
-                              'value' => $this->penyampaian->status == PenyampaianStatus::SIMPAN->value ? 'OK' : PenyampaianStatus::TERLAPOR,
+                              'value' => $this->penyampaian->status,
                          ],
                     ];
                }),

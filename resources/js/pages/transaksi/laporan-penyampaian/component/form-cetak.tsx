@@ -44,8 +44,18 @@ export default function FormCetak({dataJenisLapor}:any) {
                link.click();
                document.body.removeChild(link);
                window.URL.revokeObjectURL(url);
-          } catch (error) {
-               alertApp(error, 'error');
+          } catch (error:any) {
+               if (error.response && error.response.data instanceof Blob) {
+                    const text = await error.response.data.text();
+                    try {
+                         const json = JSON.parse(text);
+                         alertApp(json.message || 'Terjadi kesalahan pada saat proses data.', 'error');
+                    } catch {
+                         alertApp('Terjadi kesalahan pada saat proses data.', 'error');
+                    }
+               } else {
+                    alertApp(error.message || 'Terjadi kesalahan pada saat proses data.', 'error');
+               }
           }finally{
                setLoadingBerdasarkanKelurahan(false)
           }
@@ -66,8 +76,18 @@ export default function FormCetak({dataJenisLapor}:any) {
                link.click();
                document.body.removeChild(link);
                window.URL.revokeObjectURL(url);
-          } catch (error) {
-               alertApp(error, 'error');
+          } catch (error:any) {
+               if (error.response && error.response.data instanceof Blob) {
+                    const text = await error.response.data.text();
+                    try {
+                         const json = JSON.parse(text);
+                         alertApp(json.message || 'Terjadi kesalahan pada saat proses data.', 'error');
+                    } catch {
+                         alertApp('Terjadi kesalahan pada saat proses data.', 'error');
+                    }
+               } else {
+                    alertApp(error.message || 'Terjadi kesalahan pada saat proses data.', 'error');
+               }
           }finally{
                setLoadingGabungan(false)
           }

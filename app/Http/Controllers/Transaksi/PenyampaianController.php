@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Transaksi\Penyampaian\DataRequest;
 use App\Http\Requests\Transaksi\Penyampaian\DeleteRequest;
 use App\Http\Requests\Transaksi\Penyampaian\StoreRequest;
-use App\Models\Penyampaian;
+use App\Http\Requests\Transaksi\Penyampaian\TersampaikanRequest;
+use App\Http\Requests\Transaksi\Penyampaian\TidakTersampaikanRequest;
 use App\Repositories\Transaksi\PenyampaianRepository;
 use App\Support\Facades\Memo;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -49,9 +50,14 @@ class PenyampaianController extends Controller implements HasMiddleware
         return response()->json($this->repository->data($request), 200);
     }
 
-    public function store(StoreRequest $request)
+    public function tersampaikan(TersampaikanRequest $request)
     {
-        return response()->json($this->repository->simpan($request));
+        return response()->json($this->repository->tersampaikan($request));
+    }
+
+    public function tidakTersampaikan(TidakTersampaikanRequest $request)
+    {
+        return response()->json($this->repository->tidakTersampaikan($request));
     }
 
     public function delete(DeleteRequest $request)

@@ -56,8 +56,10 @@ return (
 			<Calendar
 				mode="single"
 				selected={value}
-				onSelect={(date:any) => {
-					onChange(date);
+				onSelect={(date: Date | undefined) => {
+					if (date) {
+						onChange(format(date, "yyyy-MM-dd"));
+					}
 					setOpen(false);
 				}}
 				disabled={tanggalSelanjutnya ? false : (date) => date > new Date()}

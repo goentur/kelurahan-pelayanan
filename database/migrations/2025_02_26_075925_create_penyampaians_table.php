@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('tipe')->nullable();
             $table->string('status')->nullable();
             $table->string('keterangan')->nullable();
+            $table->string('catatan')->nullable();
             $table->timestamps();
         });
     }

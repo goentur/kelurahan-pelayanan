@@ -71,7 +71,68 @@ class PenyampaianRepository
         $result = DataResource::collection($query->paginate($request->perPage ?? 25))->response()->getData(true);
         return $result['meta'] + ['data' => $result['data']];
     }
-    public function simpan($request)
+    public function tersampaikan($request)
+    {
+        $tahun = date('Y');
+        $nop = explode('.', $request->id);
+        $tipe = PenyampaianTipe::TERSAMPAIKAN;
+        $penyampaian = $this->model::select('id')->where([
+            'kd_propinsi' => $nop[0],
+            'kd_dati2' => $nop[1],
+            'kd_kecamatan' => $nop[2],
+            'kd_kelurahan' => $nop[3],
+            'kd_blok' => $nop[4],
+            'no_urut' => $nop[5],
+            'kd_jns_op' => $nop[6],
+            'tahun' => $tahun,
+            'tipe' => $tipe,
+        ])->first();
+        try {
+            DB::beginTransaction();
+            if (!$penyampaian) {
+                $this->model::create([
+                    'user_id' => auth()->id(),
+                    'penyampaian_keterangan_id' => null,
+                    'kd_propinsi' => $nop[0],
+                    'kd_dati2' => $nop[1],
+                    'kd_kecamatan' => $nop[2],
+                    'kd_kelurahan' => $nop[3],
+                    'kd_blok' => $nop[4],
+                    'no_urut' => $nop[5],
+                    'kd_jns_op' => $nop[6],
+                    'tahun' => $tahun,
+                    'nama_wp' => $request->nama_wp,
+                    'alamat_objek' => $request->alamat_objek,
+                    'nominal' => str_replace('.', '', $request->nominal),
+                    'tipe' => $tipe,
+                    'status' => PenyampaianStatus::SIMPAN,
+                    'keterangan' => $request->value,
+                    'catatan' => "Tersampaikan ke Wajib Pajak",
+                ]);
+            } else {
+                $penyampaian->update([
+                    'user_id' => auth()->id(),
+                    'penyampaian_keterangan_id' => null,
+                    'keterangan' => $request->value,
+                    'catatan' => "Tersampaikan ke Wajib Pajak",
+                ]);
+            }
+            DB::commit();
+            return [
+                'status' => true,
+                'value' => $tipe,
+                'message' => "SIMPAN",
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return [
+                'status' => false,
+                'value' => null,
+                'message' => "GAGAL",
+            ];
+        }
+    }
+    public function tidakTersampaikan($request)
     {
         $tahun = date('Y');
         $nop = explode('.', $request->id);
@@ -87,14 +148,12 @@ class PenyampaianRepository
         ])->first();
         try {
             DB::beginTransaction();
-
-            $tipe = $request->type === 'ya' ? PenyampaianTipe::TERSAMPAIKAN : PenyampaianTipe::TIDAK;
-            $keterangan = $request->type === 'tidak' ? RefPenyampaianKeterangan::find($request->value)?->nama : null;
-
+            $tipe = PenyampaianTipe::TIDAK;
+            $keterangan = RefPenyampaianKeterangan::find($request->value)?->nama;
             if (!$penyampaian) {
                 $this->model::create([
                     'user_id' => auth()->id(),
-                    'penyampaian_keterangan_id' => $request->type === 'tidak' ? $request->value : null,
+                    'penyampaian_keterangan_id' => $request->value,
                     'kd_propinsi' => $nop[0],
                     'kd_dati2' => $nop[1],
                     'kd_kecamatan' => $nop[2],
@@ -108,34 +167,28 @@ class PenyampaianRepository
                     'nominal' => str_replace('.', '', $request->nominal),
                     'tipe' => $tipe,
                     'status' => PenyampaianStatus::SIMPAN,
-                    'keterangan' => $keterangan ?? $request->value,
+                    'keterangan' => $keterangan,
+                    'catatan' => $request->keterangan,
                 ]);
             } else {
                 $penyampaian->update([
                     'user_id' => auth()->id(),
-                    'penyampaian_keterangan_id' => $request->type === 'tidak' ? $request->value : null,
-                    'keterangan' => $keterangan ?? $request->value,
+                    'penyampaian_keterangan_id' => $request->value,
+                    'keterangan' => $keterangan,
+                    'catatan' => $request->keterangan,
                 ]);
             }
-
             DB::commit();
-
             return [
-                'status' => true,
-                'tipe' => [
-                    'status' => $request->type === 'ya',
-                    'value' => $tipe
-                ],
-                'message' => "OK",
+                'status' => false,
+                'value' => $tipe,
+                'message' => "SIMPAN",
             ];
         } catch (\Exception $e) {
             DB::rollBack();
             return [
                 'status' => false,
-                'tipe' => [
-                    'status' => null,
-                    'value' => null
-                ],
+                'value' => null,
                 'message' => "GAGAL",
             ];
         }

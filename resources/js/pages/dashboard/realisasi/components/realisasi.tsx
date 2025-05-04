@@ -13,7 +13,7 @@ export default function Realisasi({gate, loading, data}:any) {
                               <th className="p-1 border w-1" rowSpan={2}>BUKU</th>
                               <th className="p-1 border" colSpan={2}>KETETAPAN AWAL</th>
                               <th className="p-1 border" colSpan={2}>REALISASI PENYAMPAIAN</th>
-                              <th className="p-1 border" colSpan={2}>SPPT PBB-P2</th>
+                              <th className="p-1 border" colSpan={2}>KETETAPAN BERJALAN</th>
                               <th className="p-1 border" colSpan={2}>REALISASI PEMBAYARAN<br/>BERDASARKAN KETETAPAN</th>
                               </tr>
                               <tr className="leading-normal">

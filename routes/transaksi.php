@@ -8,7 +8,8 @@ Route::middleware(['auth', 'verified'])->prefix('transaksi')->name('transaksi.')
     Route::prefix('penyampaian')->name('penyampaian.')->middleware('can:penyampaian-index')->controller(PenyampaianController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('data', 'data')->name('data');
-        Route::post('store', 'store')->name('store');
+        Route::post('tersampaikan', 'tersampaikan')->name('tersampaikan');
+        Route::post('tidak-tersampaikan', 'tidakTersampaikan')->name('tidak-tersampaikan');
         Route::post('delete', 'delete')->name('delete');
     });
     Route::prefix('laporan-penyampaian')->name('laporan-penyampaian.')->middleware('can:laporan-penyampaian-index')->controller(LaporanPenyampaianController::class)->group(function () {

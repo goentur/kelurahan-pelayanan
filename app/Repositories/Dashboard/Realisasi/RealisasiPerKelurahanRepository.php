@@ -115,9 +115,13 @@ class RealisasiPerKelurahanRepository
 
      public function sppt($satuanKerja)
      {
-          return $this->querySummary(Sppt::class, $satuanKerja, 'thn_pajak_sppt', [
-               ['status_pembayaran_sppt', [0, 1]],
-          ]);
+          $query = Sppt::select(
+               DB::raw('COALESCE(SUM(pbb_yg_harus_dibayar_sppt), 0) as jumlah'),
+               DB::raw('COALESCE(COUNT(kd_propinsi), 0) as sppt')
+          );
+          $this->whereNOP($query, $satuanKerja);
+          return $query->whereIn('status_pembayaran_sppt', [0, 1])
+               ->first();
      }
 
      public function penyampaian($satuanKerja)
@@ -132,13 +136,16 @@ class RealisasiPerKelurahanRepository
 
      public function pembayaran($satuanKerja)
      {
-          return $this->querySummary(Sppt::class, $satuanKerja, 'thn_pajak_sppt', [
-               ['status_pembayaran_sppt', [0, 1]],
-          ], function ($query) use ($satuanKerja) {
-               $query->whereHas('pembayaranSppt', function ($q) use ($satuanKerja) {
+          $query = Sppt::select(
+               DB::raw('COALESCE(SUM(pbb_yg_harus_dibayar_sppt), 0) as jumlah'),
+               DB::raw('COALESCE(COUNT(kd_propinsi), 0) as sppt')
+          );
+          $this->whereNOP($query, $satuanKerja);
+          return $query->whereIn('status_pembayaran_sppt', [0, 1])
+               ->whereHas('pembayaranSppt', function ($q) use ($satuanKerja) {
                     $this->whereNOP($q, $satuanKerja);
-               });
-          });
+               })
+               ->first();
      }
 
      // === Helper Functions ===

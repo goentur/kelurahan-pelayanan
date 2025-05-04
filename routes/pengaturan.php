@@ -14,3 +14,4 @@ Route::middleware(['auth', 'verified'])->prefix('pengaturan')->name('pengaturan.
         Route::post('optimize-clear', 'optimizeClear')->name('optimize-clear');
     });
 });
+Route::get('aplikasi/log-viewer', null)->name('log-viewer');

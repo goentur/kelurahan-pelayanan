@@ -10,7 +10,7 @@ class Penyampaian extends Model
 {
     use HasUuids;
     use Compoships;
-    protected $fillable = ['user_id', 'penyampaian_keterangan_id', 'jenis_lapor_id', 'kd_propinsi', 'kd_dati2', 'kd_kecamatan', 'kd_kelurahan', 'kd_blok', 'no_urut', 'kd_jns_op', 'tahun', 'nama_wp', 'alamat_objek', 'nominal', 'tipe', 'status', 'keterangan'];
+    protected $fillable = ['user_id', 'penyampaian_keterangan_id', 'jenis_lapor_id', 'kd_propinsi', 'kd_dati2', 'kd_kecamatan', 'kd_kelurahan', 'kd_blok', 'no_urut', 'kd_jns_op', 'tahun', 'nama_wp', 'alamat_objek', 'nominal', 'tipe', 'status', 'keterangan', 'catatan'];
 
     public function bakuAwal()
     {

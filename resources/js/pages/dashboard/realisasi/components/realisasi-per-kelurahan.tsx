@@ -24,7 +24,7 @@ export default function RealisasiPerKelurahan({gate, loading, data}:any) {
                                 <th className="p-1 border" colSpan={2}>KETETAPAN AWAL</th>
                                 <th className="p-1 border" colSpan={2}>REALISASI PENYAMPAIAN</th>
                                 <th className="p-1 border" rowSpan={2}>%</th>
-                                <th className="p-1 border" colSpan={2}>SPPT PBB-P2</th>
+                                <th className="p-1 border" colSpan={2}>KETETAPAN BERJALAN</th>
                                 <th className="p-1 border" colSpan={2}>REALISASI PEMBAYARAN<br/>BERDASARKAN KETETAPAN</th>
                                 <th className="p-1 border" rowSpan={2}>%</th>
                             </tr>

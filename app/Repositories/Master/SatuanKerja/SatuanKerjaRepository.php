@@ -30,14 +30,21 @@ class SatuanKerjaRepository
      }
      public function list()
      {
-          return LabelValueResource::collection($this->model::select('id', 'nama')->get());
+          return LabelValueResource::collection($this->model::select('id', 'nama')->whereNull('atasan_satuan_kerja_id')->get());
      }
      public function data($request)
      {
           $query = $this->model::with('user')->select('id', 'user_id', 'atasan_satuan_kerja_id', 'nama', 'kode_ref');
           if ($request->search) {
-               $query->where('nama', 'like', "%{$request->search}%")
-                    ->orWhereHas('atasan', fn($q) => $q->where('nama', 'like', "%{$request->search}%"));
+               $query
+                    ->where('nama', 'like', "%{$request->search}%")
+                    ->orWhereHas('atasan', fn($q) => $q->where('nama', 'like', "%{$request->search}%"))
+                    ->orWhereHas(
+                         'user',
+                         fn($q) =>
+                         $q->where('email', 'like', "%{$request->search}%")
+                              ->orWhereHas('roles', fn($q) => $q->where('name', 'like', "%{$request->search}%"))
+                    );
           }
           $result = SatuanKerjaResource::collection($query->latest()->paginate($request->perPage ?? 25))->response()->getData(true);
           return $result['meta'] + ['data' => $result['data']];
