@@ -44,7 +44,7 @@ export default function RealisasiPerKelurahan({gate, loading, data}:any) {
                                 {Object.entries(data).length > 0 ? (
                                     Object.entries(data).map(([key, value]: any) => (
                                         <React.Fragment key={key}>
-                                            <tr className="hover:bg-gray-100 dark:hover:bg-slate-900 font-bold">
+                                            <tr className="bg-gray-100 dark:bg-slate-900 font-bold">
                                                 <td className="px-2 py-1 border">{value.nama}</td>
                                                 <td className="px-2 py-1 border text-end">{value.bakuAwal?.sppt}</td>
                                                 <td className="px-2 py-1 border text-end">{value.bakuAwal?.jumlah}</td>

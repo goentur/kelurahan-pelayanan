@@ -87,10 +87,13 @@ class PegawaiRepository
           $petugas = $this->model::select('nip', 'nama')->where([
                'satuan_kerja_id' => $user?->satuanKerja->id,
                'status' => PegawaiStatus::AKTIF,
-          ])->limit(2)->whereHas('jabatan', fn($q) => $q->where('jenis', JabatanJenis::PETUGAS))->get();
+          ])->whereHas('jabatan', fn($q) => $q->where('jenis', JabatanJenis::PETUGAS))->limit(2);
+          if ($petugas->count() < 2) {
+               throw new \Exception('Pegawai dengan jabatan Petugas tidak ada, silakan masukkan data pegawai dengan jabatan Petugas. minimal 2 pegawai.');
+          }
           $namaPetugas = [];
           $nipPetugas = [];
-          foreach ($petugas as $value) {
+          foreach ($petugas->get() as $value) {
                $namaPetugas[] = $value->nama;
                $nipPetugas[] = $value->nip ? 'NIP : ' . $value->nip : '';
           }

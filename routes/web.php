@@ -4,16 +4,13 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('welcome');
+    return redirect('login');
 })->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('beranda', function () {
         return Inertia::render('beranda');
     })->name('beranda');
-    Route::get('beranda/detail', function () {
-        return Inertia::render('beranda');
-    })->name('beranda.detail');
 });
 
 require __DIR__ . '/dashboard.php';
