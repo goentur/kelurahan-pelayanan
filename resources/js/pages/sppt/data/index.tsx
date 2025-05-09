@@ -48,13 +48,12 @@ export default function Index({ gate }: IndexProps) {
     const [linksPagination, setLinksPagination] = useState([]);
     const [infoDataTabel, setInfoDataTabel] = useState({
         page: 1,
-        from: 1,
-        to: 1,
+        from: 0,
+        to: 0,
         total: 0,
         perPage: 25,
     });
     const { data, setData, errors} = useForm({
-        jenisBuku : '',
         kelurahan : '',
         kd_blok : '',
         no_urut : '',
@@ -77,7 +76,6 @@ export default function Index({ gate }: IndexProps) {
             const response = await axios.post(route('sppt.data.data'), {
                 page: infoDataTabel.page,
                 perPage: infoDataTabel.perPage,
-                jenisBuku: data.jenisBuku,
                 kelurahan: data.kelurahan,
                 kd_blok: data.kd_blok,
                 no_urut: data.no_urut,
