@@ -203,12 +203,8 @@ export default function Index({ gate }: IndexProps) {
                             </Button>
                         </form>
                         <hr className='mb-2' />
-                        <div className="mb-2 flex justify-end items-center flex-wrap gap-4">
-                            <PerPageSelect
-                                onChange={(value) =>
-                                    setInfoDataTabel((prev: any) => ({ ...prev, page: 1, perPage: value }))
-                                }
-                            />
+                        <div className="w-fit mb-2">
+                            <PerPageSelect onChange={(value) => setInfoDataTabel((prev:any) => ({...prev,page: 1,perPage: value}))}/>
                         </div>
                         <DataTable dataTable={dataTable} loading={loading} />
                         <DataTablePagination infoDataTabel={infoDataTabel} setInfoDataTabel={setInfoDataTabel} linksPagination={linksPagination} />

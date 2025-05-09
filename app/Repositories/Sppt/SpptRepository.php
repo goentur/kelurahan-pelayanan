@@ -17,7 +17,6 @@ class SpptRepository
      ) {}
      public function data($request)
      {
-
           if ($request->kelurahan) {
                $nop = explode('.', $request->kelurahan ?? '');
                $kd_propinsi   = $nop[0] ?? null;
@@ -38,10 +37,6 @@ class SpptRepository
                'kd_kecamatan'  => $kd_kecamatan,
                'thn_pajak_sppt' => date('Y'),
           ])->whereIn('kd_kelurahan', $kd_kelurahan)->whereIn('status_pembayaran_sppt', [0, 1]);
-          if (!empty($request->jenisBuku)) {
-               $nominal = $this->jenisBuku->dataNominal($request->jenisBuku);
-               $query->whereBetween('pbb_yg_harus_dibayar_sppt', [$nominal['min'], $nominal['max']]);
-          }
           if (!empty($request->kd_blok)) {
                $query->where('kd_blok', $request->kd_blok);
           }

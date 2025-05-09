@@ -327,8 +327,15 @@ export default function DataTable({ gate, dataTable, infoDataTabel, setInfoDataT
                     </ul>
                 </li>
             </ul>
-            <div className="mb-1 flex justify-end items-center flex-wrap gap-4">
-                <div className="flex flex-wrap gap-1">
+            <div className="mb-1 flex items-center justify-between flex-wrap gap-4">
+                <div className="flex flex-col gap-2">
+                    <PerPageSelect
+                        onChange={(value) =>
+                            setInfoDataTabel((prev: any) => ({ ...prev, page: 1, perPage: value }))
+                        }
+                    />
+                </div>
+                <div className="flex gap-1">
                     {filterTipe.map((item: any, index: number) => (
                     <button
                         type="button"
@@ -346,13 +353,6 @@ export default function DataTable({ gate, dataTable, infoDataTabel, setInfoDataT
                         {item.label}
                     </button>
                     ))}
-                </div>
-                <div className="flex flex-col gap-2">
-                    <PerPageSelect
-                        onChange={(value) =>
-                            setInfoDataTabel((prev: any) => ({ ...prev, page: 1, perPage: value }))
-                        }
-                    />
                 </div>
             </div>
             <table className="w-full text-left border-collapse border">
