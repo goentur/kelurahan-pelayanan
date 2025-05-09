@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Master\Pengguna;
 
+use App\Models\Role;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateRequest extends FormRequest
 {
@@ -22,7 +24,8 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nama' => 'required|string|max:255'
+            'nama' => 'required|string|max:255',
+            'role' => 'required|' . Rule::exists(Role::class, 'name')
         ];
     }
 }

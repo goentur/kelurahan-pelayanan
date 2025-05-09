@@ -37,6 +37,7 @@ export default function DataTable({
                     <th className="p-2 border w-1">NO</th>
                     <th className="p-2 border w-1">Email</th>
                     <th className="p-2 border">Nama</th>
+                    <th className="p-2 border">Role</th>
                     <th className="p-2 border w-1">Aksi</th>
                 </tr>
             </thead>
@@ -50,12 +51,13 @@ export default function DataTable({
                         >
                             <td className="px-2 py-1 border text-center">{from++}</td>
                             <td className="px-2 py-1 border">{value.email}</td>
-                            <td className="px-2 py-1 border">{value.name}</td>
+                            <td className="px-2 py-1 border">{value.nama}</td>
+                            <td className="px-2 py-1 border">{value.role}</td>
                             <td className="border text-center">
                                 <DropdownMenu>
                                     <DropdownMenuTrigger className='px-2 py-1 cursor-pointer'><Ellipsis/></DropdownMenuTrigger>
                                     <DropdownMenuContent align='end'>
-                                        {gate.update && <DropdownMenuItem onClick={() => {setForm(true), setIsEdit(true), setData({ id:value.id, email:value.email, nama:value.name})}}><Pencil/> Ubah</DropdownMenuItem>}
+                                        {gate.update && <DropdownMenuItem onClick={() => {setForm(true), setIsEdit(true), setData({ id:value.id, email:value.email, nama:value.nama, role:value.role})}}><Pencil/> Ubah</DropdownMenuItem>}
                                         {gate.delete && <DropdownMenuItem onClick={() => {setHapus(true), setData({id:value.id,})}}><BadgeX/> Hapus</DropdownMenuItem>}
                                     </DropdownMenuContent>
                                 </DropdownMenu>

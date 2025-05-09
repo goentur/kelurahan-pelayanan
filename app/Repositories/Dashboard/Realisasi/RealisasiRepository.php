@@ -4,7 +4,6 @@ namespace App\Repositories\Dashboard\Realisasi;
 
 use App\Models\BakuAwal;
 use App\Models\Penyampaian;
-use App\Models\SatuanKerja;
 use App\Models\Sppt;
 use App\Repositories\Common\JenisBukuRepository;
 use App\Repositories\Master\SatuanKerja\SatuanKerjaRepository;
@@ -23,76 +22,72 @@ class RealisasiRepository
      {
           $satuanKerja = $this->satuanKerja->collectionData();
           $user = auth()->user();
+
           return Memo::for3min('tabel-dashboard-realisasi-' . $user->id, function () use ($jenisBuku, $satuanKerja) {
                $data = [];
-               $bakuAwaljumlah = 0;
-               $bakuAwalsppt = 0;
-               $spptjumlah = 0;
-               $spptsppt = 0;
-               $penyampaianjumlah = 0;
-               $penyampaiansppt = 0;
-               $pembayaranjumlah = 0;
-               $pembayaransppt = 0;
+               $totals = [
+                    'bakuAwal' => ['jumlah' => 0, 'sppt' => 0],
+                    'penyampaian' => ['jumlah' => 0, 'sppt' => 0],
+                    'sppt' => ['jumlah' => 0, 'sppt' => 0],
+                    'pembayaran' => ['jumlah' => 0, 'sppt' => 0],
+               ];
 
                foreach ($jenisBuku as $value) {
                     $nominal = $this->jenisBuku->dataNominal($value);
-                    $bakuAwal = $this->bakuAwal($nominal, $satuanKerja);
-                    $sppt = $this->sppt($nominal, $satuanKerja);
-                    $penyampaian = $this->penyampaian($nominal, $satuanKerja);
-                    $pembayaran = $this->pembayaran($nominal, $satuanKerja);
 
-                    $bakuAwaljumlah += $bakuAwal->jumlah;
-                    $bakuAwalsppt += $bakuAwal->sppt;
+                    $items = [
+                         'bakuAwal' => $this->bakuAwal($nominal, $satuanKerja),
+                         'sppt' => $this->sppt($nominal, $satuanKerja),
+                         'penyampaian' => $this->penyampaian($nominal, $satuanKerja),
+                         'pembayaran' => $this->pembayaran($nominal, $satuanKerja),
+                    ];
 
-                    $spptjumlah += $sppt->jumlah;
-                    $spptsppt += $sppt->sppt;
-
-                    $penyampaianjumlah += $penyampaian->jumlah;
-                    $penyampaiansppt += $penyampaian->sppt;
-
-                    $pembayaranjumlah += $pembayaran->jumlah;
-                    $pembayaransppt += $pembayaran->sppt;
+                    foreach ($items as $key => $item) {
+                         $totals[$key]['jumlah'] += $item->jumlah;
+                         $totals[$key]['sppt'] += $item->sppt;
+                    }
 
                     $data[$value] = [
-                         'bakuAwal' => [
-                              'jumlah' => Helpers::ribuan($bakuAwal->jumlah),
-                              'sppt' => Helpers::ribuan($bakuAwal->sppt),
-                         ],
-                         'penyampaian' => [
-                              'jumlah' => Helpers::ribuan($penyampaian->jumlah),
-                              'sppt' => Helpers::ribuan($penyampaian->sppt),
-                         ],
-                         'sppt' => [
-                              'jumlah' => Helpers::ribuan($sppt->jumlah),
-                              'sppt' => Helpers::ribuan($sppt->sppt),
-                         ],
-                         'pembayaran' => [
-                              'jumlah' => Helpers::ribuan($pembayaran->jumlah),
-                              'sppt' => Helpers::ribuan($pembayaran->sppt),
-                         ],
+                         'bakuAwal' => $this->formatData($items['bakuAwal']),
+                         'penyampaian' => $this->formatData($items['penyampaian'], $items['bakuAwal']),
+                         'sppt' => $this->formatData($items['sppt']),
+                         'pembayaran' => $this->formatData($items['pembayaran'], $items['sppt']),
                     ];
                }
 
                $data['JUMLAH'] = [
-                    'bakuAwal' => [
-                         'jumlah' => Helpers::ribuan($bakuAwaljumlah),
-                         'sppt' => Helpers::ribuan($bakuAwalsppt),
-                    ],
-                    'penyampaian' => [
-                         'jumlah' => Helpers::ribuan($penyampaianjumlah),
-                         'sppt' => Helpers::ribuan($penyampaiansppt),
-                    ],
-                    'sppt' => [
-                         'jumlah' => Helpers::ribuan($spptjumlah),
-                         'sppt' => Helpers::ribuan($spptsppt),
-                    ],
-                    'pembayaran' => [
-                         'jumlah' => Helpers::ribuan($pembayaranjumlah),
-                         'sppt' => Helpers::ribuan($pembayaransppt),
-                    ],
+                    'bakuAwal' => $this->formatData((object) $totals['bakuAwal']),
+                    'penyampaian' => $this->formatData(
+                         (object) $totals['penyampaian'],
+                         (object) $totals['bakuAwal']
+                    ),
+                    'sppt' => $this->formatData((object) $totals['sppt']),
+                    'pembayaran' => $this->formatData(
+                         (object) $totals['pembayaran'],
+                         (object) $totals['sppt'],
+                         true
+                    ),
                ];
                return $data;
           });
+     }
+
+     private function formatData($current, $reference = null, $sppt = false)
+     {
+          $persen = 0;
+          if ($reference && $reference->jumlah > 0) {
+               if ($sppt) {
+                    $persen = round(($current->sppt / $reference->sppt) * 100, 2);
+               } else {
+                    $persen = round(($current->jumlah / $reference->jumlah) * 100, 2);
+               }
+          }
+
+          return [
+               'jumlah' => Helpers::ribuan($current->jumlah),
+               'sppt' => Helpers::ribuan($current->sppt),
+               'persen' => isset($reference) ? $persen : null,
+          ];
      }
 
      protected function whereNOP($query, $satuanKerja, $tahunColumn = 'thn_pajak_sppt')

@@ -3,6 +3,7 @@
 namespace App\Repositories\User;
 
 use App\Http\Resources\Common\SelectOptionResource;
+use App\Http\Resources\Role\SelectOptionRoleForPenggunaResource;
 use App\Models\Role;
 use Illuminate\Support\Facades\DB;
 
@@ -68,5 +69,10 @@ class RoleRepository
     public function list()
     {
         return SelectOptionResource::collection($this->model::select('uuid', 'name')->get());
+    }
+
+    public function listForPengguna()
+    {
+        return SelectOptionRoleForPenggunaResource::collection($this->model::select('name')->whereNotIn('name', ['KECAMATAN', 'KELURAHAN'])->get());
     }
 }

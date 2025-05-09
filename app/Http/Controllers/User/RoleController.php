@@ -89,4 +89,9 @@ class RoleController extends Controller implements HasMiddleware
     {
         return response()->json($this->repository->list(), 200);
     }
+
+    public function listForPengguna()
+    {
+        return response()->json($this->repository->listForPengguna(), 200);
+    }
 }

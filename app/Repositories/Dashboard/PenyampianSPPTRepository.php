@@ -7,6 +7,7 @@ use App\Models\BakuAwal;
 use App\Models\JenisLapor;
 use App\Models\Penyampaian;
 use App\Models\SatuanKerja;
+use App\Support\Facades\Helpers;
 use App\Support\Facades\Memo;
 use Illuminate\Support\Facades\DB;
 
@@ -18,71 +19,89 @@ class PenyampianSPPTRepository
      {
           $user = auth()->user();
           return Memo::for3min('tabel-dashboard-penyampaian-sppt-' . $user->id, function () {
-               $satuanKerjas = SatuanKerja::with('bawahan')->whereNull('atasan_satuan_kerja_id')->get();
-               $jenisLapor = JenisLapor::select('id', 'nama')->where('jenis', PenyampaianTipe::TERSAMPAIKAN)->orderBy('no_urut')->get();
+               $jenisLapor = JenisLapor::select('id', 'nama')
+                    ->where('jenis', PenyampaianTipe::TERSAMPAIKAN)
+                    ->orderBy('no_urut')
+                    ->get();
 
-               $jenisLaporFields = [];
-               foreach ($jenisLapor as $lapor) {
-                    $jenisLaporFields[$lapor->id] = 0;
-               }
+               $laporIds = $jenisLapor->pluck('id')->toArray();
+               $laporInit = array_fill_keys($laporIds, 0);
 
                $dataAtasan = [];
+               $grandTotal = ['baku' => 0, 'total' => 0, 'sisa' => 0] + $laporInit;
 
-               foreach ($satuanKerjas as $satuanKerja) {
-                    $dataBawahan = [];
+               foreach (SatuanKerja::with('bawahan')->whereNull('atasan_satuan_kerja_id')->orderBy('kode_ref')->get() as $atasan) {
                     $baku = 0;
+                    $rekapAtasan = $laporInit;
+                    $bawahanData = [];
+                    $kode = 1;
 
-                    $rekapLaporAtasan = $jenisLaporFields;
-                    $n = 1;
-                    foreach ($satuanKerja->bawahan as $bawahan) {
-                         $dataBawahanBaku = $this->baku($bawahan->kelurahan);
+                    foreach ($atasan->bawahan as $bawahan) {
+                         $bakuBawahan = $this->baku($bawahan->kelurahan);
+                         $penyampaian = $this->penyampaian($laporIds, $bawahan->user_id);
+                         $rekapBawahan = array_replace($laporInit, $penyampaian);
 
-                         $rekapLaporBawahan = $jenisLaporFields;
-                         $jenisLaporIds = $jenisLapor->pluck('id')->toArray();
-                         $penyampaianData = $this->penyampaian($jenisLaporIds, $bawahan->user_id);
+                         $total = array_sum($rekapBawahan);
+                         $sisa = $bakuBawahan - $total;
+                         $persen = $bakuBawahan > 0 ? round(($total / $bakuBawahan) * 100, 2) : 0;
 
-                         $rekapLaporBawahan = [];
-                         foreach ($jenisLaporIds as $id) {
-                              $rekapLaporBawahan[$id] = $penyampaianData[$id] ?? 0;
-                         }
-
-                         $totalBawahan = array_sum($rekapLaporBawahan);
-                         $sisaBawahan = $dataBawahanBaku - $totalBawahan;
-                         $persenBawahan = $dataBawahanBaku > 0 ? round(($totalBawahan / $dataBawahanBaku) * 100, 2) : 0;
-
-                         $dataBawahan[] = array_merge([
-                              'kode' => $n++,
+                         $bawahanData[] = [
+                              'kode' => $kode++,
                               'nama' => $bawahan->nama,
-                              'baku' => $dataBawahanBaku,
-                              'total' => $totalBawahan,
-                              'sisa' => $sisaBawahan,
-                              'persen' => $persenBawahan,
-                         ], $rekapLaporBawahan);
+                              'baku' => Helpers::ribuan($bakuBawahan),
+                              'total' => Helpers::ribuan($total),
+                              'sisa' => Helpers::ribuan($sisa),
+                              'persen' => $persen,
+                         ] + $rekapBawahan;
 
-                         foreach ($rekapLaporBawahan as $key => $val) {
-                              $rekapLaporAtasan[$key] += $val;
+                         foreach ($laporIds as $id) {
+                              $rekapAtasan[$id] += $rekapBawahan[$id];
                          }
 
-                         $baku += $dataBawahanBaku;
+                         $baku += $bakuBawahan;
                     }
 
-                    $totalAtasan = array_sum($rekapLaporAtasan);
+                    $totalAtasan = array_sum($rekapAtasan);
                     $sisaAtasan = $baku - $totalAtasan;
                     $persenAtasan = $baku > 0 ? round(($totalAtasan / $baku) * 100, 2) : 0;
 
-                    $dataAtasan[] = array_merge([
-                         'kode' => $satuanKerja->kode_ref,
-                         'nama' => $satuanKerja->nama,
-                         'baku' => $baku,
-                         'total' => $totalAtasan,
-                         'sisa' => $sisaAtasan,
+                    $dataAtasan[] = [
+                         'kode' => $atasan->kode_ref,
+                         'nama' => $atasan->nama,
+                         'baku' => Helpers::ribuan($baku),
+                         'total' => Helpers::ribuan($totalAtasan),
+                         'sisa' => Helpers::ribuan($sisaAtasan),
                          'persen' => $persenAtasan,
-                         'bawahan' => $dataBawahan,
-                    ], $rekapLaporAtasan);
+                         'bawahan' => $bawahanData,
+                    ] + $rekapAtasan;
+
+                    // Akumulasi grand total
+                    $grandTotal['baku'] += $baku;
+                    $grandTotal['total'] += $totalAtasan;
+                    $grandTotal['sisa'] += $sisaAtasan;
+                    foreach ($laporIds as $id) {
+                         $grandTotal[$id] += $rekapAtasan[$id];
+                    }
                }
+
+               $grandTotal['persen'] = $grandTotal['baku'] > 0
+                    ? round(($grandTotal['total'] / $grandTotal['baku']) * 100, 2)
+                    : 0;
+
+               $dataAtasan[] = [
+                    'kode' => '',
+                    'nama' => 'TOTAL',
+                    'baku' => Helpers::ribuan($grandTotal['baku']),
+                    'total' => Helpers::ribuan($grandTotal['total']),
+                    'sisa' => Helpers::ribuan($grandTotal['sisa']),
+                    'persen' => $grandTotal['persen'],
+                    'bawahan' => [],
+               ] + array_intersect_key($grandTotal, $laporInit);
+
                return $dataAtasan;
           });
      }
+
      protected function baku($kelurahans)
      {
           if (empty($kelurahans)) {

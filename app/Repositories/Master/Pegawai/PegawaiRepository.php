@@ -54,8 +54,11 @@ class PegawaiRepository
                DB::beginTransaction();
                $data = $this->model::find($id);
                $data->update([
+                    'jabatan_id' => $request->jabatan,
+                    'nik' => $request->nik,
+                    'nip' => $request->nip,
                     'nama' => $request->nama,
-                    'jenis' => $request->jenis,
+                    'no_rekening' => $request->no_rekening,
                ]);
                DB::commit();
           } catch (\Exception $e) {
@@ -89,7 +92,7 @@ class PegawaiRepository
                'status' => PegawaiStatus::AKTIF,
           ])->whereHas('jabatan', fn($q) => $q->where('jenis', JabatanJenis::PETUGAS))->limit(2);
           if ($petugas->count() < 2) {
-               throw new \Exception('Pegawai dengan jabatan Petugas tidak ada, silakan masukkan data pegawai dengan jabatan Petugas. minimal 2 pegawai.');
+               abort(400, 'Pegawai dengan jabatan Petugas tidak ada, silakan masukkan data pegawai dengan jabatan Petugas. Minimal 2 pegawai.');
           }
           $namaPetugas = [];
           $nipPetugas = [];
@@ -126,11 +129,11 @@ class PegawaiRepository
      {
           $pegawaiLurah = $this->pegawaiLurah($user);
           if (!$pegawaiLurah) {
-               throw new \Exception('Pegawai dengan jabatan Lurah tidak ada, silakan masukkan data pegawai dengan jabatan Lurah.');
+               abort(400, 'Pegawai dengan jabatan Lurah tidak ada, silakan masukkan data pegawai dengan jabatan Lurah.');
           }
           $pegawaiCamat = $this->pegawaiCamat($user);
           if (!$pegawaiCamat) {
-               throw new \Exception('Pegawai dengan jabatan camat tidak ada, silakan hubungi kecamatan untuk menambahkan data pegawai dengan jabatan Camat.');
+               abort(400, 'Pegawai dengan jabatan camat tidak ada, silakan hubungi kecamatan untuk menambahkan data pegawai dengan jabatan Camat.');
           }
           return [
                'nama' => [

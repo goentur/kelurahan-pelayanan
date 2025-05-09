@@ -72,7 +72,7 @@ export default function Index({jenisLapor} : any) {
                                 {loading && <LoadingData colSpan={9}/>}
                                 {Object.entries(dataTable).length > 0 ? Object.entries(dataTable).map(([key, value]: any, index) => (
                                     <React.Fragment key={`atasan-${key}`}>
-                                        <tr className="hover:bg-gray-100 dark:hover:bg-slate-900 font-semibold">
+                                        <tr className="bg-gray-100 dark:bg-slate-900 font-semibold">
                                             <td className="px-2 py-1 border text-center">{value.kode}</td>
                                             <td className="px-2 py-1 border text-start">{value.nama}</td>
                                             <td className="px-2 py-1 border text-end">{value.baku}</td>

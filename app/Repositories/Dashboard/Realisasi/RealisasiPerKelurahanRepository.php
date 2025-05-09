@@ -212,11 +212,9 @@ class RealisasiPerKelurahanRepository
           $penyampaianPersen = $data['bakuAwal']->jumlah > 0
                ? round(($data['penyampaian']->jumlah / $data['bakuAwal']->jumlah) * 100, 2)
                : 0;
-
           $pembayaranPersen = $data['sppt']->sppt > 0
                ? round(($data['pembayaran']->sppt / $data['sppt']->sppt) * 100, 2)
                : 0;
-
           return [
                'nama' => $namaKelurahan,
                'bakuAwal' => [

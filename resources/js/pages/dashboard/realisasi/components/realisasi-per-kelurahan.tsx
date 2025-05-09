@@ -38,6 +38,19 @@ export default function RealisasiPerKelurahan({gate, loading, data}:any) {
                                 <th className="p-1 border">JUMLAH<br/>OBJEK PAJAK</th>
                                 <th className="p-1 border w-1">NOMINAL (Rp)</th>
                             </tr>
+                            <tr className="leading-normal text-[12px]">
+                                <th className="p-1 border">1</th>
+                                <th className="p-1 border">2</th>
+                                <th className="p-1 border">3</th>
+                                <th className="p-1 border">4</th>
+                                <th className="p-1 border">5</th>
+                                <th className="p-1 border">(5/3)</th>
+                                <th className="p-1 border">7</th>
+                                <th className="p-1 border">8</th>
+                                <th className="p-1 border">9</th>
+                                <th className="p-1 border">10</th>
+                                <th className="p-1 border">(9/7)</th>
+                            </tr>
                         </thead>
                         <tbody className="font-light">
                             {loading && <LoadingData colSpan={11} />}

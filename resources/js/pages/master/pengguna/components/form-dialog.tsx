@@ -1,5 +1,7 @@
+import Combobox from '@/components/combobox'
 import FormInput from '@/components/form-input'
 import InfoPassword from '@/components/info-password'
+import InputError from '@/components/input-error'
 import { Button } from '@/components/ui/button'
 import {
     Dialog,
@@ -9,6 +11,8 @@ import {
     DialogHeader,
     DialogTitle
 } from '@/components/ui/dialog'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Loader2, Save } from 'lucide-react'
 type props = {
     open: boolean
@@ -21,6 +25,7 @@ type props = {
     formRefs: React.RefObject<Record<string, HTMLInputElement | null>>
     processing: boolean
     handleForm: (e: React.FormEvent) => void
+    dataRoles: { value: string; label: string }[]
 }
 export default function FormDialog({
     open,
@@ -33,6 +38,7 @@ export default function FormDialog({
     formRefs,
     processing,
     handleForm,
+    dataRoles,
 }: props) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -104,6 +110,7 @@ export default function FormDialog({
                                 />
                                 <InfoPassword/>
                             </>)}
+                            <Combobox label="role" selectedValue={data.role} options={dataRoles} onSelect={(value) => setData((prevData:any) => ({ ...prevData, role: value }))} error={errors.role} />
                         </div>
                     </div>
                     <DialogFooter>

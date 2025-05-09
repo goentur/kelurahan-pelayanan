@@ -12,6 +12,7 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::controller(RoleController::class)->prefix('role')->name('role.')->group(function () {
         Route::middleware('can:role-index')->post('data', 'data')->name('data');
         Route::post('list', 'list')->name('list');
+        Route::post('list-for-pengguna', 'listForPengguna')->name('list-for-pengguna');
     });
     Route::resource('permission', PermissionController::class);
     Route::resource('role', RoleController::class);

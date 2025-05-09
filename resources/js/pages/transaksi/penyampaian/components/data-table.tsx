@@ -210,49 +210,49 @@ export default function DataTable({ gate, dataTable, infoDataTabel, setInfoDataT
 
             if (response.data.status) {
                 setLoadingState((prev) => {
-                    const data = { ...prev };
-                    delete data[id];
-                    return data;
+                    const dataLoadingState = { ...prev };
+                    delete dataLoadingState[id];
+                    return dataLoadingState;
                 })
                 setSelectedItemTabel((prev) => {
-                    const data = { ...prev };
-                    delete data[id];
-                    return data;
+                    const dataSelectedItemTabel = { ...prev };
+                    delete dataSelectedItemTabel[id];
+                    return dataSelectedItemTabel;
                 })
                 setEditedDataYa((prev) => {
-                    const data = { ...prev };
-                    delete data[id];
-                    return data;
+                    const dataEditDataYa = { ...prev };
+                    delete dataEditDataYa[id];
+                    return dataEditDataYa;
                 })
                 setEditedDataTidak((prev) => {
-                    const data = { ...prev };
-                    delete data[id];
-                    return data;
+                    const dataEditDataTidak = { ...prev };
+                    delete dataEditDataTidak[id];
+                    return dataEditDataTidak;
                 })
                 setEditedDataTidakSementara((prev) => {
-                    const data = { ...prev };
-                    delete data[id];
-                    return data;
+                    const dataEditedDataTidakSementara = { ...prev };
+                    delete dataEditedDataTidakSementara[id];
+                    return dataEditedDataTidakSementara;
                 })
                 setKeterangan((prev) => {
-                    const data = { ...prev };
-                    delete data[id];
-                    return data;
+                    const dataKeterangan = { ...prev };
+                    delete dataKeterangan[id];
+                    return dataKeterangan;
                 })
                 setLoadingDeletePerItem((prev) => {
-                    const data = { ...prev };
-                    delete data[id];
-                    return data;
+                    const dataLoadingDeletePErItem = { ...prev };
+                    delete dataLoadingDeletePErItem[id];
+                    return dataLoadingDeletePErItem;
                 })
                 setTipe((prev) => {
-                    const data = { ...prev };
-                    delete data[id];
-                    return data;
+                    const dataTipe = { ...prev };
+                    delete dataTipe[id];
+                    return dataTipe;
                 })
                 setMessages((prev) => {
-                    const data = { ...prev };
-                    delete data[id];
-                    return data;
+                    const dataMessages = { ...prev };
+                    delete dataMessages[id];
+                    return dataMessages;
                 })
 
                 alertApp(response.data.message);

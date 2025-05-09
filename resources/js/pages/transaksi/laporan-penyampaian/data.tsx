@@ -67,7 +67,7 @@ export default function Data({jenisLapor}:dataProps) {
                 page: response.data.current_page,
                 from: response.data.from,
                 to: response.data.to,
-                totalRecords: response.data.total,
+                total: response.data.total,
                 perPage: response.data.per_page,
             }));
         } catch (error:any) {
@@ -75,11 +75,6 @@ export default function Data({jenisLapor}:dataProps) {
         } finally {
             setLoading(false);
         }
-    };
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        infoDataTabel.page = 1
-        getData()
     };
     const handleKirimData = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -97,7 +92,7 @@ export default function Data({jenisLapor}:dataProps) {
                     page: 1,
                     from: 0,
                     to: 0,
-                    totalRecords: 0,
+                    total: 0,
                     perPage: 25,
                 }));
                 setLinksPagination([]);
@@ -122,9 +117,9 @@ export default function Data({jenisLapor}:dataProps) {
                         <hr className='mt-3 mb-3' />
                     </CardHeader>
                     <CardContent>
-                        <form onSubmit={handleSubmit} className="mb-4 mx-auto">
+                        <div className="w-fit mb-4">
                             <PerPageSelect onChange={(value) => setInfoDataTabel((prev:any) => ({...prev,page: 1,perPage: value}))}/>
-                        </form>
+                        </div>
                         <DataTable dataTable={dataTable} loading={loading} />
                         <DataTablePagination infoDataTabel={infoDataTabel} setInfoDataTabel={setInfoDataTabel} linksPagination={linksPagination}/>
                     </CardContent>

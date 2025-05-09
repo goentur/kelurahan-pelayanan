@@ -34,6 +34,7 @@ export default function Index({ gate }: IndexGate) {
     const [loading, setLoading] = useState(false)
     const [isEdit, setIsEdit] = useState(false)
     const [dataTable, setDataTable] = useState<[]>([])
+    const [dataRoles, setDataRoles] = useState<[]>([])
     const [linksPagination, setLinksPagination] = useState([])
     const [infoDataTabel, setInfoDataTabel] = useState<InfoDataTabel>({
         page: 1,
@@ -58,6 +59,10 @@ export default function Index({ gate }: IndexGate) {
     useEffect(() => {
         getData()
     }, [infoDataTabel.page, infoDataTabel.search, infoDataTabel.perPage])
+    
+    useEffect(() => {
+        getDataRole()
+    }, [])
 
     const getData = async () => {
         setLoading(true)
@@ -84,6 +89,15 @@ export default function Index({ gate }: IndexGate) {
             alertApp(error.message, 'error')
         } finally {
             setLoading(false)
+        }
+    }
+    
+    const getDataRole = async () => {
+        try {
+            const response = await axios.post(route('role.list-for-pengguna'))
+            setDataRoles(response.data)
+        } catch (error: any) {
+            alertApp(error.message, 'error')
         }
     }
 
@@ -167,6 +181,7 @@ export default function Index({ gate }: IndexGate) {
                 formRefs={formRefs}
                 processing={processing}
                 handleForm={handleForm}
+                dataRoles={dataRoles}
             />
             <Delete
                 open={hapus}
