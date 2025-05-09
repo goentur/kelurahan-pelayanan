@@ -51,12 +51,12 @@ export default function Realisasi({gate, loading, data}:any) {
                                    <td className="px-2 py-1 border text-end">{value.bakuAwal?.jumlah}</td>
                                    <td className="px-2 py-1 border text-end">{value.penyampaian?.sppt}</td>
                                    <td className="px-2 py-1 border text-end">{value.penyampaian?.jumlah}</td>
-                                   <td className="px-2 py-1 border text-end">{value.penyampaian?.persen}</td>
+                                   <td className="px-2 py-1 border text-end italic">{value.penyampaian?.persen}</td>
                                    <td className="px-2 py-1 border text-end">{value.sppt?.sppt}</td>
                                    <td className="px-2 py-1 border text-end">{value.sppt?.jumlah}</td>
                                    <td className="px-2 py-1 border text-end">{value.pembayaran?.sppt}</td>
                                    <td className="px-2 py-1 border text-end">{value.pembayaran?.jumlah}</td>
-                                   <td className="px-2 py-1 border text-end">{value.pembayaran?.persen}</td>
+                                   <td className="px-2 py-1 border text-end italic">{value.pembayaran?.persen}</td>
                               </tr>
                               )):(!loading ?<NoData colSpan={11}/>: null)}
                          </tbody>

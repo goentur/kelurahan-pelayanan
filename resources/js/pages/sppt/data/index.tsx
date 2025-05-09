@@ -34,13 +34,13 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: 'sppt.data.index',
     },
     {
-        title: 'Data SPPT',
+        title: 'Data',
         href: 'sppt.data.index',
     },
 ];
 
 export default function Index({ gate }: IndexProps) {
-    const title = 'Data SPPT'
+    const title = 'Data'
     const [loading, setLoading] = useState(false);
     const formRefs = useRef<Record<string, HTMLInputElement | null>>({})
     const [dataTable, setDataTable] = useState<[]>([]);
