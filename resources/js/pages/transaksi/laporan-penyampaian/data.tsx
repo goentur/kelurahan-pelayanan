@@ -58,7 +58,7 @@ export default function Data({jenisLapor}:dataProps) {
             const response = await axios.post(route('transaksi.laporan-penyampaian.data'), {
                 page: infoDataTabel.page,
                 perPage: infoDataTabel.perPage,
-                jenis: jenisLapor.jenis,
+                id: jenisLapor.id,
             });
             setDataTable(response.data.data);
             setLinksPagination(response.data.links);

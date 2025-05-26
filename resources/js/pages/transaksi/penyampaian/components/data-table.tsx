@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import Delete from "./delete";
 import DialogKeterangan from "./dialog-keterangan";
 import { Input } from "@/components/ui/input";
+import FormCalendarRange from "@/components/form-calendar-range";
 
 type DataTableProps = {
     gate: {
@@ -22,6 +23,7 @@ type DataTableProps = {
     infoDataTabel: InfoDataTabel;
     setInfoDataTabel: React.Dispatch<React.SetStateAction<any>>
     loading: boolean;
+	tanggal: {tanggal_awal : Date, tanggal_akhir : Date};
     dataPenyampaianKeterangan: any[];
 };
 type TidakTersampaikan = {
@@ -50,7 +52,8 @@ const filterTipe = [
         class : 'bg-red-500 hover:bg-red-600',
     },
 ]
-export default function DataTable({ gate, dataTable, infoDataTabel, setInfoDataTabel, loading, dataPenyampaianKeterangan }: DataTableProps) {
+
+export default function DataTable({ gate, dataTable, infoDataTabel, setInfoDataTabel, loading, tanggal, dataPenyampaianKeterangan }: DataTableProps) {
     const [loadingState, setLoadingState] = useState<{ [key: string]: boolean }>({});
     const [selectedItemTabel, setSelectedItemTabel] = useState<{ [key: string]: boolean }>({});
 
@@ -416,12 +419,13 @@ export default function DataTable({ gate, dataTable, infoDataTabel, setInfoDataT
                         <td className="px-1 py-1 border">
                             
                             {selectedItemTabel[value.id] == true ? (
-                                <FormCalendar
+                                <FormCalendarRange
                                     value={editedDataYa[value.id]?.value}
                                     onChange={(v) => handleSelectTersampaikan(value.id, v, value.nama_wp, value.alamat_objek, value.pajak)}
                                     autoOpen={true}
                                     disabled={!gate.create || !gate.update || loadingDeletePerItem[value.id]}
                                     placeholder="Pilih tanggal"
+                                    tanggal={tanggal}
                                 />
                             ) : null}
 

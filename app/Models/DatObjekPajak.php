@@ -89,4 +89,31 @@ class DatObjekPajak extends Model
         'tgl_perekaman_op',
         'nip_perekam_op',
     ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'kd_propinsi' => LeadingZero::class . ':2',
+        'kd_dati2' => LeadingZero::class . ':2',
+        'kd_kecamatan' => LeadingZero::class . ':3',
+        'kd_kelurahan' => LeadingZero::class . ':3',
+        'kd_blok' => LeadingZero::class . ':3',
+        'no_urut' => LeadingZero::class . ':4',
+        'no_persil' => Uppercase::class,
+        'jalan_op' => Uppercase::class,
+        'blok_kav_no_op' => Uppercase::class,
+        'rw_op' => LeadingZero::class . ':2',
+        'rt_op' => LeadingZero::class . ':3',
+        'tgl_pendataan_op' => 'date',
+        'tgl_pemeriksaan_op' => 'date',
+        'tgl_perekaman_op' => 'datetime',
+    ];
+
+    public function datSubjekPajak()
+    {
+        return $this->belongsTo(DatSubjekPajak::class, 'subjek_pajak_id', 'subjek_pajak_id');
+    }
 }

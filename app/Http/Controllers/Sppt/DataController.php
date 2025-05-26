@@ -4,23 +4,15 @@ namespace App\Http\Controllers\Sppt;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Sppt\Data\DataRequest;
-use App\Repositories\Common\JenisBukuRepository;
 use App\Repositories\Sppt\SpptRepository;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 
 class DataController extends Controller implements HasMiddleware
 {
-    protected SpptRepository $repository;
-    protected JenisBukuRepository $jenisBukuRepository;
-
     public function __construct(
-        SpptRepository $repository,
-        JenisBukuRepository $jenisBukuRepository,
-    ) {
-        $this->repository = $repository;
-        $this->jenisBukuRepository = $jenisBukuRepository;
-    }
+        protected SpptRepository $repository
+    ) {}
     public static function middleware(): array
     {
         return [
@@ -30,8 +22,7 @@ class DataController extends Controller implements HasMiddleware
 
     public function index()
     {
-        $jenisBuku = $this->jenisBukuRepository->data();
-        return inertia('sppt/data/index', compact("jenisBuku"));
+        return inertia('sppt/data/index');
     }
 
     public function data(DataRequest $request)

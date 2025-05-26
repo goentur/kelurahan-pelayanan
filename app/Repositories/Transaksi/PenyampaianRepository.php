@@ -9,6 +9,7 @@ use App\Http\Resources\Transaksi\LaporanPenyampaian\DataResource as LaporanPenya
 use App\Http\Resources\Transaksi\LaporanPenyampaian\DataSisaAtauKembaliResource;
 use App\Http\Resources\Transaksi\Penyampaian\DataResource;
 use App\Models\BakuAwal;
+use App\Models\JenisLapor;
 use App\Models\Penyampaian;
 use App\Models\Ref\RefPenyampaianKeterangan;
 use App\Repositories\Common\JenisBukuRepository;
@@ -210,17 +211,26 @@ class PenyampaianRepository
     }
     public function queryLaporan($request)
     {
+        $jenisLapor = JenisLapor::find($request->id);
         $dataSatuanKerja = $this->satuanKerja->collectionData();
-        $query = $this->model::select('id', 'kd_propinsi', 'kd_dati2', 'kd_kecamatan', 'kd_kelurahan', 'kd_blok', 'no_urut', 'kd_jns_op', 'tahun', 'nama_wp', 'alamat_objek', 'nominal', 'tipe', 'keterangan')
+        return $this->model::select('id', 'kd_propinsi', 'kd_dati2', 'kd_kecamatan', 'kd_kelurahan', 'kd_blok', 'no_urut', 'kd_jns_op', 'tahun', 'nama_wp', 'alamat_objek', 'nominal', 'tipe', 'keterangan')
             ->where([
                 'kd_propinsi' => $dataSatuanKerja['propinsi'],
                 'kd_dati2' => $dataSatuanKerja['dati2'],
                 'kd_kecamatan' => $dataSatuanKerja['kecamatan'],
                 'tahun' => date('Y'),
-                'tipe' => $request->jenis,
+                'tipe' => $jenisLapor->jenis,
                 'status' => PenyampaianStatus::SIMPAN,
-            ])->whereIn('kd_kelurahan', $dataSatuanKerja['kelurahan']);
-        return $query->orderBy('kd_kelurahan')->orderBy('kd_blok')->orderBy('no_urut')->orderBy('kd_jns_op');
+            ])
+            ->whereIn('kd_kelurahan', $dataSatuanKerja['kelurahan'])
+            ->when(
+                $jenisLapor->jenis === PenyampaianTipe::TERSAMPAIKAN->value,
+                fn($q) => $q->whereBetween('keterangan', [$jenisLapor->tanggal_awal, $jenisLapor->tanggal_akhir])
+            )
+            ->orderBy('kd_kelurahan')
+            ->orderBy('kd_blok')
+            ->orderBy('no_urut')
+            ->orderBy('kd_jns_op');
     }
     public function queryLaporanSisa()
     {

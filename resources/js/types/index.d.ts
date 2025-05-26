@@ -15,6 +15,7 @@ export interface Gate {
     create: boolean
     update: boolean
     delete: boolean
+    validasi?: boolean
 }
 export interface BreadcrumbItem {
     title: string;

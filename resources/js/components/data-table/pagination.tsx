@@ -22,7 +22,7 @@ export default function DataTablePagination({
 }: props) {
     return (
         <div className="flex justify-between items-center mt-4">
-            <span className="text-sm">
+            <span className="text-sm hidden md:block">
                 Menampilkan {infoDataTabel.from} sampai {infoDataTabel.to} dari {infoDataTabel.total} data
             </span>
             <div className="flex items-center space-x-1">

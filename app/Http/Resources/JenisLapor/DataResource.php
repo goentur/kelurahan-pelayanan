@@ -20,9 +20,9 @@ class DataResource extends JsonResource
             'nama' => $this->nama,
             'keterangan' => $this->keterangan,
             'jenis' => $this->jenis,
-            'tanggal_awal' => $this->tanggal_awal,
-            'tanggal_akhir' => $this->tanggal_akhir,
-            'status' => now()->between(Carbon::parse($this->tanggal_awal), Carbon::parse($this->tanggal_akhir)),
+            'tanggal_awal' => $this->tanggal_lapor_awal,
+            'tanggal_akhir' => $this->tanggal_lapor_akhir,
+            'status' => now()->between(Carbon::parse($this->tanggal_lapor_awal), Carbon::parse($this->tanggal_lapor_akhir)),
         ];
     }
 }

@@ -18,11 +18,12 @@ type IndexProps = {
         create : boolean,
         update : boolean,
         delete : boolean,
-    };
-    jenisBuku : {
-        value : string,
-        label : string,
-    }[]
+    }
+    tanggal : {
+        tanggal_awal : Date,
+        tanggal_akhir : Date,
+    }
+    pesan : string | null
 };
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -39,7 +40,7 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: 'transaksi.penyampaian.index',
     },
 ];
-export default function Index({ gate }: IndexProps) {
+export default function Index({ gate, tanggal, pesan }: IndexProps) {
     const title = 'Penyampaian'
     const [loading, setLoading] = useState(false);
     const formRefs = useRef<Record<string, HTMLInputElement | null>>({})
@@ -137,6 +138,7 @@ export default function Index({ gate }: IndexProps) {
                         <CardTitle className="text-xl">{title}</CardTitle>
                     </CardHeader>
                     <CardContent>
+                        {pesan && <div className='bg-red-500 rounded mb-3 p-2 text-sm'>{pesan}</div>}
                         <form onSubmit={handleSubmit} className="mb-4 mx-auto">
                             <div className="grid gap-4 lg:grid-cols-3 md:grid-cols-3">
                                 <div>
@@ -155,7 +157,7 @@ export default function Index({ gate }: IndexProps) {
                                                 setData((prevData: any) => ({ ...prevData, kd_blok: value }));
         
                                                 if (value.length === 3 && formRefs.current?.no_urut) {
-                                                        formRefs.current.no_urut.focus();
+                                                        formRefs.current.no_urut.select();
                                                 }
                                             }}
                                             inputRef={(el) => {
@@ -176,7 +178,7 @@ export default function Index({ gate }: IndexProps) {
                                                 setData((prevData: any) => ({ ...prevData, no_urut: value }));
         
                                                 if (value.length === 4 && formRefs.current?.nama) {
-                                                        formRefs.current.nama.focus();
+                                                        formRefs.current.nama.select();
                                                 }
                                             }}
                                             inputRef={(el) => {
@@ -213,7 +215,7 @@ export default function Index({ gate }: IndexProps) {
                                 {loading ? <Loader2 className="animate-spin" /> : <Search/>} Cari
                             </Button>
                         </form>
-                        <DataTable gate={gate} dataTable={dataTable} infoDataTabel={infoDataTabel} setInfoDataTabel={setInfoDataTabel} loading={loading} dataPenyampaianKeterangan={dataPenyampaianKeterangan} />
+                        <DataTable gate={gate} dataTable={dataTable} infoDataTabel={infoDataTabel} setInfoDataTabel={setInfoDataTabel} loading={loading} tanggal={tanggal} dataPenyampaianKeterangan={dataPenyampaianKeterangan} />
                         <DataTablePagination infoDataTabel={infoDataTabel} setInfoDataTabel={setInfoDataTabel} linksPagination={linksPagination} />
                     </CardContent>
                 </Card>

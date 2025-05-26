@@ -3,7 +3,9 @@
 namespace App\Http\Requests\Transaksi\LaporanPenyampaian;
 
 use App\Enums\PenyampaianTipe;
+use App\Models\JenisLapor;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 
 class DataRequest extends FormRequest
@@ -26,7 +28,7 @@ class DataRequest extends FormRequest
           return [
                'page' => 'required|numeric',
                'perPage' => 'required|numeric|max:100|min:25',
-               'jenis' => ['required', new Enum(PenyampaianTipe::class)],
+               'id' => ['required', Rule::exists(JenisLapor::class, 'id')],
           ];
      }
 }

@@ -12,7 +12,7 @@ class JenisLaporRepository
      public function __construct(protected JenisLapor $model) {}
      public function list()
      {
-          return DataResource::collection($this->model::select('id', 'nama', 'keterangan', 'jenis', 'tanggal_awal', 'tanggal_akhir')->orderBy('no_urut')->get());
+          return DataResource::collection($this->model::select('id', 'nama', 'keterangan', 'jenis', 'tanggal_awal', 'tanggal_akhir', 'tanggal_lapor_awal', 'tanggal_lapor_akhir')->orderBy('no_urut')->get());
      }
      public function data($request)
      {

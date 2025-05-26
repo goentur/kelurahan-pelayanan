@@ -129,7 +129,7 @@ export default function Index({ gate }: IndexProps) {
                                         options={dataBerdasarkanUser}
                                         onSelect={(value) => {
                                             setData((prev: any) => ({ ...prev, kelurahan: value }));
-                                            formRefs.current.kd_blok?.focus();
+                                            formRefs.current.kd_blok?.select();
                                         }}
                                         error={errors.kelurahan}
                                     />
@@ -145,7 +145,7 @@ export default function Index({ gate }: IndexProps) {
                                                 setData((prevData: any) => ({ ...prevData, kd_blok: value }));
         
                                                 if (value.length === 3 && formRefs.current?.no_urut) {
-                                                        formRefs.current.no_urut.focus();
+                                                        formRefs.current.no_urut.select();
                                                 }
                                             }}
                                             inputRef={(el) => {
@@ -166,7 +166,7 @@ export default function Index({ gate }: IndexProps) {
                                                 setData((prevData: any) => ({ ...prevData, no_urut: value }));
         
                                                 if (value.length === 4 && formRefs.current?.nama_wp) {
-                                                        formRefs.current.nama_wp.focus();
+                                                        formRefs.current.nama_wp.select();
                                                 }
                                             }}
                                             inputRef={(el) => {

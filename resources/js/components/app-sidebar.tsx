@@ -4,7 +4,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { Building, ChartPie, FileSearch, FileText, Key, LayoutDashboard, Medal, MonitorCog, NotebookPen, Send, UserCheck, UserRoundCog } from 'lucide-react';
+import { Building, ChartPie, FilePenLine, FileSearch, FileText, Key, LayoutDashboard, Medal, MonitorCog, NotebookPen, Send, UserCheck, UserRoundCog } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavDashboard: NavItem[] = [
@@ -35,12 +35,37 @@ const mainNavTransaksi: NavItem[] = [
         permission: 'laporan-penyampaian-index',
     },
 ];
+const mainNavPendataan: NavItem[] = [
+    {
+        title: "SPOP",
+        href: "pendataan.spop.index",
+        icon: FilePenLine,
+        permission: 'pendataan-spop-index',
+    },
+];
 const mainNavSppt: NavItem[] = [
     {
         title: "Data",
         href: "sppt.data.index",
         icon: FileSearch,
         permission: 'sppt-data-index',
+    },
+    {
+        title: 'Pelayanan',
+        href: '#',
+        icon: FilePenLine,
+        items: [
+            {
+                title: 'Perubahan Alamat',
+                href: 'sppt.pelayanan.perubahan-alamat.index',
+                permission: 'pelayanan-perubahan-alamat-pemohon-index',
+            },
+            {
+                title: 'Perubahan Alamat',
+                href: 'sppt.pelayanan.perubahan-alamat.index',
+                permission: 'pelayanan-perubahan-alamat-validasi-action',
+            }
+        ]
     },
 ];
 const mainNavMaster: NavItem[] = [
@@ -129,6 +154,7 @@ export function AppSidebar() {
             <SidebarContent>
                 <NavMain items={mainNavDashboard} permissions={permissions} title="Dashboard" />
                 <NavMain items={mainNavTransaksi} permissions={permissions} title="Transaksi" />
+                <NavMain items={mainNavPendataan} permissions={permissions} title="Pendataan" />
                 <NavMain items={mainNavSppt} permissions={permissions} title="SPPT" />
                 <NavMain items={mainNavMaster} permissions={permissions} title="Master" />
                 <NavMain items={mainNavPengaturan} permissions={permissions} title="Pengaturan" />

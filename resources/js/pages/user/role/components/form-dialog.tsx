@@ -40,7 +40,7 @@ export default function FormDialog({
 }: props) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className='w-5xl'>
+            <DialogContent className='w-5xl max-h-[95vh] overflow-y-auto'>
                 <form onSubmit={handleForm}>
                     <DialogHeader>
                         <DialogTitle>Form {title}</DialogTitle>

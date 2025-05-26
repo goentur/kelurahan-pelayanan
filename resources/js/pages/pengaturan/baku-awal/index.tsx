@@ -40,7 +40,7 @@ export default function Index() {
 
     const handleForm = (e: React.FormEvent) => {
           e.preventDefault();
-          post(route('pengaturan.aplikasi.baku-awal'));
+          post(route('pengaturan.baku-awal.store-or-update'));
      };
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -61,7 +61,7 @@ export default function Index() {
                                         setData((prevData: any) => ({ ...prevData, tahun_pajak: value }));
 
                                         if (value.length === 4 && formRefs.current?.kd_propinsi) {
-                                             formRefs.current.kd_propinsi.focus();
+                                             formRefs.current.kd_propinsi.select();
                                         }
                                    }}
                                    inputRef={(el) => {
@@ -83,7 +83,7 @@ export default function Index() {
                                         setData((prevData: any) => ({ ...prevData, kd_propinsi: value }));
 
                                         if (value.length === 2 && formRefs.current?.kd_dati2) {
-                                             formRefs.current.kd_dati2.focus();
+                                             formRefs.current.kd_dati2.select();
                                         }
                                    }}
                                    inputRef={(el) => {
@@ -105,7 +105,7 @@ export default function Index() {
                                         setData((prevData: any) => ({ ...prevData, kd_dati2: value }));
 
                                         if (value.length === 2 && formRefs.current?.kd_kecamatan) {
-                                             formRefs.current.kd_kecamatan.focus();
+                                             formRefs.current.kd_kecamatan.select();
                                         }
                                    }}
                                    inputRef={(el) => {
@@ -127,7 +127,7 @@ export default function Index() {
                                         setData((prevData: any) => ({ ...prevData, kd_kecamatan: value }));
 
                                         if (value.length === 3 && formRefs.current?.kd_kelurahan) {
-                                             formRefs.current.kd_kelurahan.focus();
+                                             formRefs.current.kd_kelurahan.select();
                                         }
                                    }}
                                    inputRef={(el) => {
@@ -150,7 +150,7 @@ export default function Index() {
                                         setData((prevData: any) => ({ ...prevData, kd_kelurahan: value }));
 
                                         if (value.length === 3 && formRefs.current?.kd_blok) {
-                                             formRefs.current.kd_blok.focus();
+                                             formRefs.current.kd_blok.select();
                                         }
                                    }}
                                    inputRef={(el) => {
@@ -172,7 +172,7 @@ export default function Index() {
                                         setData((prevData: any) => ({ ...prevData, kd_blok: value }));
 
                                         if (value.length === 3 && formRefs.current?.no_urut) {
-                                             formRefs.current.no_urut.focus();
+                                             formRefs.current.no_urut.select();
                                         }
                                    }}
                                    inputRef={(el) => {
