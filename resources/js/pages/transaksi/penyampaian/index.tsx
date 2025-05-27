@@ -39,6 +39,10 @@ const breadcrumbs: BreadcrumbItem[] = [
         title: 'Penyampaian',
         href: 'transaksi.penyampaian.index',
     },
+    {
+        title: 'Form',
+        href: 'transaksi.penyampaian.index',
+    },
 ];
 export default function Index({ gate, tanggal, pesan }: IndexProps) {
     const title = 'Penyampaian'

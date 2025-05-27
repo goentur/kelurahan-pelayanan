@@ -14,6 +14,7 @@ use App\Models\Penyampaian;
 use App\Repositories\Transaksi\PenyampaianRepository;
 use App\Support\Facades\Memo;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 
@@ -116,5 +117,14 @@ class PenyampaianController extends Controller implements HasMiddleware
                 'message' => 'Gagal menghapus data : ' . $e->getMessage(),
             ], 500);
         }
+    }
+    public function lihat()
+    {
+        return inertia('transaksi/penyampaian/lihat');
+    }
+
+    public function lihatData(Request $request)
+    {
+        return response()->json($this->repository->lihatData($request), 200);
     }
 }

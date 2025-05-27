@@ -23,10 +23,21 @@ const mainNavDashboard: NavItem[] = [
 ];
 const mainNavTransaksi: NavItem[] = [
     {
-        title: "Penyampaian",
-        href: "transaksi.penyampaian.index",
+        title: 'Penyampaian',
+        href: '#',
         icon: Building,
-        permission: 'penyampaian-index',
+        items: [
+            {
+                title: 'Form',
+                href: 'transaksi.penyampaian.index',
+                permission: 'penyampaian-index',
+            },
+            {
+                title: 'Lihat',
+                href: 'transaksi.penyampaian.lihat.index',
+                permission: 'penyampaian-index',
+            },
+        ]
     },
     {
         title: "Laporan Penyampaian",

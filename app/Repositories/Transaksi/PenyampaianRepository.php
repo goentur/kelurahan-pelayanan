@@ -209,9 +209,14 @@ class PenyampaianRepository
             'tahun' => $tahun,
         ])?->delete();
     }
-    public function queryLaporan($request)
+    public function lihatData($request)
     {
-        $jenisLapor = JenisLapor::find($request->id);
+        $result = LaporanPenyampaianDataResource::collection($this->queryLaporan()->paginate($request->perPage ?? 25))->response()->getData(true);
+        return $result['meta'] + ['data' => $result['data']];
+    }
+    public function queryLaporan($request = null)
+    {
+        $jenisLapor = JenisLapor::find($request?->id);
         $dataSatuanKerja = $this->satuanKerja->collectionData();
         return $this->model::select('id', 'kd_propinsi', 'kd_dati2', 'kd_kecamatan', 'kd_kelurahan', 'kd_blok', 'no_urut', 'kd_jns_op', 'tahun', 'nama_wp', 'alamat_objek', 'nominal', 'tipe', 'keterangan')
             ->where([
@@ -219,12 +224,15 @@ class PenyampaianRepository
                 'kd_dati2' => $dataSatuanKerja['dati2'],
                 'kd_kecamatan' => $dataSatuanKerja['kecamatan'],
                 'tahun' => date('Y'),
-                'tipe' => $jenisLapor->jenis,
                 'status' => PenyampaianStatus::SIMPAN,
             ])
             ->whereIn('kd_kelurahan', $dataSatuanKerja['kelurahan'])
             ->when(
-                $jenisLapor->jenis === PenyampaianTipe::TERSAMPAIKAN->value,
+                $jenisLapor,
+                fn($q) => $q->where('tipe', $jenisLapor->jenis)
+            )
+            ->when(
+                $jenisLapor && $jenisLapor->jenis === PenyampaianTipe::TERSAMPAIKAN->value,
                 fn($q) => $q->whereBetween('keterangan', [$jenisLapor->tanggal_awal, $jenisLapor->tanggal_akhir])
             )
             ->orderBy('kd_kelurahan')

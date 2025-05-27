@@ -6,11 +6,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified'])->prefix('transaksi')->name('transaksi.')->group(function () {
     Route::prefix('penyampaian')->name('penyampaian.')->middleware('can:penyampaian-index')->controller(PenyampaianController::class)->group(function () {
-        Route::get('/', 'index')->name('index');
+        Route::get('form', 'index')->name('index');
         Route::post('data', 'data')->name('data');
         Route::post('tersampaikan', 'tersampaikan')->name('tersampaikan');
         Route::post('tidak-tersampaikan', 'tidakTersampaikan')->name('tidak-tersampaikan');
         Route::post('delete', 'delete')->name('delete');
+        Route::prefix('lihat')->name('lihat.')->group(function () {
+            Route::get('/', 'lihat')->name('index');
+            Route::post('data', 'lihatData')->name('data');
+        });
     });
     Route::prefix('laporan-penyampaian')->name('laporan-penyampaian.')->middleware('can:laporan-penyampaian-index')->controller(LaporanPenyampaianController::class)->group(function () {
         Route::get('/', 'index')->name('index');
