@@ -177,12 +177,12 @@ class RealisasiPerKelurahanRepository
 
      function formatTotals($totals)
      {
-          $penyampaianPersen = $totals['bakuAwal']['jumlah'] > 0
-               ? round(($totals['penyampaian']['jumlah'] / $totals['bakuAwal']['jumlah']) * 100, 2)
+          $penyampaianPersen = $totals['bakuAwal']['sppt'] > 0
+               ? round(($totals['penyampaian']['sppt'] / $totals['bakuAwal']['sppt']) * 100, 2)
                : 0;
 
-          $pembayaranPersen = $totals['sppt']['sppt'] > 0
-               ? round(($totals['pembayaran']['sppt'] / $totals['sppt']['sppt']) * 100, 2)
+          $pembayaranPersen = $totals['sppt']['jumlah'] > 0
+               ? round(($totals['pembayaran']['jumlah'] / $totals['sppt']['jumlah']) * 100, 2)
                : 0;
 
           return [
@@ -209,11 +209,11 @@ class RealisasiPerKelurahanRepository
 
      function formatData($namaKelurahan, $data)
      {
-          $penyampaianPersen = $data['bakuAwal']->jumlah > 0
-               ? round(($data['penyampaian']->jumlah / $data['bakuAwal']->jumlah) * 100, 2)
+          $penyampaianPersen = $data['bakuAwal']->sppt > 0
+               ? round(($data['penyampaian']->sppt / $data['bakuAwal']->sppt) * 100, 2)
                : 0;
-          $pembayaranPersen = $data['sppt']->sppt > 0
-               ? round(($data['pembayaran']->sppt / $data['sppt']->sppt) * 100, 2)
+          $pembayaranPersen = $data['sppt']->jumlah > 0
+               ? round(($data['pembayaran']->jumlah / $data['sppt']->jumlah) * 100, 2)
                : 0;
           return [
                'nama' => $namaKelurahan,

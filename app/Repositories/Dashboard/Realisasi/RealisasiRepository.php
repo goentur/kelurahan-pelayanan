@@ -49,7 +49,7 @@ class RealisasiRepository
 
                     $data[$value] = [
                          'bakuAwal' => $this->formatData($items['bakuAwal']),
-                         'penyampaian' => $this->formatData($items['penyampaian'], $items['bakuAwal']),
+                         'penyampaian' => $this->formatData($items['penyampaian'], $items['bakuAwal'], true),
                          'sppt' => $this->formatData($items['sppt']),
                          'pembayaran' => $this->formatData($items['pembayaran'], $items['sppt']),
                     ];
@@ -59,13 +59,14 @@ class RealisasiRepository
                     'bakuAwal' => $this->formatData((object) $totals['bakuAwal']),
                     'penyampaian' => $this->formatData(
                          (object) $totals['penyampaian'],
-                         (object) $totals['bakuAwal']
+                         (object) $totals['bakuAwal'],
+                         true
                     ),
                     'sppt' => $this->formatData((object) $totals['sppt']),
                     'pembayaran' => $this->formatData(
                          (object) $totals['pembayaran'],
                          (object) $totals['sppt'],
-                         true
+                         false
                     ),
                ];
                return $data;

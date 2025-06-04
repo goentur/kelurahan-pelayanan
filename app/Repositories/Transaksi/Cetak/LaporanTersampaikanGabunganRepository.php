@@ -153,8 +153,8 @@ class LaporanTersampaikanGabunganRepository
                     Helpers::ribuan($value['lalu']['jumlah'] + $value['ini']['jumlah']),
                     Helpers::ribuan($value['baku']['sppt'] - ($value['lalu']['sppt'] + $value['ini']['sppt'])),
                     Helpers::ribuan($value['baku']['jumlah'] - ($value['lalu']['jumlah'] + $value['ini']['jumlah'])),
-                    round(1 - (($value['baku']['sppt'] - ($value['lalu']['sppt'] + $value['ini']['sppt'])) / max($value['baku']['sppt'], 1)), 2),
-                    round(1 - (($value['baku']['jumlah'] - ($value['lalu']['jumlah'] + $value['ini']['jumlah'])) / max($value['baku']['jumlah'], 1)), 2),
+                    round((1 - (($value['baku']['sppt'] - ($value['lalu']['sppt'] + $value['ini']['sppt'])) / max($value['baku']['sppt'], 1))) * 100, 2),
+                    round((1 - (($value['baku']['jumlah'] - ($value['lalu']['jumlah'] + $value['ini']['jumlah'])) / max($value['baku']['jumlah'], 1))) * 100, 2),
                ];
 
                // Menambahkan nilai ke total hanya dari kolom 2 - 13

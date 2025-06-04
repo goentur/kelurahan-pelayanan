@@ -66,7 +66,7 @@ class LaporanPenyampaianController extends Controller implements HasMiddleware
 
     public function form(JenisLapor $jenisLapor)
     {
-        if (now()->between(Carbon::parse($jenisLapor->tanggal_awal), Carbon::parse($jenisLapor->tanggal_akhir))) {
+        if (now()->between(Carbon::parse($jenisLapor->tanggal_lapor_awal), Carbon::parse($jenisLapor->tanggal_lapor_akhir))) {
             return inertia('transaksi/laporan-penyampaian/data', compact('jenisLapor'));
         } else {
             return back();
