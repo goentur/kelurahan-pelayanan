@@ -44,12 +44,12 @@ export default function RealisasiPerKelurahan({gate, loading, data}:any) {
                                 <th className="p-1 border">3</th>
                                 <th className="p-1 border">4</th>
                                 <th className="p-1 border">5</th>
-                                <th className="p-1 border">(5/3)</th>
+                                <th className="p-1 border">(4/2)</th>
                                 <th className="p-1 border">7</th>
                                 <th className="p-1 border">8</th>
                                 <th className="p-1 border">9</th>
                                 <th className="p-1 border">10</th>
-                                <th className="p-1 border">(9/7)</th>
+                                <th className="p-1 border">(10/8)</th>
                             </tr>
                         </thead>
                         <tbody className="font-light">
