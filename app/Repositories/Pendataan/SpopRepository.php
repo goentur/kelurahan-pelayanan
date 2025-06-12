@@ -2,8 +2,10 @@
 
 namespace App\Repositories\Pendataan;
 
-use App\Http\Resources\Pendataan\SpopResource;
+use App\Http\Resources\Pendataan\Spop\SpopDetailResource;
+use App\Http\Resources\Pendataan\Spop\SpopResource;
 use App\Models\Pendataan\PendataanSpop;
+use App\Models\Pendataan\PendataanSpopBangunan;
 use App\Models\Pendataan\PendataanSpopSubjekPajak;
 use App\Models\Pendataan\PendataanSpopTanah;
 use Illuminate\Support\Facades\DB;
@@ -13,8 +15,29 @@ class SpopRepository
 {
      public function data($request)
      {
-          $query = PendataanSpop::with('subjekPajak', 'tanah')->select('id', 'kd_propinsi', 'kd_dati2', 'kd_kecamatan', 'kd_kelurahan', 'kd_blok', 'no_urut', 'kd_jns_op', 'jalan', 'blok_kav_no', 'rw', 'rt');
-          $result = SpopResource::collection($query->latest()->paginate($request->perPage ?? 25))->response()->getData(true);
+          $query = PendataanSpop::with('subjekPajak', 'tanah')
+               ->select('id', 'kd_propinsi', 'kd_dati2', 'kd_kecamatan', 'kd_kelurahan', 'kd_blok', 'no_urut', 'kd_jns_op', 'jalan', 'blok_kav_no', 'rw', 'rt');
+          if ($request->filled(['berdasarkan', 'search'])) {
+               match ($request->berdasarkan) {
+                    'NOP' => $query->where(function ($q) use ($request) {
+                         $nop = explode('.', $request->search);
+                         if (count($nop) !== 7) abort(404, 'Data tidak ditemukan');
+
+                         $fields = ['kd_propinsi', 'kd_dati2', 'kd_kecamatan', 'kd_kelurahan', 'kd_blok', 'no_urut', 'kd_jns_op'];
+                         foreach ($fields as $i => $field) {
+                              $q->where($field, $nop[$i]);
+                         }
+                    }),
+                    'Nama' => $query->whereHas('subjekPajak', function ($q) use ($request) {
+                         $q->whereLike('nama', "%$request->search%", caseSensitive: false);
+                    }),
+                    default => null
+               };
+          }
+          $result = SpopResource::collection(
+               $query->latest()->paginate($request->perPage ?? 25)
+          )->response()->getData(true);
+
           return $result['meta'] + ['data' => $result['data']];
      }
      public function store($request)
@@ -62,6 +85,22 @@ class SpopRepository
                     'no_telp' => $request->no_telp,
                     'email' => $request->email,
                ]);
+               PendataanSpopBangunan::create([
+                    'pendataan_spop_id' => $spop->id,
+                    'ref_jenis_bangunan_id' => $request->jenis_bangunan,
+                    'luas_bangunan' => $request->luas_bangunan,
+                    'jumlah_lantai' => $request->jumlah_lantai,
+                    'tahun_dibangun' => $request->tahun_dibangun,
+                    'tahun_renovasi' => $request->tahun_renovasi,
+                    'daya_listrik' => $request->daya_listrik,
+                    'jumlah_ac' => $request->jumlah_ac,
+                    'ref_kondisi_id' => $request->kondisi,
+                    'ref_konstruksi_id' => $request->konstruksi,
+                    'ref_atap_id' => $request->atap,
+                    'ref_dinding_id' => $request->dinding,
+                    'ref_lantai_id' => $request->lantai,
+                    'ref_langit_id' => $request->langit,
+               ]);
                DB::commit();
           } catch (\Exception $e) {
                DB::rollBack();
@@ -90,5 +129,71 @@ class SpopRepository
                'status' => true,
                'message' => 'Data dengan NOP yang dimasukan tidak ada',
           ];
+     }
+     public function dataDetail($request)
+     {
+          return SpopDetailResource::collection(PendataanSpopBangunan::where("pendataan_spop_id", $request->id)->orderBy('id')->get());
+     }
+     public function addBangunan($request)
+     {
+          try {
+               DB::beginTransaction();
+               PendataanSpopBangunan::create([
+                    'pendataan_spop_id' => $request->pendataan_spop,
+                    'ref_jenis_bangunan_id' => $request->jenis_bangunan,
+                    'luas_bangunan' => $request->luas_bangunan,
+                    'jumlah_lantai' => $request->jumlah_lantai,
+                    'tahun_dibangun' => $request->tahun_dibangun,
+                    'tahun_renovasi' => $request->tahun_renovasi,
+                    'daya_listrik' => $request->daya_listrik,
+                    'jumlah_ac' => $request->jumlah_ac,
+                    'ref_kondisi_id' => $request->kondisi,
+                    'ref_konstruksi_id' => $request->konstruksi,
+                    'ref_atap_id' => $request->atap,
+                    'ref_dinding_id' => $request->dinding,
+                    'ref_lantai_id' => $request->lantai,
+                    'ref_langit_id' => $request->langit,
+               ]);
+               DB::commit();
+          } catch (\Exception $e) {
+               DB::rollBack();
+               throw $e;
+          }
+     }
+     public function updateBangunan($request)
+     {
+          try {
+               DB::beginTransaction();
+               PendataanSpopBangunan::find($request->id)->update([
+                    'ref_jenis_bangunan_id' => $request->jenis_bangunan,
+                    'luas_bangunan' => $request->luas_bangunan,
+                    'jumlah_lantai' => $request->jumlah_lantai,
+                    'tahun_dibangun' => $request->tahun_dibangun,
+                    'tahun_renovasi' => $request->tahun_renovasi,
+                    'daya_listrik' => $request->daya_listrik,
+                    'jumlah_ac' => $request->jumlah_ac,
+                    'ref_kondisi_id' => $request->kondisi,
+                    'ref_konstruksi_id' => $request->konstruksi,
+                    'ref_atap_id' => $request->atap,
+                    'ref_dinding_id' => $request->dinding,
+                    'ref_lantai_id' => $request->lantai,
+                    'ref_langit_id' => $request->langit,
+               ]);
+               DB::commit();
+          } catch (\Exception $e) {
+               DB::rollBack();
+               throw $e;
+          }
+     }
+     public function deleteBangunan($request)
+     {
+          try {
+               DB::beginTransaction();
+               PendataanSpopBangunan::find($request->id)->delete();
+               DB::commit();
+          } catch (\Exception $e) {
+               DB::rollBack();
+               throw $e;
+          }
      }
 }

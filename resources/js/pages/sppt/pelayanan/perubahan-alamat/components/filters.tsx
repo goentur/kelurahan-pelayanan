@@ -39,7 +39,7 @@ export default function Filters({gate, tambah, formRefs, handleCari, setData, da
                <div className="flex flex-col gap-2">
                     <PerPageSelect onChange={(value) => setInfoDataTabel((prev:any) => ({...prev,page: 1,perPage: value}))}/>
                </div>
-               <form onSubmit={handleCari} className="flex gap-2 w-3/4">
+               <form onSubmit={handleCari} className="flex gap-2 min-w-2/4">
                     <Select onValueChange={(value) => {setData((prev:any) => ({...prev,berdasarkan:value, search:""})), formRefs.current.search?.select()}}>
                          <SelectTrigger className="w-1/2 cursor-pointer">
                          <SelectValue placeholder="Filter berdasarkan"/>
@@ -56,11 +56,7 @@ export default function Filters({gate, tambah, formRefs, handleCari, setData, da
                          className="block w-full"
                          onChange={(e) => setData((prev:any) => ({...prev,search:e.target.value}))}
                          placeholder="Masukan kata pencarian"
-                         ref={(el) => {
-                              if (formRefs.current) {
-                                   formRefs.current['search'] = el;
-                              }
-                         }}
+                         ref={(el) => {if (formRefs.current) {formRefs.current['search'] = el}}}
                     />
                     <Button type="submit" disabled={loading}>
                          {loading ? <Loader2 className="animate-spin" /> : <Search/>} Cari

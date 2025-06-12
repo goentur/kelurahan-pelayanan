@@ -1,4 +1,3 @@
-import DataTableFilters from '@/components/data-table/filters'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { alertApp } from '@/components/utils'
 import AppLayout from '@/layouts/app-layout'
@@ -9,6 +8,8 @@ import { useEffect, useRef, useState } from 'react'
 import DataTable from './components/data-table'
 import FormDialog from './components/form-dialog'
 import DataTablePagination from '@/components/data-table/pagination'
+import DataTableFilters from './components/filters'
+import FormDialogDetail from './components/form-dialog-detail'
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -25,36 +26,39 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Index({ gate, status, pekerjaan, tanah }: any) {
+export default function Index({ gate, status, pekerjaan, tanah, jenisBangunan, kondisi, konstruksi, atap, dinding, lantai, langit }: any) {
     
-    const title = 'Form'
+    const title = 'SPOP'
     const formRefs = useRef<Record<string, HTMLInputElement | null>>({})
     const [form, setForm] = useState(false)
+    const [formDetail, setFormDetail] = useState(false)
     const [isEdit, setIsEdit] = useState(false)
     const [loading, setLoading] = useState(false)
     const [dataTable, setDataTable] = useState<[]>([])
     const [linksPagination, setLinksPagination] = useState([])
     const [hapus, setHapus] = useState(false)
+    const [dataDetail, setDataDetail] = useState([])
     const [infoDataTabel, setInfoDataTabel] = useState<InfoDataTabel>({
         page: 1,
         from: 0,
         to: 0,
         total: 0,
         perPage: 25,
+        berdasarkan: null,
         search: null,
     })
-    const statusOptions = status.map((item:any) => ({
-        label: item.nama,
-        value: item.id,
-    }));
-    const pekerjaanOptions = pekerjaan.map((item:any) => ({
-        label: item.nama,
-        value: item.id,
-    }));
-    const tanahOptions = tanah.map((item:any) => ({
-        label: item.nama,
-        value: item.id,
-    }));
+    const mapToOptions = (data: any[]) => data.map(item => ({ label: item.nama, value: item.id }));
+    const statusOptions = mapToOptions(status);
+    const pekerjaanOptions = mapToOptions(pekerjaan);
+    const tanahOptions = mapToOptions(tanah);
+    const jenisBangunanOptions = mapToOptions(jenisBangunan);
+    const kondisiOptions = mapToOptions(kondisi);
+    const konstruksiOptions = mapToOptions(konstruksi);
+    const atapOptions = mapToOptions(atap);
+    const dindingOptions = mapToOptions(dinding);
+    const lantaiOptions = mapToOptions(lantai);
+    const langitOptions = mapToOptions(langit);
+      
     const { data, setData, errors, post, patch, reset, processing} = useForm({
         kd_propinsi : "",
         kd_dati2 : "",
@@ -86,6 +90,19 @@ export default function Index({ gate, status, pekerjaan, tanah }: any) {
         kode_pos : "",
         no_telp : "",
         email : "",
+        jenis_bangunan : "",
+        luas_bangunan : "",
+        jumlah_lantai : "",
+        tahun_dibangun : "",
+        tahun_renovasi : "",
+        daya_listrik : "",
+        jumlah_ac : "",
+        kondisi : "",
+        konstruksi : "",
+        atap : "",
+        dinding : "",
+        lantai : "",
+        langit : "",
     });
     useEffect(() => {
         getData();
@@ -101,8 +118,8 @@ export default function Index({ gate, status, pekerjaan, tanah }: any) {
             const response = await axios.post(route('pendataan.spop.data'), {
                 page: infoDataTabel.page,
                 perPage: infoDataTabel.perPage,
-                // berdasarkan: data.berdasarkan,
-                // search: data.search,
+                berdasarkan: infoDataTabel.berdasarkan,
+                search: infoDataTabel.search,
             });
             setDataTable(response.data.data);
             setLinksPagination(response.data.links);
@@ -120,6 +137,10 @@ export default function Index({ gate, status, pekerjaan, tanah }: any) {
             setLoading(false);
         }
     };
+    const handleCari = (e: React.FormEvent) => {
+        e.preventDefault()
+        getData()
+    }
     const handleForm = (e: React.FormEvent) => {
         e.preventDefault()
         const action = isEdit ? patch : post
@@ -161,38 +182,39 @@ export default function Index({ gate, status, pekerjaan, tanah }: any) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={title} />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="text-xl">{title}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <DataTableFilters
-                            gate={gate}
-                            setInfoDataTabel={setInfoDataTabel}
-                            onClick={() => {reset(), setForm(true), setIsEdit(false)}}
-                        />
-                        <DataTable
-                            gate={gate}
-                            loading={loading}
-                            data={dataTable}
-                            from={infoDataTabel.from}
-                            setForm={setForm}
-                            setIsEdit={setIsEdit}
-                            setData={setData}
-                            setHapus={setHapus}
-                        />
-                        <DataTablePagination
-                            infoDataTabel={infoDataTabel}
-                            setInfoDataTabel={setInfoDataTabel}
-                            linksPagination={linksPagination}
-                        />
-                    </CardContent>
-                </Card>
+                <CardTitle className="text-xl">{title}</CardTitle>
+                <DataTableFilters
+                    gate={gate}
+                    tambah={() => {reset(), setForm(true), setIsEdit(false)}}
+                    formRefs={formRefs}
+                    handleCari={handleCari}
+                    infoDataTabel={infoDataTabel}
+                    setInfoDataTabel={setInfoDataTabel}
+                    loading={loading}
+                />
+                <DataTable
+                    gate={gate}
+                    loading={loading}
+                    data={dataTable}
+                    from={infoDataTabel.from}
+                    setForm={setForm}
+                    setFormDetail={setFormDetail}
+                    setIsEdit={setIsEdit}
+                    setData={setData}
+                    setDataDetail={setDataDetail}
+                    setHapus={setHapus}
+                />
+                <DataTablePagination
+                    infoDataTabel={infoDataTabel}
+                    setInfoDataTabel={setInfoDataTabel}
+                    linksPagination={linksPagination}
+                />
             </div>
             <FormDialog
                 open={form}
                 setOpen={setForm}
                 title={title}
+                isEdit={isEdit}
                 data={data}
                 setData={setData}
                 errors={errors}
@@ -202,6 +224,32 @@ export default function Index({ gate, status, pekerjaan, tanah }: any) {
                 tanahOptions={tanahOptions}
                 statusOptions={statusOptions}
                 pekerjaanOptions={pekerjaanOptions}
+                jenisBangunanOptions={jenisBangunanOptions}
+                kondisiOptions={kondisiOptions}
+                konstruksiOptions={konstruksiOptions}
+                atapOptions={atapOptions}
+                dindingOptions={dindingOptions}
+                lantaiOptions={lantaiOptions}
+                langitOptions={langitOptions}
+            />
+            <FormDialogDetail
+                open={formDetail}
+                setOpen={setFormDetail}
+                title={title}
+                dataDetail={dataDetail}
+                data={data}
+                setData={setData}
+                errors={errors}
+                formRefs={formRefs}
+                processing={processing}
+                handleForm={handleForm}
+                jenisBangunanOptions={jenisBangunanOptions}
+                kondisiOptions={kondisiOptions}
+                konstruksiOptions={konstruksiOptions}
+                atapOptions={atapOptions}
+                dindingOptions={dindingOptions}
+                lantaiOptions={lantaiOptions}
+                langitOptions={langitOptions}
             />
             {/* <Delete
                 open={hapus}

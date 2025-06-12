@@ -7,7 +7,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Gate } from '@/types'
-import { BadgeX, Ellipsis, Pencil } from 'lucide-react'
+import { BadgeX, Ellipsis, Eye, Pencil } from 'lucide-react'
 
 type DataTableProps = {
     gate: Gate
@@ -15,8 +15,10 @@ type DataTableProps = {
     data: []
     from: number
     setForm: React.Dispatch<React.SetStateAction<boolean>>
+    setFormDetail: React.Dispatch<React.SetStateAction<boolean>>
     setIsEdit: React.Dispatch<React.SetStateAction<boolean>>
     setData: React.Dispatch<React.SetStateAction<any>>
+    setDataDetail: React.Dispatch<React.SetStateAction<any>>
     setHapus: React.Dispatch<React.SetStateAction<boolean>>
 }
 
@@ -26,8 +28,10 @@ export default function DataTable({
     data,
     from,
     setForm,
+    setFormDetail,
     setIsEdit,
     setData,
+    setDataDetail,
     setHapus,
 }: DataTableProps) {
     return (
@@ -42,7 +46,7 @@ export default function DataTable({
                     <th className="p-2 border w-1">Aksi</th>
                 </tr>
             </thead>
-            <tbody className="font-light">
+            <tbody className="font-light text-sm">
                 {loading && <LoadingData colSpan={5}/>}
                 {data.length > 0 ? (
                     data.map((value: any, index: number) => (
@@ -65,6 +69,7 @@ export default function DataTable({
                                     <DropdownMenuContent align='end'>
                                         {gate.update && <DropdownMenuItem onClick={() => {setForm(true), setIsEdit(true), setData({ id:value.id, nama:value.nama, jenis:value.jenis})}}><Pencil/> Ubah</DropdownMenuItem>}
                                         {gate.delete && <DropdownMenuItem onClick={() => {setHapus(true), setData({id:value.id,})}}><BadgeX/> Hapus</DropdownMenuItem>}
+                                        <DropdownMenuItem onClick={() => {setFormDetail(true), setDataDetail(value)}}><Eye/> Detail</DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             </td>

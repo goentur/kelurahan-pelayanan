@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Pendataan;
+namespace App\Http\Resources\Pendataan\Spop;
 
 use App\Support\Facades\Helpers;
 use Illuminate\Http\Request;

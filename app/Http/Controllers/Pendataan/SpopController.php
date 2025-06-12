@@ -4,9 +4,20 @@ namespace App\Http\Controllers\Pendataan;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Common\NopRequest;
+use App\Http\Requests\Pendataan\Spop\AddBangunanRequest;
+use App\Http\Requests\Pendataan\Spop\DataDetailRequest;
 use App\Http\Requests\Pendataan\Spop\DataRequest;
+use App\Http\Requests\Pendataan\Spop\DeleteBangunanRequest;
 use App\Http\Requests\Pendataan\Spop\StoreRequest;
+use App\Http\Requests\Pendataan\Spop\UpdateBangunanRequest;
+use App\Models\Ref\RefAtap;
+use App\Models\Ref\RefDinding;
+use App\Models\Ref\RefJenisBangunan;
 use App\Models\Ref\RefJenisTanah;
+use App\Models\Ref\RefKondisi;
+use App\Models\Ref\RefKonstruksi;
+use App\Models\Ref\RefLangit;
+use App\Models\Ref\RefLantai;
 use App\Models\Ref\RefPekerjaanSubjekPajak;
 use App\Models\Ref\RefStatusSubjekPajak;
 use App\Repositories\Pendataan\SpopRepository;
@@ -36,7 +47,14 @@ class SpopController extends Controller
         $status = RefStatusSubjekPajak::select("id", "nama")->get();
         $pekerjaan = RefPekerjaanSubjekPajak::select("id", "nama")->get();
         $tanah = RefJenisTanah::select("id", "nama")->get();
-        return inertia('pendataan/spop/index', compact("gate", "status", "pekerjaan", "tanah"));
+        $jenisBangunan = RefJenisBangunan::select("id", "nama")->get();
+        $kondisi = RefKondisi::select("id", "nama")->get();
+        $konstruksi = RefKonstruksi::select("id", "nama")->get();
+        $atap = RefAtap::select("id", "nama")->get();
+        $dinding = RefDinding::select("id", "nama")->get();
+        $lantai = RefLantai::select("id", "nama")->get();
+        $langit = RefLangit::select("id", "nama")->get();
+        return inertia('pendataan/spop/index', compact("gate", "status", "pekerjaan", "tanah", "jenisBangunan", "kondisi", "konstruksi", "atap", "dinding", "lantai", "langit"));
     }
 
     public function data(DataRequest $request)
@@ -53,6 +71,29 @@ class SpopController extends Controller
     public function store(StoreRequest $request)
     {
         $this->repository->store($request);
+        back()->with('success', 'Data berhasil ditambahkan');
+    }
+
+    public function dataDetail(DataDetailRequest $request)
+    {
+        return response()->json($this->repository->dataDetail($request));
+    }
+
+    public function addBangunan(AddBangunanRequest $request)
+    {
+        $this->repository->addBangunan($request);
+        back()->with('success', 'Data berhasil ditambahkan');
+    }
+
+    public function updateBangunan(UpdateBangunanRequest $request)
+    {
+        $this->repository->updateBangunan($request);
+        back()->with('success', 'Data berhasil ditambahkan');
+    }
+
+    public function deleteBangunan(DeleteBangunanRequest $request)
+    {
+        $this->repository->deleteBangunan($request);
         back()->with('success', 'Data berhasil ditambahkan');
     }
 }
