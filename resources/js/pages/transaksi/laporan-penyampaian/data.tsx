@@ -113,7 +113,7 @@ export default function Data({jenisLapor}:dataProps) {
                 <Card>
                     <CardHeader className='text-center'>
                         <CardTitle className="text-xl uppercase">{title}</CardTitle>
-                        <CardTitle className="text-sm text-green-500">{jenisLapor.tanggal_awal} S.D. {jenisLapor.tanggal_akhir}</CardTitle>
+                        <CardTitle className="text-sm text-green-500">{jenisLapor.tanggal_data_awal} S.D. {jenisLapor.tanggal_data_akhir}</CardTitle>
                         <hr className='mt-3 mb-3' />
                     </CardHeader>
                     <CardContent>
