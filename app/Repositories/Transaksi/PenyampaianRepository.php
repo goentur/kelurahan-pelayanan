@@ -233,7 +233,7 @@ class PenyampaianRepository
             )
             ->when(
                 $jenisLapor && $jenisLapor->jenis === PenyampaianTipe::TERSAMPAIKAN->value,
-                fn($q) => $q->whereBetween('keterangan', [$jenisLapor->tanggal_awal, $jenisLapor->tanggal_akhir])
+                fn($q) => $q->whereBetween('keterangan', [$jenisLapor->tanggal_data_awal, $jenisLapor->tanggal_data_akhir])
             )
             ->orderBy('kd_kelurahan')
             ->orderBy('kd_blok')
