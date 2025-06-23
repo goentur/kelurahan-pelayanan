@@ -146,7 +146,6 @@ export default function SubjekPajak({data, setData, formRefs, errors, statusOpti
                          inputRef={(el) => {if (formRefs.current) {formRefs.current['no_telp'] = el;}}}
                          placeholder="no telp"
                          error={errors.no_telp}
-                         required
                     />
                </div>
                <FormInput

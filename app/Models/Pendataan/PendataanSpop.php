@@ -4,11 +4,12 @@ namespace App\Models\Pendataan;
 
 use App\Casts\LeadingZero;
 use App\Casts\Uppercase;
+use App\Models\Ref\RefJenisPendataanSpop;
 use Illuminate\Database\Eloquent\Model;
 
 class PendataanSpop extends Model
 {
-    protected $fillable = ['uuid', 'user_id', 'kd_propinsi', 'kd_dati2', 'kd_kecamatan', 'kd_kelurahan', 'kd_blok', 'no_urut', 'kd_jns_op', 'tahun', 'jalan', 'blok_kav_no', 'rw', 'rt', 'koordinat'];
+    protected $fillable = ['uuid', 'user_id', 'ref_jenis_pendataan_spop_id', 'kd_propinsi', 'kd_dati2', 'kd_kecamatan', 'kd_kelurahan', 'kd_blok', 'no_urut', 'kd_jns_op', 'tahun', 'jalan', 'blok_kav_no', 'rw', 'rt', 'koordinat', 'keterangan'];
 
     protected $casts = [
         'kd_propinsi' => LeadingZero::class . ':2',
@@ -45,5 +46,10 @@ class PendataanSpop extends Model
     public function bangunan()
     {
         return $this->hasOne(PendataanSpopBangunan::class);
+    }
+
+    public function jenisPendataanSpop()
+    {
+        return $this->belongsTo(RefJenisPendataanSpop::class);
     }
 }

@@ -35,7 +35,7 @@ class SpopRepository
                };
           }
           $result = SpopResource::collection(
-               $query->latest()->paginate($request->perPage ?? 25)
+               $query->where('user_id', auth()->id())->latest()->paginate($request->perPage ?? 25)
           )->response()->getData(true);
 
           return $result['meta'] + ['data' => $result['data']];
@@ -60,6 +60,7 @@ class SpopRepository
                     'rw' => $request->rw,
                     'rt' => $request->rt,
                     'koordinat' => json_encode($request->koordinat),
+                    'keterangan' => $request->keterangan,
                ]);
                PendataanSpopTanah::create([
                     'pendataan_spop_id' => $spop->id,

@@ -24,7 +24,7 @@ export default function Nop({data, setData, formRefs, errors, selanjutnya} : pro
                     <Input
                          className="text-center"
                          required
-                         autoFocus={name === 'kd_propinsi'}
+                         autoFocus={name === 'no_urut'}
                          maxLength={val}
                          minLength={val}
                          value={data[name] ?? ""}

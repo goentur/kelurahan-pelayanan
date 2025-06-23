@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('rw')->nullable();
             $table->string('rt')->nullable();
             $table->string('koordinat')->nullable();
+            $table->string('keterangan')->nullable();
             $table->timestamps();
         });
     }

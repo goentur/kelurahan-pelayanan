@@ -13,6 +13,7 @@ use App\Http\Requests\Pendataan\Spop\UpdateBangunanRequest;
 use App\Models\Ref\RefAtap;
 use App\Models\Ref\RefDinding;
 use App\Models\Ref\RefJenisBangunan;
+use App\Models\Ref\RefJenisPendataanSpop;
 use App\Models\Ref\RefJenisTanah;
 use App\Models\Ref\RefKondisi;
 use App\Models\Ref\RefKonstruksi;
@@ -44,6 +45,7 @@ class SpopController extends Controller
     public function index()
     {
         $gate = $this->gate();
+        $jenis = RefJenisPendataanSpop::select("id", "nama")->get();
         $status = RefStatusSubjekPajak::select("id", "nama")->get();
         $pekerjaan = RefPekerjaanSubjekPajak::select("id", "nama")->get();
         $tanah = RefJenisTanah::select("id", "nama")->get();
@@ -54,7 +56,7 @@ class SpopController extends Controller
         $dinding = RefDinding::select("id", "nama")->get();
         $lantai = RefLantai::select("id", "nama")->get();
         $langit = RefLangit::select("id", "nama")->get();
-        return inertia('pendataan/spop/index', compact("gate", "status", "pekerjaan", "tanah", "jenisBangunan", "kondisi", "konstruksi", "atap", "dinding", "lantai", "langit"));
+        return inertia('pendataan/spop/index', compact("gate", "jenis", "status", "pekerjaan", "tanah", "jenisBangunan", "kondisi", "konstruksi", "atap", "dinding", "lantai", "langit"));
     }
 
     public function data(DataRequest $request)

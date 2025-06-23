@@ -26,7 +26,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Index({ gate, status, pekerjaan, tanah, jenisBangunan, kondisi, konstruksi, atap, dinding, lantai, langit }: any) {
+export default function Index({ gate, jenis, status, pekerjaan, tanah, jenisBangunan, kondisi, konstruksi, atap, dinding, lantai, langit }: any) {
     
     const title = 'SPOP'
     const formRefs = useRef<Record<string, HTMLInputElement | null>>({})
@@ -48,6 +48,7 @@ export default function Index({ gate, status, pekerjaan, tanah, jenisBangunan, k
         search: null,
     })
     const mapToOptions = (data: any[]) => data.map(item => ({ label: item.nama, value: item.id }));
+    const jenisOptions = mapToOptions(jenis);
     const statusOptions = mapToOptions(status);
     const pekerjaanOptions = mapToOptions(pekerjaan);
     const tanahOptions = mapToOptions(tanah);
@@ -60,10 +61,11 @@ export default function Index({ gate, status, pekerjaan, tanah, jenisBangunan, k
     const langitOptions = mapToOptions(langit);
       
     const { data, setData, errors, post, patch, reset, processing} = useForm({
-        kd_propinsi : "",
-        kd_dati2 : "",
-        kd_kecamatan : "",
-        kd_kelurahan : "",
+        jenis : "",
+        kd_propinsi : "33",
+        kd_dati2 : "75",
+        kd_kecamatan : "040",
+        kd_kelurahan : "007",
         kd_blok : "",
         no_urut : "",
         kd_jns_op : "",
@@ -74,6 +76,7 @@ export default function Index({ gate, status, pekerjaan, tanah, jenisBangunan, k
         luas_tanah : "",
         no_sertipikat : "",
         tanah : "",
+        keterangan : "",
         koordinat : null,
         status : "",
         pekerjaan : "",
@@ -221,6 +224,7 @@ export default function Index({ gate, status, pekerjaan, tanah, jenisBangunan, k
                 formRefs={formRefs}
                 processing={processing}
                 handleForm={handleForm}
+                jenisOptions={jenisOptions}
                 tanahOptions={tanahOptions}
                 statusOptions={statusOptions}
                 pekerjaanOptions={pekerjaanOptions}

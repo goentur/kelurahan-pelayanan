@@ -61,7 +61,7 @@ class StoreRequest extends FormRequest
             'kecamatan' => 'required|string|max:255',
             'kota' => 'required|string|max:255',
             'kode_pos' => 'nullable|numeric|digits:5',
-            'no_telp' => 'required|numeric',
+            'no_telp' => 'nullable|numeric',
             'email' => 'nullable|email',
             'jenis_bangunan' => 'required|' . Rule::exists(RefJenisBangunan::class, 'id'),
             'luas_bangunan' => 'required|numeric',

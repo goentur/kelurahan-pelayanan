@@ -9,15 +9,17 @@ type props = {
      setData: React.Dispatch<React.SetStateAction<any>>
      formRefs: React.RefObject<Record<string, HTMLInputElement | null>>
      errors: any
+     jenisOptions: { value: string; label: string }[]
      tanahOptions: { value: string; label: string }[]
  }
-export default function ObjekPajak({data, setData, formRefs, errors, tanahOptions} : props) {
+export default function ObjekPajak({data, setData, formRefs, errors, jenisOptions, tanahOptions} : props) {
      return (
      <div>
           <span className='text-2xl font-semibold'>OBJEK PAJAK</span>
           <hr className='my-2' />
           <div className="grid gap-2 md:grid-cols-2 mt-2 mb-2">
                <div>
+                    <Combobox label="jenis" selectedValue={data.jenis} options={jenisOptions} onSelect={(value) => setData((prevData:any) => ({ ...prevData, jenis: value }))} error={errors.jenis}/>
                     <div className="gap-2 md:w-3/4">
                          <Label>
                               NOP
@@ -100,11 +102,22 @@ export default function ObjekPajak({data, setData, formRefs, errors, tanahOption
                               inputRef={(el) => {if (formRefs.current) {formRefs.current['no_sertipikat'] = el;}}}
                               placeholder="no sertipikat"
                               error={errors.no_sertipikat}
-                              maxLength={14}
-                              minLength={14}
+                              minLength={4}
                          />
                          <Combobox label="tanah" selectedValue={data.tanah} options={tanahOptions} onSelect={(value) => setData((prevData:any) => ({ ...prevData, tanah: value }))} error={errors.tanah}/>
                     </div>
+                    <FormInput
+                         id="Keterangan"
+                         type="text"
+                         value={data.keterangan}
+                         onChange={(e) => setData((prevData: any) => ({ ...prevData, keterangan: e.target.value }))}
+                         inputRef={(el) => {if (formRefs.current) {formRefs.current['keterangan'] = el;}}}
+                         placeholder="Keterangan"
+                         error={errors.keterangan}
+                         required
+                         maxLength={3}
+                         minLength={3}
+                    />
                </div>
                <div className='gap-2'>
                     <Label>

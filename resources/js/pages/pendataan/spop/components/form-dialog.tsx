@@ -22,6 +22,7 @@ type props = {
     formRefs: React.RefObject<Record<string, HTMLInputElement | null>>
     processing: boolean
     handleForm: (e: React.FormEvent) => void
+    jenisOptions: { value: string; label: string }[]
     tanahOptions: { value: string; label: string }[]
     statusOptions: { value: string; label: string }[]
     pekerjaanOptions: { value: string; label: string }[]
@@ -44,6 +45,7 @@ export default function FormDialog({
     formRefs,
     processing,
     handleForm,
+    jenisOptions,
     tanahOptions,
     statusOptions,
     pekerjaanOptions,
@@ -68,6 +70,7 @@ export default function FormDialog({
                         setData={setData}
                         formRefs={formRefs}
                         errors={errors}
+                        jenisOptions={jenisOptions}
                         tanahOptions={tanahOptions}
                     />
                     <SubjekPajak
