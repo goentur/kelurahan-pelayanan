@@ -5,6 +5,7 @@ namespace App\Http\Requests\Pendataan\Spop;
 use App\Models\Ref\RefAtap;
 use App\Models\Ref\RefDinding;
 use App\Models\Ref\RefJenisBangunan;
+use App\Models\Ref\RefJenisPendataanSpop;
 use App\Models\Ref\RefJenisTanah;
 use App\Models\Ref\RefKondisi;
 use App\Models\Ref\RefKonstruksi;
@@ -33,6 +34,7 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'jenis' => 'required|' . Rule::exists(RefJenisPendataanSpop::class, 'id'),
             'kd_propinsi' => 'required|numeric|digits:2',
             'kd_dati2' => 'required|numeric|digits:2',
             'kd_kecamatan' => 'required|numeric|digits:3',
@@ -47,6 +49,7 @@ class StoreRequest extends FormRequest
             'luas_tanah' => 'required|numeric',
             'no_sertipikat' => 'nullable|string',
             'tanah' => 'required|' . Rule::exists(RefJenisTanah::class, 'id'),
+            'keterangan' => 'required|string',
             'koordinat' => 'required|array',
             'status' => 'required|' . Rule::exists(RefStatusSubjekPajak::class, 'id'),
             'pekerjaan' => 'required|' . Rule::exists(RefPekerjaanSubjekPajak::class, 'id'),

@@ -47,6 +47,7 @@ class SpopRepository
                $spop = PendataanSpop::create([
                     'uuid' => Str::uuid()->toString(),
                     'user_id' => auth()->id(),
+                    'ref_jenis_pendataan_spop_id' => $request->jenis,
                     'kd_propinsi' => $request->kd_propinsi,
                     'kd_dati2' => $request->kd_dati2,
                     'kd_kecamatan' => $request->kd_kecamatan,

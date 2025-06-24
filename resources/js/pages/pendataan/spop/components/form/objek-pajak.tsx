@@ -115,8 +115,6 @@ export default function ObjekPajak({data, setData, formRefs, errors, jenisOption
                          placeholder="Keterangan"
                          error={errors.keterangan}
                          required
-                         maxLength={3}
-                         minLength={3}
                     />
                </div>
                <div className='gap-2'>
