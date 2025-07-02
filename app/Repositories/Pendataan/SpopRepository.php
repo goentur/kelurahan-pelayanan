@@ -87,22 +87,24 @@ class SpopRepository
                     'no_telp' => $request->no_telp,
                     'email' => $request->email,
                ]);
-               PendataanSpopBangunan::create([
-                    'pendataan_spop_id' => $spop->id,
-                    'ref_jenis_bangunan_id' => $request->jenis_bangunan,
-                    'luas_bangunan' => $request->luas_bangunan,
-                    'jumlah_lantai' => $request->jumlah_lantai,
-                    'tahun_dibangun' => $request->tahun_dibangun,
-                    'tahun_renovasi' => $request->tahun_renovasi,
-                    'daya_listrik' => $request->daya_listrik,
-                    'jumlah_ac' => $request->jumlah_ac,
-                    'ref_kondisi_id' => $request->kondisi,
-                    'ref_konstruksi_id' => $request->konstruksi,
-                    'ref_atap_id' => $request->atap,
-                    'ref_dinding_id' => $request->dinding,
-                    'ref_lantai_id' => $request->lantai,
-                    'ref_langit_id' => $request->langit,
-               ]);
+               if ($request->bangunan == 'ya') {
+                    PendataanSpopBangunan::create([
+                         'pendataan_spop_id' => $spop->id,
+                         'ref_jenis_bangunan_id' => $request->jenis_bangunan,
+                         'luas_bangunan' => $request->luas_bangunan,
+                         'jumlah_lantai' => $request->jumlah_lantai,
+                         'tahun_dibangun' => $request->tahun_dibangun,
+                         'tahun_renovasi' => $request->tahun_renovasi,
+                         'daya_listrik' => $request->daya_listrik,
+                         'jumlah_ac' => $request->jumlah_ac,
+                         'ref_kondisi_id' => $request->kondisi,
+                         'ref_konstruksi_id' => $request->konstruksi,
+                         'ref_atap_id' => $request->atap,
+                         'ref_dinding_id' => $request->dinding,
+                         'ref_lantai_id' => $request->lantai,
+                         'ref_langit_id' => $request->langit,
+                    ]);
+               }
                DB::commit();
           } catch (\Exception $e) {
                DB::rollBack();

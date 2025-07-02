@@ -27,7 +27,7 @@ class RealisasiPerKelurahanRepository
                     $user->satuanKerja,
                     fn($query) => $query->where('user_id', $user->id),
                     fn($query) => $query->whereNull('atasan_satuan_kerja_id')
-               )->get();
+               )->orderBy('kode_ref')->get();
 
                $dataAtasan = [];
                $finalTotals = $this->initTotals();

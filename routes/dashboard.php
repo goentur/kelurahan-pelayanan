@@ -15,7 +15,8 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard.')
     Route::prefix('penyampaian-sppt')->name('penyampaian-sppt.')->group(function () {
         Route::middleware('can:dashboard-penyampaian-sppt')->controller(PenyampaianSPPTController::class)->group(function () {
             Route::get('/', 'index')->name('index');
-            Route::post('/', 'data')->name('data');
+            Route::post('data', 'data')->name('data');
+            Route::post('rekap-data', 'rekapData')->name('rekap-data');
         });
     });
 });

@@ -31,9 +31,12 @@ class StoreRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
+
     public function rules(): array
     {
         return [
+            // === Validasi Utama ===
+            'bangunan' => 'required|in:ya,tidak',
             'jenis' => 'required|' . Rule::exists(RefJenisPendataanSpop::class, 'id'),
             'kd_propinsi' => 'required|numeric|digits:2',
             'kd_dati2' => 'required|numeric|digits:2',
@@ -66,19 +69,42 @@ class StoreRequest extends FormRequest
             'kode_pos' => 'nullable|numeric|digits:5',
             'no_telp' => 'nullable|numeric',
             'email' => 'nullable|email',
-            'jenis_bangunan' => 'required|' . Rule::exists(RefJenisBangunan::class, 'id'),
-            'luas_bangunan' => 'required|numeric',
-            'jumlah_lantai' => 'required|numeric',
-            'tahun_dibangun' => 'required|numeric|digits:4',
-            'tahun_renovasi' => 'required|numeric|digits:4',
-            'daya_listrik' => 'required|numeric',
-            'jumlah_ac' => 'required|numeric',
-            'kondisi' => 'required|' . Rule::exists(RefKondisi::class, 'id'),
-            'konstruksi' => 'required|' . Rule::exists(RefKonstruksi::class, 'id'),
-            'atap' => 'required|' . Rule::exists(RefAtap::class, 'id'),
-            'dinding' => 'required|' . Rule::exists(RefDinding::class, 'id'),
-            'lantai' => 'required|' . Rule::exists(RefLantai::class, 'id'),
-            'langit' => 'required|' . Rule::exists(RefLangit::class, 'id'),
+
+            // === Field Bangunan Default (nullable jika tidak dipilih) ===
+            'jenis_bangunan' => 'nullable|' . Rule::exists(RefJenisBangunan::class, 'id'),
+            'luas_bangunan' => 'nullable|numeric',
+            'jumlah_lantai' => 'nullable|numeric',
+            'tahun_dibangun' => 'nullable|numeric|digits:4',
+            'tahun_renovasi' => 'nullable|numeric|digits:4',
+            'daya_listrik' => 'nullable|numeric',
+            'jumlah_ac' => 'nullable|numeric',
+            'kondisi' => 'nullable|' . Rule::exists(RefKondisi::class, 'id'),
+            'konstruksi' => 'nullable|' . Rule::exists(RefKonstruksi::class, 'id'),
+            'atap' => 'nullable|' . Rule::exists(RefAtap::class, 'id'),
+            'dinding' => 'nullable|' . Rule::exists(RefDinding::class, 'id'),
+            'lantai' => 'nullable|' . Rule::exists(RefLantai::class, 'id'),
+            'langit' => 'nullable|' . Rule::exists(RefLangit::class, 'id'),
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->sometimes([
+            'jenis_bangunan',
+            'luas_bangunan',
+            'jumlah_lantai',
+            'tahun_dibangun',
+            'tahun_renovasi',
+            'daya_listrik',
+            'jumlah_ac',
+            'kondisi',
+            'konstruksi',
+            'atap',
+            'dinding',
+            'lantai',
+            'langit',
+        ], 'required', function ($input) {
+            return $input->bangunan === 'ya';
+        });
     }
 }

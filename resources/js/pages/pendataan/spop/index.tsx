@@ -10,6 +10,7 @@ import FormDialog from './components/form-dialog'
 import DataTablePagination from '@/components/data-table/pagination'
 import DataTableFilters from './components/filters'
 import FormDialogDetail from './components/form-dialog-detail'
+import { mapToOptions } from '@/lib/utils'
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -47,7 +48,6 @@ export default function Index({ gate, jenis, status, pekerjaan, tanah, jenisBang
         berdasarkan: null,
         search: null,
     })
-    const mapToOptions = (data: any[]) => data.map(item => ({ label: item.nama, value: item.id }));
     const jenisOptions = mapToOptions(jenis);
     const statusOptions = mapToOptions(status);
     const pekerjaanOptions = mapToOptions(pekerjaan);
@@ -60,7 +60,7 @@ export default function Index({ gate, jenis, status, pekerjaan, tanah, jenisBang
     const lantaiOptions = mapToOptions(lantai);
     const langitOptions = mapToOptions(langit);
       
-    const { data, setData, errors, post, patch, reset, processing} = useForm({
+    const { data, setData, errors, post, patch, processing} = useForm({
         jenis : "",
         kd_propinsi : "33",
         kd_dati2 : "75",
@@ -69,6 +69,7 @@ export default function Index({ gate, jenis, status, pekerjaan, tanah, jenisBang
         kd_blok : "",
         no_urut : "",
         kd_jns_op : "",
+        nop : false,
         jalan : "",
         blok_kav_no : "",
         rw : "",
@@ -93,6 +94,7 @@ export default function Index({ gate, jenis, status, pekerjaan, tanah, jenisBang
         kode_pos : "",
         no_telp : "",
         email : "",
+        bangunan : "tidak",
         jenis_bangunan : "",
         luas_bangunan : "",
         jumlah_lantai : "",
@@ -115,6 +117,56 @@ export default function Index({ gate, jenis, status, pekerjaan, tanah, jenisBang
         getData();
     }, [infoDataTabel.page, infoDataTabel.perPage]);
 
+    const reset = () => setData({
+        jenis: "",
+        kd_propinsi: "33",
+        kd_dati2: "75",
+        kd_kecamatan: "040",
+        kd_kelurahan: "007",
+        kd_blok: "",
+        no_urut: "",
+        kd_jns_op: "",
+        nop: false,
+        jalan: "",
+        blok_kav_no: "",
+        rw: "",
+        rt: "",
+        luas_tanah: "",
+        no_sertipikat: "",
+        tanah: "",
+        keterangan: "",
+        koordinat: null,
+        status: "",
+        pekerjaan: "",
+        nik: "",
+        npwp: "",
+        nama: "",
+        jalan_sp: "",
+        blok_kav_no_sp: "",
+        rw_sp: "",
+        rt_sp: "",
+        kelurahan: "",
+        kecamatan: "",
+        kota: "",
+        kode_pos: "",
+        no_telp: "",
+        email: "",
+        bangunan: "tidak",
+        jenis_bangunan: "",
+        luas_bangunan: "",
+        jumlah_lantai: "",
+        tahun_dibangun: "",
+        tahun_renovasi: "",
+        daya_listrik: "",
+        jumlah_ac: "",
+        kondisi: "",
+        konstruksi: "",
+        atap: "",
+        dinding: "",
+        lantai: "",
+        langit: "",
+    });
+    
     const getData = async () => {
         setLoading(true);
         try {
@@ -156,6 +208,7 @@ export default function Index({ gate, jenis, status, pekerjaan, tanah, jenisBang
                 reset()
                 alertApp(e)
                 setForm(false)
+                getData();
             },
             onError: (e) => {
                 const firstErrorKey = Object.keys(e)[0]
@@ -169,7 +222,10 @@ export default function Index({ gate, jenis, status, pekerjaan, tanah, jenisBang
         try {
             const response = await axios.post(route('pendataan.spop.cek-nop'), data);
             if (!response.data.status) {
+                setData((prevData: any) => ({ ...prevData, nop: true }))
                 alertApp(response.data.message,"error")
+            }else{
+                setData((prevData: any) => ({ ...prevData, nop: false }))
             }
         } catch (error:any) {
             alertApp(error.response.data.message, 'error');
@@ -188,7 +244,7 @@ export default function Index({ gate, jenis, status, pekerjaan, tanah, jenisBang
                 <CardTitle className="text-xl">{title}</CardTitle>
                 <DataTableFilters
                     gate={gate}
-                    tambah={() => {reset(), setForm(true), setIsEdit(false)}}
+                    tambah={() => {setForm(true), setIsEdit(false)}}
                     formRefs={formRefs}
                     handleCari={handleCari}
                     infoDataTabel={infoDataTabel}

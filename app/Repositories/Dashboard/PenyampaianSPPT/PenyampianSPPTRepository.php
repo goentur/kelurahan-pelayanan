@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\Dashboard;
+namespace App\Repositories\Dashboard\PenyampaianSPPT;
 
 use App\Enums\PenyampaianTipe;
 use App\Models\BakuAwal;
@@ -18,6 +18,7 @@ class PenyampianSPPTRepository
      public function data()
      {
           $user = auth()->user();
+
           return Memo::for3min('tabel-dashboard-penyampaian-sppt-' . $user->id, function () {
                $jenisLapor = JenisLapor::select('id', 'nama')
                     ->where('jenis', PenyampaianTipe::TERSAMPAIKAN)
@@ -52,7 +53,7 @@ class PenyampianSPPTRepository
                               'total' => Helpers::ribuan($total),
                               'sisa' => Helpers::ribuan($sisa),
                               'persen' => $persen,
-                         ] + $rekapBawahan;
+                         ] + array_map([Helpers::class, 'ribuan'], $rekapBawahan);
 
                          foreach ($laporIds as $id) {
                               $rekapAtasan[$id] += $rekapBawahan[$id];
@@ -65,6 +66,8 @@ class PenyampianSPPTRepository
                     $sisaAtasan = $baku - $totalAtasan;
                     $persenAtasan = $baku > 0 ? round(($totalAtasan / $baku) * 100, 2) : 0;
 
+                    $rekapAtasanFormatted = array_map([Helpers::class, 'ribuan'], $rekapAtasan);
+
                     $dataAtasan[] = [
                          'kode' => $atasan->kode_ref,
                          'nama' => $atasan->nama,
@@ -73,9 +76,8 @@ class PenyampianSPPTRepository
                          'sisa' => Helpers::ribuan($sisaAtasan),
                          'persen' => $persenAtasan,
                          'bawahan' => $bawahanData,
-                    ] + $rekapAtasan;
+                    ] + $rekapAtasanFormatted;
 
-                    // Akumulasi grand total
                     $grandTotal['baku'] += $baku;
                     $grandTotal['total'] += $totalAtasan;
                     $grandTotal['sisa'] += $sisaAtasan;
@@ -88,6 +90,8 @@ class PenyampianSPPTRepository
                     ? round(($grandTotal['total'] / $grandTotal['baku']) * 100, 2)
                     : 0;
 
+               $grandTotalLaporFormatted = array_map([Helpers::class, 'ribuan'], array_intersect_key($grandTotal, $laporInit));
+
                $dataAtasan[] = [
                     'kode' => '',
                     'nama' => 'TOTAL',
@@ -96,7 +100,7 @@ class PenyampianSPPTRepository
                     'sisa' => Helpers::ribuan($grandTotal['sisa']),
                     'persen' => $grandTotal['persen'],
                     'bawahan' => [],
-               ] + array_intersect_key($grandTotal, $laporInit);
+               ] + $grandTotalLaporFormatted;
 
                return $dataAtasan;
           });

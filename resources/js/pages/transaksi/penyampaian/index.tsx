@@ -142,7 +142,7 @@ export default function Index({ gate, tanggal, pesan }: IndexProps) {
                         <CardTitle className="text-xl">{title}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        {pesan && <div className='bg-red-500 rounded mb-3 p-2 text-sm'>{pesan}</div>}
+                        {pesan && <div className='bg-red-500 rounded mb-3 p-2 text-sm text-white'>{pesan}</div>}
                         <form onSubmit={handleSubmit} className="mb-4 mx-auto">
                             <div className="grid gap-4 lg:grid-cols-3 md:grid-cols-3">
                                 <div>

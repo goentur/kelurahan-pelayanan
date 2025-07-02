@@ -2,8 +2,10 @@ import Combobox from "@/components/combobox";
 import FormInput from "@/components/form-input";
 import InputError from "@/components/input-error";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import LayerGoogleMap from "./layer-google-map";
 import Nop from "./nop";
+import { TriangleAlert } from "lucide-react";
 type props = {
      data: any
      setData: React.Dispatch<React.SetStateAction<any>>
@@ -32,6 +34,7 @@ export default function ObjekPajak({data, setData, formRefs, errors, jenisOption
                               selanjutnya={"jalan"}
                          />
                     </div>
+                    {data.nop && <div className='bg-red-500 rounded mb-3 mt-3 p-2 text-sm text-white'><TriangleAlert className="inline" size={18}/> PERINGATAN <br /> NOP Sudah digunakan.</div>}
                     <div className="grid gap-2 md:grid-cols-2 mt-2 mb-2">
                          <FormInput
                               id="jalan"
@@ -81,7 +84,7 @@ export default function ObjekPajak({data, setData, formRefs, errors, jenisOption
                               </div>
                          </div>
                     </div>
-                    <div className="grid gap-2 md:grid-cols-3 mt-2 mb-2">
+                    <div className="grid gap-2 md:grid-cols-4 mt-2 mb-2">
                          <FormInput
                               id="luas_tanah"
                               type="text"
@@ -105,6 +108,18 @@ export default function ObjekPajak({data, setData, formRefs, errors, jenisOption
                               minLength={4}
                          />
                          <Combobox label="tanah" selectedValue={data.tanah} options={tanahOptions} onSelect={(value) => setData((prevData:any) => ({ ...prevData, tanah: value }))} error={errors.tanah}/>
+                         <div className="gap-2">
+                              <Label>Bangunan</Label>
+                              <Select defaultValue="tidak" onValueChange={(value) => {setData((prev:any) => ({...prev,bangunan:value}))}}>
+                                   <SelectTrigger className="cursor-pointer">
+                                        <SelectValue placeholder="Ada Bangunan?"/>
+                                   </SelectTrigger>
+                                   <SelectContent align="end">
+                                        <SelectItem className='cursor-pointer' value="tidak">TIDAK</SelectItem>
+                                        <SelectItem className='cursor-pointer' value="ya">YA</SelectItem>
+                                   </SelectContent>
+                              </Select>
+                         </div>
                     </div>
                     <FormInput
                          id="Keterangan"

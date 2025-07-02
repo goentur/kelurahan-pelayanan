@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Dashboard;
+namespace App\Http\Controllers\Cetak;
 
 use App\Enums\PenyampaianTipe;
 use App\Http\Controllers\Controller;
@@ -23,15 +23,8 @@ class PenyampaianSPPTController extends Controller implements HasMiddleware
     public function index()
     {
         $jenisLapor = JenisLapor::select('id', 'nama')->where('jenis', PenyampaianTipe::TERSAMPAIKAN)->orderBy('no_urut')->get();
-        return inertia('dashboard/penyampaian-sppt/index', compact('jenisLapor'));
+        return inertia('cetak/penyampaian-sppt/index', compact('jenisLapor'));
     }
 
-    public function data(PenyampianSPPTRepository $penyampianSPPTRepository)
-    {
-        return response()->json($penyampianSPPTRepository->data());
-    }
-    public function rekapData(RekapRepository $rekapRepository)
-    {
-        return response()->json($rekapRepository->data());
-    }
+    public function tidakTersampaikan() {}
 }

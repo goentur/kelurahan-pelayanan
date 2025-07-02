@@ -6,7 +6,7 @@ type props = {
      formRefs: React.RefObject<Record<string, HTMLInputElement | null>>
      errors: any
      selanjutnya?: string
- }
+}
 export default function Nop({data, setData, formRefs, errors, selanjutnya} : props) {
      const inputFields = [
           { name: 'kd_propinsi', val: 2, next: 'kd_dati2' },
@@ -16,7 +16,7 @@ export default function Nop({data, setData, formRefs, errors, selanjutnya} : pro
           { name: 'kd_blok', val: 3, next: 'no_urut' },
           { name: 'no_urut', val: 4, next: 'kd_jns_op' },
           { name: 'kd_jns_op', val: 1, next: selanjutnya??'' },
-        ];
+     ];
      return (
      <div className="grid gap-2 grid-cols-3 md:grid-cols-7">
           {inputFields.map(({ name, val, next }) => (

@@ -81,7 +81,7 @@ export default function FormDialog({
                         statusOptions={statusOptions}
                         pekerjaanOptions={pekerjaanOptions}
                     />
-                    {!isEdit && 
+                    {!isEdit && data.bangunan=='ya' && 
                         <Bangunan
                             data={data}
                             setData={setData}
@@ -98,7 +98,7 @@ export default function FormDialog({
                     }
                     <DialogFooter>
                         <div className="flex items-center mt-5">
-                            <Button type="submit" disabled={processing}> {processing ? (<Loader2 className="animate-spin" />) : (<Save /> )} Simpan</Button>
+                            <Button type="submit" disabled={processing || data.nop}> {processing ? (<Loader2 className="animate-spin" />) : (<Save /> )} Simpan</Button>
                         </div>
                     </DialogFooter>
                 </form>

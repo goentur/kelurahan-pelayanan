@@ -14,11 +14,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 require __DIR__ . '/dashboard.php';
-require __DIR__ . '/master.php';
 require __DIR__ . '/pengaturan.php';
 require __DIR__ . '/pendataan.php';
 require __DIR__ . '/sppt.php';
 require __DIR__ . '/transaksi.php';
 require __DIR__ . '/user.php';
 require __DIR__ . '/settings.php';
+require __DIR__ . '/cetak.php';
+require __DIR__ . '/master.php';
 require __DIR__ . '/auth.php';
