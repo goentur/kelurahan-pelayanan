@@ -10,6 +10,7 @@ use App\Http\Requests\Pendataan\Spop\DataRequest;
 use App\Http\Requests\Pendataan\Spop\DeleteBangunanRequest;
 use App\Http\Requests\Pendataan\Spop\StoreRequest;
 use App\Http\Requests\Pendataan\Spop\UpdateBangunanRequest;
+use App\Models\Pendataan\PendataanSpop;
 use App\Models\Ref\RefAtap;
 use App\Models\Ref\RefDinding;
 use App\Models\Ref\RefJenisBangunan;
@@ -97,5 +98,11 @@ class SpopController extends Controller
     {
         $this->repository->deleteBangunan($request);
         back()->with('success', 'Data berhasil ditambahkan');
+    }
+
+    public function destroy(PendataanSpop $pendataanSpop)
+    {
+        $this->repository->delete($pendataanSpop);
+        back()->with('success', 'Data berhasil dihapus');
     }
 }

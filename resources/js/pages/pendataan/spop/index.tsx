@@ -11,6 +11,7 @@ import DataTablePagination from '@/components/data-table/pagination'
 import DataTableFilters from './components/filters'
 import FormDialogDetail from './components/form-dialog-detail'
 import { mapToOptions } from '@/lib/utils'
+import Delete from '@/components/data-table/delete'
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -60,7 +61,7 @@ export default function Index({ gate, jenis, status, pekerjaan, tanah, jenisBang
     const lantaiOptions = mapToOptions(lantai);
     const langitOptions = mapToOptions(langit);
       
-    const { data, setData, errors, post, patch, processing} = useForm({
+    const { data, setData, errors, post, delete: destroy, patch, processing} = useForm({
         jenis : "",
         kd_propinsi : "33",
         kd_dati2 : "75",
@@ -108,11 +109,7 @@ export default function Index({ gate, jenis, status, pekerjaan, tanah, jenisBang
         dinding : "",
         lantai : "",
         langit : "",
-    });
-    useEffect(() => {
-        getData();
-    }, []);
-    
+    });    
     useEffect(() => {
         getData();
     }, [infoDataTabel.page, infoDataTabel.perPage]);
@@ -237,6 +234,21 @@ export default function Index({ gate, jenis, status, pekerjaan, tanah, jenisBang
             cekNop();
         }
     }, [data.kd_propinsi, data.kd_dati2, data.kd_kecamatan, data.kd_kelurahan, data.kd_blok, data.no_urut, data.kd_jns_op]);
+    
+    const handleHapus = (e: React.FormEvent) => {
+        e.preventDefault()
+        destroy(route('pendataan.spop.destroy', data), {
+            preserveScroll: true,
+            onSuccess: (e) => {
+                setHapus(false)
+                alertApp(e)
+                getData()
+            },
+            onError: (e) => {
+                alertApp(e.message, 'error')
+            },
+        })
+    }
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={title} />
@@ -311,12 +323,12 @@ export default function Index({ gate, jenis, status, pekerjaan, tanah, jenisBang
                 lantaiOptions={lantaiOptions}
                 langitOptions={langitOptions}
             />
-            {/* <Delete
+            <Delete
                 open={hapus}
                 setOpen={setHapus}
                 processing={processing}
                 handleHapusData={handleHapus}
-            />  */}
+            /> 
         </AppLayout>
     )
 }

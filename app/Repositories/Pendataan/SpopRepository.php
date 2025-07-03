@@ -200,4 +200,20 @@ class SpopRepository
                throw $e;
           }
      }
+
+     public function delete(PendataanSpop $pendataanSpop)
+     {
+
+          try {
+               DB::beginTransaction();
+               $pendataanSpop->subjekPajak->delete();
+               $pendataanSpop->tanah->delete();
+               $pendataanSpop->bangunan->delete();
+               $pendataanSpop->delete();
+               DB::commit();
+          } catch (\Exception $e) {
+               DB::rollBack();
+               throw $e;
+          }
+     }
 }
