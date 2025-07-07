@@ -10,6 +10,8 @@ import {
     DialogTitle
 } from '@/components/ui/dialog'
 import { Loader2, Save } from 'lucide-react'
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { Label } from '@/components/ui/label'
 type props = {
     open: boolean
     setOpen: (open: boolean) => void
@@ -99,8 +101,24 @@ export default function FormDialog({
                                 error={errors.no_rekening}
                                 required
                             />
+                            <Combobox label="jabatan" selectedValue={data.jabatan} options={dataJabatan} onSelect={(value) => setData((prevData:any) => ({ ...prevData, jabatan: value }))} error={errors.jabatan} />
+                                                
+                            <div className="grid gap-2">
+                                <Label htmlFor="jabatan_status" className="capitalize">
+                                    Jabatan Status
+                                </Label>
+                                <Select defaultValue={data.jabatan_status} onValueChange={(value) => setData((prevData:any) => ({ ...prevData, jabatan_status: value }))}>
+                                    <SelectTrigger className="cursor-pointer">
+                                        <SelectValue placeholder="Pilih per jabatan status"/>
+                                    </SelectTrigger>
+                                    <SelectContent align="start">
+                                        {['DEFINITIF', 'PLT', 'PLH'].map((num) => (
+                                            <SelectItem key={num} value={num}>{num}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
                         </div>
-                        <Combobox label="jabatan" selectedValue={data.jabatan} options={dataJabatan} onSelect={(value) => setData((prevData:any) => ({ ...prevData, jabatan: value }))} error={errors.jabatan} />
                     </div>
                     <DialogFooter>
                         <div className="flex items-center mt-5">

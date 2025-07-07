@@ -18,7 +18,7 @@ class PegawaiRepository
      }
      public function data($request)
      {
-          $query = $this->model::select('id', 'jabatan_id', 'nik', 'nip', 'nama', 'no_rekening', 'status')->where('satuan_kerja_id', $request->satuan_kerja);
+          $query = $this->model::select('id', 'jabatan_id', 'nik', 'nip', 'nama', 'no_rekening', 'status', 'jabatan_status')->where('satuan_kerja_id', $request->satuan_kerja);
           if ($request->search) {
                $query->where('nik', 'like', "%{$request->search}%")
                     ->orWhere('nip', 'like', "%{$request->search}%")
@@ -41,6 +41,7 @@ class PegawaiRepository
                     'nama' => $request->nama,
                     'no_rekening' => $request->no_rekening,
                     'status' => PegawaiStatus::AKTIF,
+                    'jabatan_status' => $request->jabatan_status,
                ]);
                DB::commit();
           } catch (\Exception $e) {
@@ -59,6 +60,7 @@ class PegawaiRepository
                     'nip' => $request->nip,
                     'nama' => $request->nama,
                     'no_rekening' => $request->no_rekening,
+                    'jabatan_status' => $request->jabatan_status,
                ]);
                DB::commit();
           } catch (\Exception $e) {
@@ -107,7 +109,7 @@ class PegawaiRepository
      }
      public function pegawaiLurah($user)
      {
-          return $this->model::select('nip', 'nama')->where([
+          return $this->model::select('nip', 'nama', 'jabatan_status')->where([
                'satuan_kerja_id' => $user?->satuanKerja->id,
                'status' => PegawaiStatus::AKTIF,
           ])->whereHas('jabatan', fn($q) => $q->where([
@@ -117,7 +119,7 @@ class PegawaiRepository
      }
      public function pegawaiCamat($user)
      {
-          return $this->model::select('nip', 'nama')->where([
+          return $this->model::select('nip', 'nama', 'jabatan_status')->where([
                'satuan_kerja_id' => $user?->satuanKerja->atasan?->id,
                'status' => PegawaiStatus::AKTIF,
           ])->whereHas('jabatan', fn($q) => $q->where([
@@ -143,6 +145,10 @@ class PegawaiRepository
                'nip' => [
                     $pegawaiLurah->nip ? 'NIP : ' . $pegawaiLurah->nip : '',
                     $pegawaiCamat->nip ? 'NIP : ' . $pegawaiCamat->nip : '',
+               ],
+               'jabatan_status' => [
+                    $pegawaiLurah->jabatan_status,
+                    $pegawaiCamat->jabatan_status,
                ],
           ];
      }

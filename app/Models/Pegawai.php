@@ -10,7 +10,7 @@ class Pegawai extends Model
 {
     use HasUuids;
     use SoftDeletes;
-    protected $fillable = ['satuan_kerja_id', 'jabatan_id', 'nik', 'nip', 'nama', 'no_rekening', 'status'];
+    protected $fillable = ['satuan_kerja_id', 'jabatan_id', 'nik', 'nip', 'nama', 'no_rekening', 'status', 'jabatan_status'];
 
     public function jabatan()
     {

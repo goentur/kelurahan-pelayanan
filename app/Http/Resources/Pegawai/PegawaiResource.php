@@ -34,6 +34,7 @@ class PegawaiResource extends JsonResource
                'nama' => $this->nama,
                'no_rekening' => $this->no_rekening,
                'status' => $this->status == PegawaiStatus::AKTIF->value ? true : false,
+               'jabatan_status' => $this->jabatan_status,
           ];
      }
 }

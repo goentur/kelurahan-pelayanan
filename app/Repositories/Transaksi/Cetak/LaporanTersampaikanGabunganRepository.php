@@ -235,8 +235,8 @@ class LaporanTersampaikanGabunganRepository
      {
           $wHeader = array(150, 150);
           $rHeader = array(
-               'LURAH ' . $satuanKerja['kelurahan'],
-               'CAMAT ' . $satuanKerja['kecamatan'],
+               $kepala['jabatan_status'][0] !== 'DEFINITIF' ? $kepala['jabatan_status'][0] . ' LURAH ' . $satuanKerja['kelurahan'] : 'LURAH ' . $satuanKerja['kelurahan'],
+               $kepala['jabatan_status'][1] !== 'DEFINITIF' ? $kepala['jabatan_status'][1] . ' CAMAT ' . $satuanKerja['kecamatan'] : 'CAMAT ' . $satuanKerja['kecamatan'],
           );
           $this->pdf->TableSetWidth($wHeader);
           $this->pdf->TableSetAlign(array('C', 'C'));
