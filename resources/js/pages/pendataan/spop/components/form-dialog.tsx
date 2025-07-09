@@ -72,6 +72,7 @@ export default function FormDialog({
                         errors={errors}
                         jenisOptions={jenisOptions}
                         tanahOptions={tanahOptions}
+                        isEdit={isEdit}
                     />
                     <SubjekPajak
                         data={data}

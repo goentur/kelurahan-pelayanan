@@ -15,8 +15,7 @@ class SpopRepository
 {
      public function data($request)
      {
-          $query = PendataanSpop::with('subjekPajak', 'tanah')
-               ->select('id', 'kd_propinsi', 'kd_dati2', 'kd_kecamatan', 'kd_kelurahan', 'kd_blok', 'no_urut', 'kd_jns_op', 'jalan', 'blok_kav_no', 'rw', 'rt');
+          $query = PendataanSpop::with('subjekPajak', 'tanah');
           if ($request->filled(['berdasarkan', 'search'])) {
                match ($request->berdasarkan) {
                     'NOP' => $query->where(function ($q) use ($request) {
@@ -105,6 +104,48 @@ class SpopRepository
                          'ref_langit_id' => $request->langit,
                     ]);
                }
+               DB::commit();
+          } catch (\Exception $e) {
+               DB::rollBack();
+               throw $e;
+          }
+     }
+     public function update($request)
+     {
+          try {
+               DB::beginTransaction();
+               $data = PendataanSpop::with('subjekPajak', 'tanah')->find($request->id);
+               $data->update([
+                    'ref_jenis_pendataan_spop_id' => $request->jenis,
+                    'jalan' => $request->jalan,
+                    'blok_kav_no' => $request->blok_kav_no,
+                    'rw' => $request->rw,
+                    'rt' => $request->rt,
+                    'koordinat' => json_encode($request->koordinat),
+                    'keterangan' => $request->keterangan,
+               ]);
+               $data->tanah->update([
+                    'luas_tanah' => $request->luas_tanah,
+                    'no_sertipikat' => $request->no_sertipikat,
+                    'ref_jenis_tanah_id' => $request->tanah,
+               ]);
+               $data->subjekPajak->update([
+                    'ref_status_subjek_pajak_id' => $request->status,
+                    'ref_pekerjaan_subjek_pajak_id' => $request->pekerjaan,
+                    'nik' => $request->nik,
+                    'npwp' => $request->npwp,
+                    'nama' => $request->nama,
+                    'jalan' => $request->jalan_sp,
+                    'blok_kav_no' => $request->blok_kav_no_sp,
+                    'rw' => $request->rw_sp,
+                    'rt' => $request->rt_sp,
+                    'kelurahan' => $request->kelurahan,
+                    'kecamatan' => $request->kecamatan,
+                    'kota' => $request->kota,
+                    'kode_pos' => $request->kode_pos,
+                    'no_telp' => $request->no_telp,
+                    'email' => $request->email,
+               ]);
                DB::commit();
           } catch (\Exception $e) {
                DB::rollBack();
@@ -203,7 +244,6 @@ class SpopRepository
 
      public function delete(PendataanSpop $pendataanSpop)
      {
-
           try {
                DB::beginTransaction();
                $pendataanSpop->subjekPajak->delete();

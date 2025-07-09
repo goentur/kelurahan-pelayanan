@@ -230,7 +230,7 @@ export default function Index({ gate, jenis, status, pekerjaan, tanah, jenisBang
     };
     useEffect(() => {
         const allFilled = data.kd_propinsi && data.kd_dati2 && data.kd_kecamatan && data.kd_kelurahan && data.kd_blok && data.no_urut && data.kd_jns_op;
-        if (allFilled) {
+        if (!isEdit && allFilled) {
             cekNop();
         }
     }, [data.kd_propinsi, data.kd_dati2, data.kd_kecamatan, data.kd_kelurahan, data.kd_blok, data.no_urut, data.kd_jns_op]);

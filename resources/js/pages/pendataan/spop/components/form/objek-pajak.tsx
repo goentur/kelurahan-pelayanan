@@ -13,8 +13,9 @@ type props = {
      errors: any
      jenisOptions: { value: string; label: string }[]
      tanahOptions: { value: string; label: string }[]
+     isEdit: boolean
  }
-export default function ObjekPajak({data, setData, formRefs, errors, jenisOptions, tanahOptions} : props) {
+export default function ObjekPajak({data, setData, formRefs, errors, jenisOptions, tanahOptions, isEdit} : props) {
      return (
      <div>
           <span className='text-2xl font-semibold'>OBJEK PAJAK</span>
@@ -32,6 +33,7 @@ export default function ObjekPajak({data, setData, formRefs, errors, jenisOption
                               formRefs={formRefs}
                               errors={errors}
                               selanjutnya={"jalan"}
+                              isEdit={isEdit}
                          />
                     </div>
                     {data.nop && <div className='bg-red-500 rounded mb-3 mt-3 p-2 text-sm text-white'><TriangleAlert className="inline" size={18}/> PERINGATAN <br /> NOP Sudah digunakan.</div>}

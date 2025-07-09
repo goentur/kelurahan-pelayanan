@@ -6,8 +6,9 @@ type props = {
      formRefs: React.RefObject<Record<string, HTMLInputElement | null>>
      errors: any
      selanjutnya?: string
+     isEdit?: boolean
 }
-export default function Nop({data, setData, formRefs, errors, selanjutnya} : props) {
+export default function Nop({data, setData, formRefs, errors, selanjutnya, isEdit} : props) {
      const inputFields = [
           { name: 'kd_propinsi', val: 2, next: 'kd_dati2' },
           { name: 'kd_dati2', val: 2, next: 'kd_kecamatan' },
@@ -27,6 +28,7 @@ export default function Nop({data, setData, formRefs, errors, selanjutnya} : pro
                          autoFocus={name === 'kd_blok'}
                          maxLength={val}
                          minLength={val}
+                         readOnly={isEdit}
                          value={data[name] ?? ""}
                          onChange={(e) => {
                               const value = e.target.value;

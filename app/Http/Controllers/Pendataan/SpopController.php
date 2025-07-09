@@ -10,6 +10,7 @@ use App\Http\Requests\Pendataan\Spop\DataRequest;
 use App\Http\Requests\Pendataan\Spop\DeleteBangunanRequest;
 use App\Http\Requests\Pendataan\Spop\StoreRequest;
 use App\Http\Requests\Pendataan\Spop\UpdateBangunanRequest;
+use App\Http\Requests\Pendataan\Spop\UpdateRequest;
 use App\Models\Pendataan\PendataanSpop;
 use App\Models\Ref\RefAtap;
 use App\Models\Ref\RefDinding;
@@ -75,6 +76,12 @@ class SpopController extends Controller
     {
         $this->repository->store($request);
         back()->with('success', 'Data berhasil ditambahkan');
+    }
+
+    public function update(UpdateRequest $request)
+    {
+        $this->repository->update($request);
+        back()->with('success', 'Data berhasil diubah');
     }
 
     public function dataDetail(DataDetailRequest $request)

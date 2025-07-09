@@ -10,6 +10,7 @@ Route::middleware(['auth', 'verified'])->prefix('pendataan')->name('pendataan.')
             Route::post('/', 'data')->name('data');
             Route::post('cek-nop', 'cekNop')->name('cek-nop');
             Route::post('store', 'store')->name('store');
+            Route::patch('update', 'update')->name('update');
             Route::delete('delete/{pendataanSpop}', 'destroy')->name('destroy');
             Route::post('data-detail', 'dataDetail')->name('data-detail');
             Route::post('add-bangunan', 'addBangunan')->name('add-bangunan');
