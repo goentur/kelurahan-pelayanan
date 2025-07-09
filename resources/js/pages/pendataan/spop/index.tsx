@@ -256,7 +256,7 @@ export default function Index({ gate, jenis, status, pekerjaan, tanah, jenisBang
                 <CardTitle className="text-xl">{title}</CardTitle>
                 <DataTableFilters
                     gate={gate}
-                    tambah={() => {setForm(true), setIsEdit(false)}}
+                    tambah={() => {reset(), setForm(true), setIsEdit(false)}}
                     formRefs={formRefs}
                     handleCari={handleCari}
                     infoDataTabel={infoDataTabel}
