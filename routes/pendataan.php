@@ -9,6 +9,7 @@ Route::middleware(['auth', 'verified'])->prefix('pendataan')->name('pendataan.')
             Route::get('/', 'index')->name('index');
             Route::post('/', 'data')->name('data');
             Route::post('cek-nop', 'cekNop')->name('cek-nop');
+            Route::post('nop-terbesar', 'nopTerbesar')->name('nop-terbesar');
             Route::post('store', 'store')->name('store');
             Route::patch('update', 'update')->name('update');
             Route::delete('delete/{pendataanSpop}', 'destroy')->name('destroy');

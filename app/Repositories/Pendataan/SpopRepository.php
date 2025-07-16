@@ -4,10 +4,12 @@ namespace App\Repositories\Pendataan;
 
 use App\Http\Resources\Pendataan\Spop\SpopDetailResource;
 use App\Http\Resources\Pendataan\Spop\SpopResource;
+use App\Models\DatObjekPajak;
 use App\Models\Pendataan\PendataanSpop;
 use App\Models\Pendataan\PendataanSpopBangunan;
 use App\Models\Pendataan\PendataanSpopSubjekPajak;
 use App\Models\Pendataan\PendataanSpopTanah;
+use App\Support\Facades\Helpers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -173,6 +175,20 @@ class SpopRepository
           return [
                'status' => true,
                'message' => 'Data dengan NOP yang dimasukan tidak ada',
+          ];
+     }
+     public function nopTerbesar($request)
+     {
+          $max_no_urut = DatObjekPajak::where('kd_propinsi', $request->kd_propinsi)
+               ->where('kd_dati2', $request->kd_dati2)
+               ->where('kd_kecamatan', $request->kd_kecamatan)
+               ->where('kd_kelurahan', $request->kd_kelurahan)
+               ->where('kd_blok', $request->kd_blok)
+               ->max('no_urut');
+
+          return [
+               'no_urut' => ($max_no_urut) ? $max_no_urut : 0,
+               'selanjutnya' => ($max_no_urut) ? Helpers::lpad($max_no_urut + 1, 4) : 0
           ];
      }
      public function dataDetail($request)

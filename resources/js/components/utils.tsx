@@ -21,21 +21,13 @@ export type YearOption = {
 };
 
 export const getYearOptions = (
+    direction: 'forward' | 'backward' = 'backward',
     maxLength: number = 3,
-    baseYear: number = 2025
-): YearOption[] => {
-    const currentYear = new Date().getFullYear();
-    const years: YearOption[] = [];
-    if (currentYear >= baseYear) {
-        const startYear = Math.max(baseYear, currentYear - maxLength + 1);
-        for (let year = startYear; year <= currentYear; year++) {
-        years.push({
-            label: year,
-            value: year
-        });
-        }
-    }
-    return years;
-};
-
-
+    baseYear: number = new Date().getFullYear(),
+  ): YearOption[] => {
+    return Array.from({ length: maxLength }, (_, i) => {
+      const year = direction === 'forward' ? baseYear + i : baseYear - i;
+      return { label: year, value: year };
+    });
+  };
+  

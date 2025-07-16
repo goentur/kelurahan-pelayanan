@@ -38,6 +38,11 @@ class Helpers
         return $kode;
     }
 
+    public static function lpad($value, $length, $pad = '0')
+    {
+        return str_pad($value, $length, $pad, STR_PAD_LEFT);
+    }
+
     public function __call($method, array $parameters)
     {
         if (static::hasMacro($method)) {

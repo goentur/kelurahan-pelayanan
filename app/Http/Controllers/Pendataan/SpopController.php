@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Pendataan;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Common\NopRequest;
+use App\Http\Requests\Common\NopTerbesarRequest;
 use App\Http\Requests\Pendataan\Spop\AddBangunanRequest;
 use App\Http\Requests\Pendataan\Spop\DataDetailRequest;
 use App\Http\Requests\Pendataan\Spop\DataRequest;
@@ -70,6 +71,11 @@ class SpopController extends Controller
     public function cekNop(NopRequest $request)
     {
         return response()->json($this->repository->cekNop($request));
+    }
+
+    public function nopTerbesar(NopTerbesarRequest $request)
+    {
+        return response()->json($this->repository->nopTerbesar($request));
     }
 
     public function store(StoreRequest $request)

@@ -1,11 +1,15 @@
 import Combobox from "@/components/combobox";
 import FormInput from "@/components/form-input";
 import InputError from "@/components/input-error";
+import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Loader2, Search, TriangleAlert } from "lucide-react";
 import LayerGoogleMap from "./layer-google-map";
 import Nop from "./nop";
-import { TriangleAlert } from "lucide-react";
+import { alertApp } from "@/components/utils";
+import axios from "axios";
+import { useEffect, useState } from "react";
 type props = {
      data: any
      setData: React.Dispatch<React.SetStateAction<any>>
@@ -14,8 +18,33 @@ type props = {
      jenisOptions: { value: string; label: string }[]
      tanahOptions: { value: string; label: string }[]
      isEdit: boolean
- }
+}
 export default function ObjekPajak({data, setData, formRefs, errors, jenisOptions, tanahOptions, isEdit} : props) {
+     const [loading, setLoading] = useState(false)
+     const [dataNopTerbesar, setDataNopTerbesar] = useState({
+          no_urut : '',
+          selanjutnya : '',
+     })
+     const handleGetNOPTerbesar = async () => {
+          if (!data.kd_blok) {
+               if (formRefs?.current?.['kd_blok']) {
+                   formRefs.current['kd_blok'].select();
+               }
+               return alertApp("Masukan kd blok dulu", 'error');
+          }
+          setLoading(true)
+          try {
+               const response = await axios.post(route('pendataan.spop.nop-terbesar'), data);
+               setDataNopTerbesar({
+                    no_urut : response.data.no_urut,
+                    selanjutnya : response.data.selanjutnya,
+               })
+          } catch (error:any) {
+               alertApp(error.response.data.message, 'error');
+          }finally{
+               setLoading(false)
+          }
+     };
      return (
      <div>
           <span className='text-2xl font-semibold'>OBJEK PAJAK</span>
@@ -37,6 +66,27 @@ export default function ObjekPajak({data, setData, formRefs, errors, jenisOption
                          />
                     </div>
                     {data.nop && <div className='bg-red-500 rounded mb-3 mt-3 p-2 text-sm text-white'><TriangleAlert className="inline" size={18}/> PERINGATAN <br /> NOP Sudah digunakan.</div>}
+
+                    {!isEdit && <div className="grid gap-2 md:grid-cols-3 mt-2 mb-2">
+                            <Button type="button" className="w-full" onClick={handleGetNOPTerbesar} disabled={loading}> {loading ? <Loader2 className="animate-spin" /> : <Search /> } CEK NOP TERBESAR</Button>
+                         <div className="md:col-span-2 bg-gray-100 p-2 rounded-md text-sm text-gray-700">
+                              {dataNopTerbesar.no_urut && dataNopTerbesar.selanjutnya  && <table>
+                                   <tbody>
+                                        <tr>
+                                             <td className="w-fit font-bold">🔎 NOP TERAKHIR</td>
+                                             <td className="w-1">:</td>
+                                             <td>{dataNopTerbesar.no_urut}</td>
+                                        </tr>
+                                        <tr>
+                                             <td className="w-fit font-bold">✅ NOP BERIKUTNYA</td>
+                                             <td className="w-1">:</td>
+                                             <td>{dataNopTerbesar.selanjutnya}</td>
+                                        </tr>
+                                   </tbody>
+                              </table>}
+                              {!dataNopTerbesar.no_urut && !dataNopTerbesar.selanjutnya  && <p className="text-gray-500 italic">Klik tombol "CEK NOP TERBESAR" untuk melihat NOP terakhir.</p>}
+                         </div>
+                    </div>}
                     <div className="grid gap-2 md:grid-cols-2 mt-2 mb-2">
                          <FormInput
                               id="jalan"
