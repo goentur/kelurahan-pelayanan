@@ -15,7 +15,7 @@ class PerUserExport implements FromView, ShouldAutoSize
     public function query()
     {
         return PendataanSpop::query()
-            ->with('user', 'subjekPajak', 'tanah', 'pendataanSpopBangunan', 'jenisPendataanSpop')
+            ->with('user', 'subjekPajak', 'tanah', 'bangunan', 'jenisPendataanSpop')
             ->where(['tahun' => date('Y'), 'user_id' => auth()->id()]);
     }
 
