@@ -116,4 +116,16 @@ class DatObjekPajak extends Model
     {
         return $this->belongsTo(DatSubjekPajak::class, 'subjek_pajak_id', 'subjek_pajak_id');
     }
+
+    public function getAlamatAttribute()
+    {
+        $alamat = [
+            $this->jalan_op,
+            $this->blok_kav_no_op
+        ];
+        if (!blank($this->rt_op) && !blank($this->rw_op)) {
+            $alamat[] = "RW.{$this->rw_op} RT.{$this->rt_op}";
+        }
+        return trim(implode(' ', array_filter($alamat)));
+    }
 }

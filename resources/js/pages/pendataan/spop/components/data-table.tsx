@@ -103,9 +103,9 @@ export default function DataTable({
                                 <DropdownMenu>
                                     <DropdownMenuTrigger className='px-2 py-1 cursor-pointer'><Ellipsis/></DropdownMenuTrigger>
                                     <DropdownMenuContent align='end'>
+                                        <DropdownMenuItem onClick={() => {setFormDetail(true), setDataDetail(value)}}><Eye/> Detail</DropdownMenuItem>
                                         {gate.update && <DropdownMenuItem onClick={() => {setForm(true), setIsEdit(true), setEditData(value)}}><Pencil/> Ubah</DropdownMenuItem>}
                                         {gate.delete && <DropdownMenuItem onClick={() => {setHapus(true), setData({id:value.id,})}}><BadgeX/> Hapus</DropdownMenuItem>}
-                                        <DropdownMenuItem onClick={() => {setFormDetail(true), setDataDetail(value)}}><Eye/> Detail</DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             </td>

@@ -346,4 +346,95 @@ class PenyampaianRepository
             ];
         }
     }
+    public function lihatDataPengembalian($request)
+    {
+        $dataSatuanKerja = $this->satuanKerja->collectionData();
+        $query = $this->model::select('id', 'kd_propinsi', 'kd_dati2', 'kd_kecamatan', 'kd_kelurahan', 'kd_blok', 'no_urut', 'kd_jns_op', 'nama_wp', 'alamat_objek', 'nominal', 'keterangan')
+            ->where('tahun', $request->tahun)
+            ->where('tipe', PenyampaianTipe::TIDAK)
+            ->where('status', PenyampaianStatus::TERLAPOR);
+
+        if ($request->filled('kelurahan')) {
+            [$prop, $dati2, $kec, $kel] = explode('.', $request->kelurahan);
+            $query->where([
+                'kd_propinsi' => $prop,
+                'kd_dati2' => $dati2,
+                'kd_kecamatan' => $kec,
+                'kd_kelurahan' => $kel,
+            ]);
+        } else {
+            $query->where([
+                'kd_propinsi' => $dataSatuanKerja['propinsi'],
+                'kd_dati2' => $dataSatuanKerja['dati2'],
+                'kd_kecamatan' => $dataSatuanKerja['kecamatan'],
+            ])->whereIn('kd_kelurahan', $dataSatuanKerja['kelurahan']);
+        }
+        $query->when(!empty($request->kd_blok), function ($query) use ($request) {
+            $query->where('kd_blok', $request->kd_blok);
+        })->when(!empty($request->no_urut), function ($query) use ($request) {
+            $query->where('no_urut', $request->no_urut);
+        })->orderBy('kd_kelurahan')->orderBy('kd_blok')->orderBy('no_urut')->orderBy('kd_jns_op');
+        $result = LaporanPenyampaianDataResource::collection($query->paginate($request->perPage ?? 25))->response()->getData(true);
+        return $result['meta'] + ['data' => $result['data']];
+    }
+    public function getDataBeritaAcara($id)
+    {
+        [$prop, $dati2, $kec, $kel, $blok, $urut, $jns, $tahun] = explode('.', $id);
+        $query = $this->model::with('datObjekPajak')->select('id', 'kd_propinsi', 'kd_dati2', 'kd_kecamatan', 'kd_kelurahan', 'kd_blok', 'no_urut', 'kd_jns_op', 'tahun', 'nama_wp', 'alamat_objek', 'nominal', 'keterangan')->where([
+            'kd_propinsi' => $prop,
+            'kd_dati2' => $dati2,
+            'kd_kecamatan' => $kec,
+            'kd_kelurahan' => $kel,
+            'kd_blok' => $blok,
+            'no_urut' => $urut,
+            'kd_jns_op' => $jns,
+            'tahun' => $tahun,
+            'tipe' => PenyampaianTipe::TIDAK,
+            'status' => PenyampaianStatus::TERLAPOR,
+        ])->first();
+        if (!$query) {
+            return abort(404);
+        }
+        return $query;
+    }
+    public function getDataBeritaAcaraMassal($request)
+    {
+        $query = $this->model::with('datObjekPajak')
+            ->select(
+                'kd_propinsi',
+                'kd_dati2',
+                'kd_kecamatan',
+                'kd_kelurahan',
+                'kd_blok',
+                'no_urut',
+                'kd_jns_op',
+                'tahun',
+                'nama_wp',
+                'alamat_objek',
+                'nominal',
+                'keterangan'
+            )
+            ->whereIn(
+                DB::raw("
+                TO_CHAR(kd_propinsi) || '.' || 
+                TO_CHAR(kd_dati2) || '.' || 
+                TO_CHAR(kd_kecamatan) || '.' || 
+                TO_CHAR(kd_kelurahan) || '.' || 
+                TO_CHAR(kd_blok) || '.' || 
+                TO_CHAR(no_urut) || '.' || 
+                TO_CHAR(kd_jns_op)"),
+                $request->nop
+            )
+            ->where([
+                'tahun' => $request->tahun,
+                'tipe' => PenyampaianTipe::TIDAK,
+                'status' => PenyampaianStatus::TERLAPOR
+            ])
+            ->get();
+        if ($query->isEmpty()) {
+            abort(404, 'Data tidak ditemukan');
+        }
+
+        return $query;
+    }
 }

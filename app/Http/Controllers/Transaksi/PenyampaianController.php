@@ -4,15 +4,19 @@ namespace App\Http\Controllers\Transaksi;
 
 use App\Enums\PenyampaianTipe;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Transaksi\Penyampaian\DataPengembalianRequest;
 use App\Http\Requests\Transaksi\Penyampaian\DataRequest;
 use App\Http\Requests\Transaksi\Penyampaian\DeleteRequest;
-use App\Http\Requests\Transaksi\Penyampaian\StoreRequest;
 use App\Http\Requests\Transaksi\Penyampaian\TersampaikanRequest;
 use App\Http\Requests\Transaksi\Penyampaian\TidakTersampaikanRequest;
 use App\Models\JenisLapor;
 use App\Models\Penyampaian;
+use App\Repositories\Master\Pegawai\PegawaiRepository;
+use App\Repositories\Transaksi\Cetak\BeritaAcaraMassalRepository;
+use App\Repositories\Transaksi\Cetak\BeritaAcaraRepository;
 use App\Repositories\Transaksi\PenyampaianRepository;
 use App\Support\Facades\Memo;
+use App\Traits\Pdf\PdfResponse;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -20,8 +24,12 @@ use Illuminate\Routing\Controllers\Middleware;
 
 class PenyampaianController extends Controller implements HasMiddleware
 {
+    use PdfResponse;
     public function __construct(
         protected PenyampaianRepository $repository,
+        protected BeritaAcaraRepository $ba,
+        protected BeritaAcaraMassalRepository $bam,
+        protected PegawaiRepository $pegawaiRepository,
     ) {}
     public static function middleware(): array
     {
@@ -126,5 +134,44 @@ class PenyampaianController extends Controller implements HasMiddleware
     public function lihatData(Request $request)
     {
         return response()->json($this->repository->lihatData($request), 200);
+    }
+
+    public function pengembalian()
+    {
+        return inertia('transaksi/penyampaian/pengembalian');
+    }
+
+    public function pengembalianData(DataPengembalianRequest $request)
+    {
+        return response()->json($this->repository->lihatDataPengembalian($request), 200);
+    }
+    public function pengembalianCetakBA($id)
+    {
+        $user = auth()->user();
+        $data = $this->repository->getDataBeritaAcara($id);
+        $pegawai = [
+            'petugas' => $this->pegawaiRepository->pegawaiPetugasCollection($user),
+            'kepala' => $this->pegawaiRepository->pegawaiKepalaCollection($user),
+        ];
+        $satuanKerja = [
+            'kecamatan' => $user?->satuanKerja->atasan->nama,
+            'kelurahan' => $user->name
+        ];
+        $this->pdfResponse($this->ba->cetak($data, $satuanKerja, $pegawai, 'I'));
+    }
+    public function pengembalianCetakMassalBA(Request $request)
+    {
+        $user = auth()->user();
+        $data = $this->repository->getDataBeritaAcaraMassal($request);
+        $pegawai = [
+            'petugas' => $this->pegawaiRepository->pegawaiPetugasCollection($user),
+            'kepala' => $this->pegawaiRepository->pegawaiKepalaCollection($user),
+        ];
+        $satuanKerja = [
+            'kecamatan' => $user?->satuanKerja->atasan->nama,
+            'kelurahan' => $user->name
+        ];
+        return $this->bam->cetak($data, $satuanKerja, $pegawai);
+        // $this->pdfResponse($this->bam->cetak($data, $satuanKerja, $pegawai, 'I'));
     }
 }

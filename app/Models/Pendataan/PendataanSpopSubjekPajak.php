@@ -4,6 +4,7 @@ namespace App\Models\Pendataan;
 
 use App\Casts\LeadingZero;
 use App\Casts\Uppercase;
+use App\Models\Ref\RefPekerjaanSubjekPajak;
 use Illuminate\Database\Eloquent\Model;
 
 class PendataanSpopSubjekPajak extends Model
@@ -21,4 +22,9 @@ class PendataanSpopSubjekPajak extends Model
         'kecamatan' => Uppercase::class,
         'kota' => Uppercase::class,
     ];
+
+    public function pekerjaan()
+    {
+        return $this->belongsTo(RefPekerjaanSubjekPajak::class);
+    }
 }

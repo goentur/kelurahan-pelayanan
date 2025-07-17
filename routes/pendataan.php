@@ -17,6 +17,7 @@ Route::middleware(['auth', 'verified'])->prefix('pendataan')->name('pendataan.')
             Route::post('add-bangunan', 'addBangunan')->name('add-bangunan');
             Route::post('update-bangunan', 'updateBangunan')->name('update-bangunan');
             Route::delete('delete-bangunan', 'deleteBangunan')->name('delete-bangunan');
+            Route::get('unduh-hasil-pendataan-per-user', 'unduhHasilPendataanPerUser')->name('unduh-hasil-pendataan-per-user');
         });
     });
 });

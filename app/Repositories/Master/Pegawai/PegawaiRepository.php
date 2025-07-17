@@ -89,7 +89,7 @@ class PegawaiRepository
      }
      public function pegawaiPetugasCollection($user)
      {
-          $petugas = $this->model::select('nip', 'nama')->where([
+          $petugas = $this->model::select('nip', 'nama', 'jabatan_status')->where([
                'satuan_kerja_id' => $user?->satuanKerja->id,
                'status' => PegawaiStatus::AKTIF,
           ])->whereHas('jabatan', fn($q) => $q->where('jenis', JabatanJenis::PETUGAS))->limit(2);
@@ -98,13 +98,16 @@ class PegawaiRepository
           }
           $namaPetugas = [];
           $nipPetugas = [];
+          $jabatan = [];
           foreach ($petugas->get() as $value) {
                $namaPetugas[] = $value->nama;
                $nipPetugas[] = $value->nip ? 'NIP : ' . $value->nip : '';
+               $jabatan[] = $value->jabatan_status;
           }
           return [
                'nama' => $namaPetugas,
                'nip' => $nipPetugas,
+               'jabatan_status' => $jabatan,
           ];
      }
      public function pegawaiLurah($user)

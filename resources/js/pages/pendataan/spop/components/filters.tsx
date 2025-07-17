@@ -3,7 +3,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Gate } from '@/types'
-import { Loader2, Plus, Search } from 'lucide-react'
+import { Link } from '@inertiajs/react'
+import { Download, Loader2, Plus, Search, Sheet } from 'lucide-react'
 
 type filterProps = {
     gate: Gate
@@ -17,8 +18,13 @@ type filterProps = {
 export default function DataTableFilters({gate, tambah, formRefs, handleCari, infoDataTabel, setInfoDataTabel, loading}: filterProps) {
     return (
         <div className="mb-1 flex justify-between items-center flex-wrap gap-4">
-            <div className="flex flex-wrap gap-1">
+            <div className="flex gap-2">
                 <PerPageSelect onChange={(value) =>setInfoDataTabel((prev:any) => ({...prev,page: 1,perPage: value}))}/>
+                <Button asChild>
+                    <a href={route('pendataan.spop.unduh-hasil-pendataan-per-user')} target="_blank">
+                        <Download /> Unduh Semua Data
+                    </a>
+                </Button>
             </div>
             <form onSubmit={handleCari} className="flex gap-2 min-w-2/4">
                 <Select onValueChange={(value) => {setInfoDataTabel((prev:any) => ({...prev,berdasarkan:value, search:""})), formRefs.current.search?.select()}}>

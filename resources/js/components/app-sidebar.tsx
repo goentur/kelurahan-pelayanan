@@ -37,6 +37,11 @@ const mainNavTransaksi: NavItem[] = [
                 href: 'transaksi.penyampaian.lihat.index',
                 permission: 'penyampaian-index',
             },
+            {
+                title: 'Pengembalian',
+                href: 'transaksi.penyampaian.pengembalian.index',
+                permission: 'penyampaian-index',
+            },
         ]
     },
     {

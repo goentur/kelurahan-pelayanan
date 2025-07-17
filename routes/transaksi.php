@@ -15,6 +15,12 @@ Route::middleware(['auth', 'verified'])->prefix('transaksi')->name('transaksi.')
             Route::get('/', 'lihat')->name('index');
             Route::post('data', 'lihatData')->name('data');
         });
+        Route::prefix('pengembalian')->name('pengembalian.')->group(function () {
+            Route::get('/', 'pengembalian')->name('index');
+            Route::post('data', 'pengembalianData')->name('data');
+            Route::get('cetak-ba/{id}', 'pengembalianCetakBA')->name('cetak-ba');
+            Route::post('cetak-massal-ba', 'pengembalianCetakMassalBA')->name('cetak-massal-ba');
+        });
     });
     Route::prefix('laporan-penyampaian')->name('laporan-penyampaian.')->middleware('can:laporan-penyampaian-index')->controller(LaporanPenyampaianController::class)->group(function () {
         Route::get('/', 'index')->name('index');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Pendataan;
 
+use App\Exports\Pendataan\Spop\PerUserExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Common\NopRequest;
 use App\Http\Requests\Common\NopTerbesarRequest;
@@ -117,5 +118,10 @@ class SpopController extends Controller
     {
         $this->repository->delete($pendataanSpop);
         back()->with('success', 'Data berhasil dihapus');
+    }
+
+    public function unduhHasilPendataanPerUser()
+    {
+        return (new PerUserExport)->download('hasil pendataan spop.xlsx');
     }
 }

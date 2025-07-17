@@ -5,6 +5,7 @@ namespace App\Models\Pendataan;
 use App\Casts\LeadingZero;
 use App\Casts\Uppercase;
 use App\Models\Ref\RefJenisPendataanSpop;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class PendataanSpop extends Model
@@ -45,11 +46,16 @@ class PendataanSpop extends Model
 
     public function bangunan()
     {
-        return $this->hasOne(PendataanSpopBangunan::class);
+        return $this->hasMany(PendataanSpopBangunan::class);
     }
 
     public function jenisPendataanSpop()
     {
         return $this->belongsTo(RefJenisPendataanSpop::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
