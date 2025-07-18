@@ -264,7 +264,7 @@ class SpopRepository
                DB::beginTransaction();
                $pendataanSpop->subjekPajak?->delete();
                $pendataanSpop->tanah?->delete();
-               $pendataanSpop->bangunan?->delete();
+               $pendataanSpop->bangunan()->delete();
                $pendataanSpop->delete();
                DB::commit();
           } catch (\Exception $e) {
