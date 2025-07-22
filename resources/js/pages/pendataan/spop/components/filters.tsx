@@ -3,8 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Gate } from '@/types'
-import { Link } from '@inertiajs/react'
-import { Download, Loader2, Plus, Search, Sheet } from 'lucide-react'
+import { Download, Loader2, Plus, Search } from 'lucide-react'
 
 type filterProps = {
     gate: Gate

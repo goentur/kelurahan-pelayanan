@@ -25,28 +25,66 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Index({jenisLapor} : any) {
-    const jenisLaporannya = { label : "SEMUA", value : "SEMUA" };
-    const jenisLaporOptions = [jenisLaporannya, ...mapToOptions(jenisLapor)];
+export default function Index({jenisLapor, kelurahan} : any) {
+    const semua = { label : "SEMUA", value : "SEMUA" };
+    const jenisLaporOptions = [semua, ...mapToOptions(jenisLapor)];
+    const kelurahanOptions = [semua, ...kelurahan];
     const title = "Penyampaian SPPT"
-    
+    const [loadingTersampikan, setLoadingTersampikan] = useState(false);
     const [loadingTidakTersampikan, setLoadingTidakTersampikan] = useState(false);
     const [data, setData] = useState({
         tahun: '',
         jenisLapor: '',
+        kelurahan: '',
     });
-    const submitTidakTersampikan = async (e: React.FormEvent) => {
+    const submitTersampikan = async (e: React.FormEvent) => {
         e.preventDefault();
-        setLoadingTidakTersampikan(true)
+        setLoadingTersampikan(true)
         try {
-            const response = await axios.post(route("cetak.penyampaian-sppt.tidak-tersampaikan",data.tahun),{},{
+            const response = await axios.post(route("cetak.penyampaian-sppt.tersampaikan"),{
+                tahun : data.tahun,
+                jenis : data.jenisLapor,
+                kelurahan : data.kelurahan
+            },{
                 responseType: 'blob',
             });
             const blob = new Blob([response.data], { type: response.headers['content-type'] });
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', 'tidak-tersampaikan.pdf');
+            link.setAttribute('download', 'tersampaikan-tahun-'+data.tahun+'.xlsx');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        } catch (error:any) {
+             if (error.response && error.response.data instanceof Blob) {
+                  const text = await error.response.data.text();
+                  try {
+                       const json = JSON.parse(text);
+                       alertApp(json.message || 'Terjadi kesalahan pada saat proses data.', 'error');
+                  } catch {
+                       alertApp('Terjadi kesalahan pada saat proses data.', 'error');
+                  }
+             } else {
+                  alertApp(error.message || 'Terjadi kesalahan pada saat proses data.', 'error');
+             }
+        }finally{
+             setLoadingTersampikan(false)
+        }
+   };
+    const submitTidakTersampikan = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoadingTidakTersampikan(true)
+        try {
+            const response = await axios.post(route("cetak.penyampaian-sppt.tidak-tersampaikan"),{tahun : data.tahun},{
+                responseType: 'blob',
+            });
+            const blob = new Blob([response.data], { type: response.headers['content-type'] });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'tidak-tersampaikan-tahun-'+data.tahun+'.xlsx');
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -81,19 +119,27 @@ export default function Index({jenisLapor} : any) {
                             <div className="border p-4 rounded shadow">
                                 <h3 className="text-lg font-semibold mb-2">Tersampaikan</h3>
                                 <hr className="mb-4" />
-                                <Combobox
-                                    label="Jenis Lapor"
-                                    selectedValue={data.jenisLapor}
-                                    options={jenisLaporOptions}
-                                    onSelect={(value) => setData((prevData: any) => ({ ...prevData, jenisLapor: value }))}
-                                />
-                                <Button type="submit" className='mt-2' disabled={loadingTidakTersampikan}> {loadingTidakTersampikan ? (<Loader2 className="animate-spin" />) : (<Printer /> )} Cetak</Button>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">
+                                    <Combobox
+                                        label="Jenis Lapor"
+                                        selectedValue={data.jenisLapor}
+                                        options={jenisLaporOptions}
+                                        onSelect={(value) => setData((prevData: any) => ({ ...prevData, jenisLapor: value }))}
+                                    />
+                                    <Combobox
+                                        label="Kelurahan"
+                                        selectedValue={data.kelurahan}
+                                        options={kelurahanOptions}
+                                        onSelect={(value) => setData((prevData: any) => ({ ...prevData, kelurahan: value }))}
+                                    />
+                                </div>
+                                <Button type="button" onClick={submitTersampikan} className='mt-2' disabled={loadingTersampikan || !data.tahun || !data.jenisLapor || !data.kelurahan}> {loadingTersampikan ? (<Loader2 className="animate-spin" />) : (<Printer /> )} Cetak</Button>
                             </div>
 
                             <div className="border p-4 rounded shadow">
                                 <h3 className="text-lg font-semibold mb-2">Tidak Tersampaikan</h3>
                                 <hr className="mb-4" />
-                                <Button type="button" onClick={submitTidakTersampikan} disabled={loadingTidakTersampikan}> {loadingTidakTersampikan ? (<Loader2 className="animate-spin" />) : (<Printer /> )} Cetak</Button>
+                                <Button type="button" onClick={submitTidakTersampikan} disabled={loadingTidakTersampikan || !data.tahun}> {loadingTidakTersampikan ? (<Loader2 className="animate-spin" />) : (<Printer /> )} Cetak</Button>
                             </div>
                         </div>
                     </CardContent>
