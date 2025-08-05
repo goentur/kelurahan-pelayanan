@@ -55,7 +55,7 @@ class RekapRepository
                          $nominal_tidak = $penyampaian['TIDAK_nominal'] ?? 0;
 
                          $jumlah_sisa = $bakuJumlah->jumlah - ($jumlah_tersampaikan + $jumlah_tidak);
-                         $nominal_sisa = 0; // jika tidak ada nominal baku, biarkan 0
+                         $nominal_sisa = $bakuJumlah->nominal - ($nominal_tersampaikan + $nominal_tidak);
 
                          $bawahanData[] = [
                               'nama' => $bawahan->nama,
