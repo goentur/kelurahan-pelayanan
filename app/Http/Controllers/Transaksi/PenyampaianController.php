@@ -62,7 +62,7 @@ class PenyampaianController extends Controller implements HasMiddleware
             ->whereDate('tanggal_akhir', '>=', $today)
             ->first();
         if (!$tanggal) {
-            return abort(500, 'Pengaturan tanggal laporan belum benar, periksa kembali tanggal awal dan tanggal akhir');
+            return abort(404);
         }
         $pesan = null;
         if ($tanggal->no_urut > 1) {

@@ -437,4 +437,14 @@ class PenyampaianRepository
 
         return $query;
     }
+    public function resetDataLaporanPenyampaianSppt($request)
+    {
+        return Penyampaian::where([
+            'tahun' => $request->tahun,
+            'jenis_lapor_id' => $request->jenis,
+            'user_id' => $request->kelurahan,
+        ])->update([
+            'jenis_lapor_id' => null,
+        ]);
+    }
 }

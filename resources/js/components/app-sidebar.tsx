@@ -4,7 +4,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { Building, ChartPie, FileCheck, FilePenLine, FileSearch, FileText, Key, LayoutDashboard, Medal, MonitorCog, NotebookPen, Send, UserCheck, UserRoundCog } from 'lucide-react';
+import { BookOpenText, Building, ChartPie, FileCheck, FilePenLine, FileSearch, FileText, Key, LayoutDashboard, Medal, MonitorCog, NotebookPen, Send, UserCheck, UserRoundCog } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavDashboard: NavItem[] = [
@@ -141,6 +141,12 @@ const mainNavPengaturan: NavItem[] = [
         title: "Aplikasi",
         href: "pengaturan.aplikasi.index",
         icon: MonitorCog,
+        permission: 'aplikasi-index',
+    },
+    {
+        title: "Penyampaian SPPT",
+        href: "pengaturan.penyampaian-sppt.index",
+        icon: BookOpenText,
         permission: 'aplikasi-index',
     },
 ];
