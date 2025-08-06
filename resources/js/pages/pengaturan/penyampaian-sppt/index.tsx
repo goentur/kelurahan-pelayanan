@@ -20,8 +20,8 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: 'pengaturan.aplikasi.index',
     },
     {
-        title: 'Aplikasi',
-        href: 'pengaturan.aplikasi.index',
+        title: 'Penyampaian SPPT',
+        href: 'pengaturan.penyampaian-sppt.index',
     },
 ];
 
@@ -54,7 +54,7 @@ export default function Index({jenisLapor, users}:any) {
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
                 <Card className='w-1/2'>
                     <CardHeader>
-                        <CardTitle className="text-xl">Reset Data Laporan Penyampaian</CardTitle>
+                        <CardTitle className="text-xl">Reset Data Laporan</CardTitle>
                     </CardHeader>
                     <CardContent>
                             <Combobox label="tahun" selectedValue={dataResetLaporanPenyampaian.tahun} options={getTahunOptions()} onSelect={(value) => setDataResetLaporanPenyampaian((prevData:any) => ({ ...prevData, tahun: value }))} />
