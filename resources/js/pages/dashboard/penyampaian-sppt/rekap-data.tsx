@@ -17,8 +17,11 @@ export default function RekapData({loading, data} : any) {
                          <th className="p-1 border" rowSpan={2}>%</th>
                          <th className="p-1 border" colSpan={2}>SISA</th>
                          <th className="p-1 border" rowSpan={2}>%</th>
+                         <th className="p-1 border" colSpan={2}>PEMBAYARAN</th>
                     </tr>
                     <tr className="leading-normal">
+                         <th className="p-1 border">JUMLAH<br/>OBJEK PAJAK</th>
+                         <th className="p-1 border w-1">NOMINAL (Rp)</th>
                          <th className="p-1 border">JUMLAH<br/>OBJEK PAJAK</th>
                          <th className="p-1 border w-1">NOMINAL (Rp)</th>
                          <th className="p-1 border">JUMLAH<br/>OBJEK PAJAK</th>
@@ -41,6 +44,8 @@ export default function RekapData({loading, data} : any) {
                          <th className="p-1 border">10</th>
                          <th className="p-1 border">11</th>
                          <th className="p-1 border">(10/2)</th>
+                         <th className="p-1 border">13</th>
+                         <th className="p-1 border">14</th>
                     </tr>
                </thead>
                <tbody className="font-light">
@@ -60,6 +65,8 @@ export default function RekapData({loading, data} : any) {
                               <td className="px-2 py-1 border text-end">{value.jumlah_sisa}</td>
                               <td className="px-2 py-1 border text-end">{value.nominal_sisa}</td>
                               <td className="px-2 py-1 border text-end">{value.persen_sisa}</td>
+                              <td className="px-2 py-1 border text-end">{value.jumlah_bayar}</td>
+                              <td className="px-2 py-1 border text-end">{value.nominal_bayar}</td>
                          </tr>
 
                          {value.bawahan && Array.isArray(value.bawahan) && value.bawahan.map((detail: any, idx: number) => (
@@ -76,10 +83,12 @@ export default function RekapData({loading, data} : any) {
                                    <td className="px-2 py-1 border text-end">{detail.jumlah_sisa}</td>
                                    <td className="px-2 py-1 border text-end">{detail.nominal_sisa}</td>
                                    <td className="px-2 py-1 border text-end">{detail.persen_sisa}</td>
+                                   <td className="px-2 py-1 border text-end">{detail.jumlah_bayar}</td>
+                                   <td className="px-2 py-1 border text-end">{detail.nominal_bayar}</td>
                               </tr>
                          ))}
                          </React.Fragment>
-                    )) : (!loading ? <NoData colSpan={12} /> : null)}
+                    )) : (!loading ? <NoData colSpan={14} /> : null)}
 
                </tbody>
           </table>

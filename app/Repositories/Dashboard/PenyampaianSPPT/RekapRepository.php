@@ -29,6 +29,8 @@ class RekapRepository
                     'nominal_tidak' => 0,
                     'sisa_jumlah' => 0,
                     'sisa_nominal' => 0,
+                    'bayar_jumlah' => 0,
+                    'bayar_nominal' => 0,
                ];
 
                foreach (SatuanKerja::with('bawahan')->whereNull('atasan_satuan_kerja_id')->orderBy('kode_ref')->get() as $atasan) {
@@ -41,6 +43,8 @@ class RekapRepository
                          'nominal_tidak' => 0,
                          'sisa_jumlah' => 0,
                          'sisa_nominal' => 0,
+                         'bayar_jumlah' => 0,
+                         'bayar_nominal' => 0,
                     ];
 
                     $bawahanData = [];
@@ -57,6 +61,9 @@ class RekapRepository
                          $jumlah_sisa = $bakuJumlah->jumlah - ($jumlah_tersampaikan + $jumlah_tidak);
                          $nominal_sisa = $bakuJumlah->nominal - ($nominal_tersampaikan + $nominal_tidak);
 
+                         $jumlah_bayar = $bakuJumlah->jumlah_pembayaran;
+                         $nominal_bayar = $bakuJumlah->total_dibayar;
+
                          $bawahanData[] = [
                               'nama' => $bawahan->nama,
                               'jumlah_baku' => Helpers::ribuan($bakuJumlah->jumlah),
@@ -70,6 +77,8 @@ class RekapRepository
                               'jumlah_sisa' => Helpers::ribuan($jumlah_sisa),
                               'nominal_sisa' => Helpers::ribuan($nominal_sisa),
                               'persen_sisa' => $bakuJumlah->jumlah > 0 ? round(($jumlah_sisa / $bakuJumlah->jumlah) * 100, 2) : 0,
+                              'jumlah_bayar' => Helpers::ribuan($jumlah_bayar),
+                              'nominal_bayar' => Helpers::ribuan($nominal_bayar),
                          ];
 
                          // Akumulasi ke rekap atasan
@@ -81,6 +90,8 @@ class RekapRepository
                          $rekapAtasan['nominal_tidak'] += $nominal_tidak;
                          $rekapAtasan['sisa_jumlah'] += $jumlah_sisa;
                          $rekapAtasan['sisa_nominal'] += $nominal_sisa;
+                         $rekapAtasan['bayar_jumlah'] += $jumlah_bayar;
+                         $rekapAtasan['bayar_nominal'] += $nominal_bayar;
                     }
 
                     $dataAtasan[] = [
@@ -96,6 +107,8 @@ class RekapRepository
                          'jumlah_sisa' => Helpers::ribuan($rekapAtasan['sisa_jumlah']),
                          'nominal_sisa' => Helpers::ribuan($rekapAtasan['sisa_nominal']),
                          'persen_sisa' => $rekapAtasan['baku'] > 0 ? round(($rekapAtasan['sisa_jumlah'] / $rekapAtasan['baku']) * 100, 2) : 0,
+                         'jumlah_bayar' => Helpers::ribuan($rekapAtasan['bayar_jumlah']),
+                         'nominal_bayar' => Helpers::ribuan($rekapAtasan['bayar_nominal']),
                          'bawahan' => $bawahanData,
                     ];
 
@@ -118,6 +131,8 @@ class RekapRepository
                     'jumlah_sisa' => Helpers::ribuan($grandTotal['sisa_jumlah']),
                     'nominal_sisa' => Helpers::ribuan($grandTotal['sisa_nominal']),
                     'persen_sisa' => $grandTotal['baku'] > 0 ? round(($grandTotal['sisa_jumlah'] / $grandTotal['baku']) * 100, 2) : 0,
+                    'jumlah_bayar' => Helpers::ribuan($grandTotal['bayar_jumlah']),
+                    'nominal_bayar' => Helpers::ribuan($grandTotal['bayar_nominal']),
                     'bawahan' => [],
                ];
 
@@ -134,7 +149,7 @@ class RekapRepository
           $kelurahanPertama = $kelurahans[0];
           $kdKelurahans = collect($kelurahans)->pluck('kd_kelurahan')->toArray();
 
-          return BakuAwal::select(
+          $baku = BakuAwal::select(
                DB::raw('COALESCE(SUM(pbb_yg_harus_dibayar_sppt), 0) as nominal'),
                DB::raw('COALESCE(COUNT(kd_propinsi), 0) as jumlah')
           )->where([
@@ -145,6 +160,45 @@ class RekapRepository
           ])
                ->whereIn('kd_kelurahan', $kdKelurahans)
                ->first();
+          $pembayaran = DB::table('baku_awal as b')
+               ->leftJoin('pembayaran_sppt as p', function ($join) {
+                    $join->on('b.kd_propinsi', '=', 'p.kd_propinsi')
+                         ->on('b.kd_dati2', '=', 'p.kd_dati2')
+                         ->on('b.kd_kecamatan', '=', 'p.kd_kecamatan')
+                         ->on('b.kd_kelurahan', '=', 'p.kd_kelurahan')
+                         ->on('b.kd_blok', '=', 'p.kd_blok')
+                         ->on('b.no_urut', '=', 'p.no_urut')
+                         ->on('b.kd_jns_op', '=', 'p.kd_jns_op')
+                         ->on('b.thn_pajak_sppt', '=', 'p.thn_pajak_sppt');
+               })
+               ->select(
+                    DB::raw("COUNT(DISTINCT 
+                  p.kd_propinsi || '.' ||
+                  p.kd_dati2 || '.' ||
+                  p.kd_kecamatan || '.' ||
+                  p.kd_kelurahan || '.' ||
+                  p.kd_blok || '.' ||
+                  p.no_urut || '.' ||
+                  p.kd_jns_op || '.' ||
+                  p.thn_pajak_sppt
+              ) AS jumlah_pembayaran"),
+                    DB::raw('COALESCE(SUM(p.jml_sppt_yg_dibayar), 0) AS total_dibayar')
+               )
+               ->where([
+                    'b.kd_propinsi' => $kelurahanPertama->kd_propinsi,
+                    'b.kd_dati2' => $kelurahanPertama->kd_dati2,
+                    'b.kd_kecamatan' => $kelurahanPertama->kd_kecamatan,
+                    'b.thn_pajak_sppt' => date('Y'),
+               ])
+               ->whereIn('b.kd_kelurahan', $kdKelurahans)
+               ->whereBetween('p.tgl_pembayaran_sppt', ['2025-01-01', '2025-09-30'])
+               ->first();
+          return (object) [
+               'nominal' => $baku->nominal,
+               'jumlah' => $baku->jumlah,
+               'jumlah_pembayaran' => $pembayaran->jumlah_pembayaran,
+               'total_dibayar' => $pembayaran->total_dibayar,
+          ];
      }
 
      protected function penyampaian($userId)
