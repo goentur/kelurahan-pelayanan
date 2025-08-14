@@ -58,8 +58,8 @@ class PenyampaianController extends Controller implements HasMiddleware
         $today = Carbon::today();
         $tanggal = JenisLapor::select('id', 'no_urut', 'tanggal_awal', 'tanggal_akhir')
             ->where('jenis', PenyampaianTipe::TERSAMPAIKAN)
-            ->whereDate('tanggal_awal', '<=', $today)
-            ->whereDate('tanggal_akhir', '>=', $today)
+            ->whereDate('tanggal_input_awal', '<=', $today)
+            ->whereDate('tanggal_input_akhir', '>=', $today)
             ->first();
         if (!$tanggal) {
             return abort(404);
