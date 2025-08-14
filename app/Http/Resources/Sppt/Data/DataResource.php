@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Sppt;
+namespace App\Http\Resources\Sppt\Data;
 
 use App\Support\Facades\Helpers;
 use Illuminate\Http\Request;

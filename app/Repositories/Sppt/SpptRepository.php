@@ -2,7 +2,9 @@
 
 namespace App\Repositories\Sppt;
 
-use App\Http\Resources\Sppt\DataResource;
+use App\Http\Resources\Sppt\Data\DataResource;
+use App\Http\Resources\Sppt\Data\DatObjekPajakResource;
+use App\Models\DatObjekPajak;
 use App\Models\Sppt;
 use App\Repositories\Common\JenisBukuRepository;
 use App\Repositories\Master\SatuanKerja\SatuanKerjaRepository;
@@ -49,5 +51,32 @@ class SpptRepository
           $query->orderBy('kd_propinsi')->orderBy('kd_dati2')->orderBy('kd_kecamatan')->orderBy('kd_kelurahan')->orderBy('kd_blok')->orderBy('no_urut')->orderBy('kd_jns_op');
           $result = DataResource::collection($query->paginate($request->perPage ?? 25))->response()->getData(true);
           return $result['meta'] + ['data' => $result['data']];
+     }
+     public function infoPajakBumiBangunan($request)
+     {
+          $nop = explode('.', $request->id);
+          $kd_propinsi   = $nop[0];
+          $kd_dati2      = $nop[1];
+          $kd_kecamatan  = $nop[2];
+          $kd_kelurahan  = $nop[3];
+          $kd_blok  = $nop[4];
+          $no_urut  = $nop[5];
+          $kd_jns_op  = $nop[6];
+
+          $dataObjek = DatObjekPajak::with('datSubjekPajak', 'spptWithBayar', 'bangunan', 'bumi', 'znt', 'statusWajibPajak')->where([
+               'kd_propinsi'   => $kd_propinsi,
+               'kd_dati2'      => $kd_dati2,
+               'kd_kecamatan'  => $kd_kecamatan,
+               'kd_kelurahan'  => $kd_kelurahan,
+               'kd_blok'       => $kd_blok,
+               'no_urut'       => $no_urut,
+               'kd_jns_op'     => $kd_jns_op,
+          ])->first();
+
+          if (!$dataObjek) {
+               return abort(404);
+          }
+
+          return new DatObjekPajakResource($dataObjek);
      }
 }

@@ -4,6 +4,10 @@ namespace App\Models;
 
 use App\Casts\LeadingZero;
 use App\Casts\Uppercase;
+use App\Models\Ref\RefStatusSubjekPajak;
+use App\Models\Sig\SigBngInfo;
+use App\Models\Sig\SigOpBumi;
+use App\Models\Sig\SigOpZnt;
 use Awobaz\Compoships\Compoships;
 use Illuminate\Database\Eloquent\Model;
 
@@ -115,6 +119,36 @@ class DatObjekPajak extends Model
     public function datSubjekPajak()
     {
         return $this->belongsTo(DatSubjekPajak::class, 'subjek_pajak_id', 'subjek_pajak_id');
+    }
+
+    public function sppt()
+    {
+        return $this->hasMany(Sppt::class, $this->primaryKey, $this->primaryKey)->where('thn_pajak_sppt', '>=', 2008)->orderBy('thn_pajak_sppt', 'desc');
+    }
+
+    public function spptWithBayar()
+    {
+        return $this->sppt()->with('pembayaranSppt');
+    }
+
+    public function bangunan()
+    {
+        return $this->hasMany(SigBngInfo::class, $this->primaryKey, $this->primaryKey);
+    }
+
+    public function bumi()
+    {
+        return $this->hasOne(SigOpBumi::class, $this->primaryKey, $this->primaryKey);
+    }
+
+    public function znt()
+    {
+        return $this->hasOne(SigOpZnt::class, $this->primaryKey, $this->primaryKey)->where('thn_nir_znt', date('Y'));
+    }
+
+    public function statusWajibPajak()
+    {
+        return $this->belongsTo(RefStatusSubjekPajak::class, 'kd_status_wp', 'id');
     }
 
     public function getAlamatAttribute()

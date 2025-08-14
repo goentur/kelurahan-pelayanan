@@ -6,8 +6,9 @@ import { Info } from 'lucide-react';
 type DataTableProps = {
     dataTable: any[];
     loading: boolean;
+    infoOnClick: (id:any) => void;
 };
-export default function DataTable({ dataTable, loading }: DataTableProps) {
+export default function DataTable({ dataTable, loading, infoOnClick }: DataTableProps) {
     return (
         <table className="w-full text-left border-collapse border">
             <thead className="text-center text-sm">
@@ -40,7 +41,7 @@ export default function DataTable({ dataTable, loading }: DataTableProps) {
                         <span className={`px-1 rounded text-white ${value.status.status?'bg-green-500':'bg-red-500'}`}>{value.status.text}</span> 
                     </td>
                     <td className="px-2 py-1 border">
-                        <Button size="icon">
+                        <Button size="icon" onClick={() => infoOnClick(value.id)}>
                             <Info />
                         </Button>
                     </td>

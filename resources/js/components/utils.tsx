@@ -30,4 +30,17 @@ export const getYearOptions = (
       return { label: year, value: year };
     });
   };
+
+export const maskText = ( text: string, visibleStart: number = 3, visibleEnd: number = 3, maskChar: string = '*', maxMaskLength: number = 5): string => {
+  if (!text || typeof text !== 'string') return '';
+  const len = text.length;
+  // Jika teks terlalu pendek, tampilkan semua
+  if (len <= visibleStart + visibleEnd) return text;
+  const safeMaskChar = maskChar?.[0] || '*';
+  const start = text.slice(0, visibleStart);
+  const end = text.slice(-visibleEnd);
+  // Gunakan maksimal maxMaskLength untuk bagian tengah
+  const maskedMiddle = safeMaskChar.repeat(maxMaskLength);
+  return start + maskedMiddle + end;
+};
   

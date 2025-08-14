@@ -12,6 +12,7 @@ import axios from 'axios'
 import { Loader2, Search } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import DataTable from './components/data-table'
+import Info from './components/info'
 
 type IndexProps = {
     gate: {
@@ -41,10 +42,12 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function Index({ gate }: IndexProps) {
     const title = 'Data'
+    const [dialogInfo, setDialogInfo] = useState(false)
     const [loading, setLoading] = useState(false);
     const formRefs = useRef<Record<string, HTMLInputElement | null>>({})
     const [dataTable, setDataTable] = useState<[]>([]);
     const [dataBerdasarkanUser, setDataBerdasarkanUser] = useState<[]>([]);
+    const [dataInfoPajakBumiBangunan, setDataInfoPajakBumiBangunan] = useState<[]>([]);
     const [linksPagination, setLinksPagination] = useState([]);
     const [infoDataTabel, setInfoDataTabel] = useState({
         page: 1,
@@ -110,6 +113,17 @@ export default function Index({ gate }: IndexProps) {
         e.preventDefault();
         infoDataTabel.page = 1
         getData()
+    };
+    const handleOnClick = async (id:any) => {
+        try {
+            const response = await axios.post(route('sppt.data.info-pajak-bumi-bangunan'),{
+                id:id,
+            });
+            setDataInfoPajakBumiBangunan(response.data);
+            setDialogInfo(true)
+        } catch (error:any) {
+            alertApp(error.message, 'error');
+        }
     };
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -204,8 +218,13 @@ export default function Index({ gate }: IndexProps) {
                         <div className="w-fit mb-2">
                             <PerPageSelect onChange={(value) => setInfoDataTabel((prev:any) => ({...prev,page: 1,perPage: value}))}/>
                         </div>
-                        <DataTable dataTable={dataTable} loading={loading} />
+                        <DataTable dataTable={dataTable} loading={loading} infoOnClick={(id) => {handleOnClick(id)}} />
                         <DataTablePagination infoDataTabel={infoDataTabel} setInfoDataTabel={setInfoDataTabel} linksPagination={linksPagination} />
+                        <Info
+                            open={dialogInfo}
+                            setOpen={setDialogInfo}
+                            data={dataInfoPajakBumiBangunan}
+                        />
                     </CardContent>
                 </Card>
             </div>

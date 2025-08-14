@@ -70,8 +70,8 @@ class LaporanTersampaikanGabunganRepository
 
 
           $this->pdf->SetFont('TIMES', 'B', 9);
-          $this->pdf->Cell(8, 20, "NO", 1, 0, 'C');
-          $this->pdf->Cell(37, 20, "KETETAPAN", 1, 1, 'C');
+          $this->pdf->Cell(8, 25, "NO", 1, 0, 'C');
+          $this->pdf->Cell(37, 25, "KETETAPAN", 1, 1, 'C');
 
           $this->pdf->SetXY(60, 38);
           $this->pdf->Cell(44, 10, "BAKU PBB", 1, 1, 'C');
@@ -81,6 +81,9 @@ class LaporanTersampaikanGabunganRepository
           $this->pdf->SetXY(60, 53);
           $this->pdf->Cell(15, 5, "Lembar", 1, 0, 'C');
           $this->pdf->Cell(29, 5, "Rupiah", 1, 1, 'C');
+          $this->pdf->SetXY(60, 58);
+          $this->pdf->Cell(15, 5, "1", 1, 0, 'C');
+          $this->pdf->Cell(29, 5, "2", 1, 1, 'C');
 
 
           $this->pdf->SetXY(104, 38);
@@ -92,7 +95,10 @@ class LaporanTersampaikanGabunganRepository
           $this->pdf->Cell(29, 5, "JUMLAH", 1, 1, 'C');
           $this->pdf->SetXY(104, 53);
           $this->pdf->Cell(15, 5, "Lembar", 1, 0, 'C');
-          $this->pdf->Cell(29, 5, "Rupiah", 1, 1, 'C');
+          $this->pdf->Cell(29, 5, "Rupiah", 1, 0, 'C');
+          $this->pdf->SetXY(104, 58);
+          $this->pdf->Cell(15, 5, "3", 1, 0, 'C');
+          $this->pdf->Cell(29, 5, "4", 1, 1, 'C');
 
           $this->pdf->SetXY(148, 43);
           $this->pdf->Cell(44, 5, 'BULAN INI', 1, 1, 'C');
@@ -101,7 +107,10 @@ class LaporanTersampaikanGabunganRepository
           $this->pdf->Cell(29, 5, "JUMLAH", 1, 1, 'C');
           $this->pdf->SetXY(148, 53);
           $this->pdf->Cell(15, 5, "Lembar", 1, 0, 'C');
-          $this->pdf->Cell(29, 5, "Rupiah", 1, 1, 'C');
+          $this->pdf->Cell(29, 5, "Rupiah", 1, 0, 'C');
+          $this->pdf->SetXY(148, 58);
+          $this->pdf->Cell(15, 5, "5", 1, 0, 'C');
+          $this->pdf->Cell(29, 5, "6", 1, 1, 'C');
 
           $this->pdf->SetXY(192, 43);
           $this->pdf->Cell(44, 5, 'S/D BULAN INI', 1, 1, 'C');
@@ -110,7 +119,10 @@ class LaporanTersampaikanGabunganRepository
           $this->pdf->Cell(29, 5, "JUMLAH", 1, 1, 'C');
           $this->pdf->SetXY(192, 53);
           $this->pdf->Cell(15, 5, "Lembar", 1, 0, 'C');
-          $this->pdf->Cell(29, 5, "Rupiah", 1, 1, 'C');
+          $this->pdf->Cell(29, 5, "Rupiah", 1, 0, 'C');
+          $this->pdf->SetXY(192, 58);
+          $this->pdf->Cell(15, 5, "7 (3+5)", 1, 0, 'C');
+          $this->pdf->Cell(29, 5, "8 (4+6)", 1, 1, 'C');
 
 
           $this->pdf->SetXY(236, 38);
@@ -120,7 +132,10 @@ class LaporanTersampaikanGabunganRepository
           $this->pdf->Cell(29, 5, "JUMLAH", 1, 1, 'C');
           $this->pdf->SetXY(236, 53);
           $this->pdf->Cell(15, 5, "Lembar", 1, 0, 'C');
-          $this->pdf->Cell(29, 5, "Rupiah", 1, 1, 'C');
+          $this->pdf->Cell(29, 5, "Rupiah", 1, 0, 'C');
+          $this->pdf->SetXY(236, 58);
+          $this->pdf->Cell(15, 5, "9 (1-7)", 1, 0, 'C');
+          $this->pdf->Cell(29, 5, "10 (2-8)", 1, 1, 'C');
 
           $this->pdf->SetXY(280, 38);
           $this->pdf->Cell(35, 10, "PROSENTASE", 1, 1, 'C');
@@ -129,7 +144,10 @@ class LaporanTersampaikanGabunganRepository
           $this->pdf->Cell(20, 5, "JUMLAH", 1, 1, 'C');
           $this->pdf->SetXY(280, 53);
           $this->pdf->Cell(15, 5, "%", 1, 0, 'C');
-          $this->pdf->Cell(20, 5, "%", 1, 1, 'C');
+          $this->pdf->Cell(20, 5, "%", 1, 0, 'C');
+          $this->pdf->SetXY(280, 58);
+          $this->pdf->Cell(15, 5, "11 (7/1)", 1, 0, 'C');
+          $this->pdf->Cell(20, 5, "22 (8/2)", 1, 1, 'C');
      }
      protected function data($wHeader, $data)
      {
@@ -181,9 +199,8 @@ class LaporanTersampaikanGabunganRepository
                $totalTampil[$i] = Helpers::ribuan($total[$i]);
           }
 
-          // Pastikan kolom 12 & 13 tetap angka biasa
-          $totalTampil[12] = round(($total[12] / 100), 2);
-          $totalTampil[13] = round(($total[13] / 100), 2);
+          $totalTampil[12] = round((1 - (($total[2] - ($total[4] + $total[6])) / max($total[2], 1))) * 100, 2);
+          $totalTampil[13] = round((1 - (($total[3] - ($total[5] + $total[7])) / max($total[3], 1))) * 100, 2);
 
           $this->pdf->TableSetAlign(array('C', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'C', 'C'));
           $this->pdf->TableSetFontsStyle('B');

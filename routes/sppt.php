@@ -9,6 +9,7 @@ Route::middleware(['auth', 'verified'])->prefix('sppt')->name('sppt.')->group(fu
         Route::middleware('can:sppt-data-index')->controller(DataController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::post('/', 'data')->name('data');
+            Route::post('data-pajak', 'infoPajakBumiBangunan')->name('info-pajak-bumi-bangunan');
         });
     });
     Route::prefix('pelayanan')->name('pelayanan.')->group(function () {

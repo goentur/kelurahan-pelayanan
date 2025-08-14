@@ -444,6 +444,7 @@ class PenyampaianRepository
             'jenis_lapor_id' => $request->jenis,
             'user_id' => $request->kelurahan,
         ])->update([
+            'status' => 'SIMPAN',
             'jenis_lapor_id' => null,
         ]);
     }

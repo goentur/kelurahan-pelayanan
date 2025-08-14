@@ -114,4 +114,39 @@ class DatSubjekPajak extends Model
     {
         return $this->hasMany(DatObjekPajak::class, $this->primaryKey, $this->primaryKey);
     }
+
+    public function getAlamatAttribute()
+    {
+        $parts = [];
+
+        // Bagian depan: jalan, blok/kav/no
+        if ($this->jalan_wp) {
+            $parts[] = trim($this->jalan_wp);
+        }
+        if ($this->blok_kav_no_wp) {
+            $parts[] = trim($this->blok_kav_no_wp);
+        }
+
+        // RT/RW
+        $rt_rw = '';
+        if (!blank($this->rt_wp) || !blank($this->rw_wp)) {
+            $rt = $this->rt_wp ? "RT.{$this->rt_wp}" : '';
+            $rw = $this->rw_wp ? "RW.{$this->rw_wp}" : '';
+            $rt_rw = trim("{$rt}/{$rw}");
+            if ($rt_rw !== '/') {
+                $parts[] = $rt_rw;
+            }
+        }
+
+        // Bagian belakang: kelurahan, kota
+        if ($this->kelurahan_wp) {
+            $parts[] = trim($this->kelurahan_wp);
+        }
+        if ($this->kota_wp) {
+            $parts[] = trim($this->kota_wp);
+        }
+
+        // Gabungkan dengan koma sebagai pemisah
+        return implode(', ', array_filter($parts, 'strlen'));
+    }
 }

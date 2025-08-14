@@ -17,7 +17,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
     {
         title: 'Pengaturan',
-        href: 'pengaturan.aplikasi.index',
+        href: 'pengaturan.penyampaian-sppt.index',
     },
     {
         title: 'Penyampaian SPPT',
