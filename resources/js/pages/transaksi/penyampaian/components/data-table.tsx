@@ -397,8 +397,9 @@ export default function DataTable({ gate, dataTable, infoDataTabel, setInfoDataT
                                 <button
                                     type="button"
                                     onClick={() => handleSelectItem(value.id, true)}
-                                    className="p-0.5 text-[12px] bg-green-500 text-white m-0 rounded hover:bg-green-600 cursor-pointer disabled:cursor-not-allowed"
-                                    disabled={loadingState[value.id] || loadingDeletePerItem[value.id]}
+                                    className="p-0.5 hidden text-[12px] bg-green-500 text-white m-0 rounded hover:bg-green-600 cursor-pointer disabled:cursor-not-allowed"
+                                    // disabled={loadingState[value.id] || loadingDeletePerItem[value.id]}
+                                    disabled={true}
                                 >
                                     {loadingState[value.id] ? <Loader2 className="animate-spin p-1" size={20} /> : 'YA'}
                                 </button>
