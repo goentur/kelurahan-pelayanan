@@ -12,11 +12,13 @@ import Tagihan from './info/tagihan';
 type props = {
     open: boolean
     setOpen: (open: boolean) => void
+    kirim: any
     data: any
 }
 export default function Info({
     open,
     setOpen,
+    kirim,
     data,
 }: props) {
     return (
@@ -25,16 +27,16 @@ export default function Info({
                 <DialogHeader>
                     <DialogTitle>INFORMASI SPPT PBB-P2</DialogTitle>
                 </DialogHeader>
-                    <div className="flex items-center gap-2 text-primary text-3xl font-bold">
+                <div className="flex items-center gap-2 text-primary text-3xl font-bold">
                     <MapPin className="w-7 h-7 text-primary" />
                     <span className="tracking-wide">{data.nop}</span>
-                    </div>
+                </div>
                 <Tabs defaultValue="umum">
                     <TabsList>
                         <TabsTrigger value="umum"><BookOpenText/> UMUM</TabsTrigger>
                         <TabsTrigger value="tagihan"><DollarSign/> TAGIHAN</TabsTrigger>
                     </TabsList>
-                    <TabsContent value="umum"><Umum data={data}/></TabsContent>
+                    <TabsContent value="umum"><Umum kirim={kirim} data={data}/></TabsContent>
                     <TabsContent value="tagihan"><Tagihan data={data}/> </TabsContent>
                 </Tabs>
                 <DialogFooter>

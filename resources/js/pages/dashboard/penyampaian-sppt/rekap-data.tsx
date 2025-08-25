@@ -49,7 +49,7 @@ export default function RekapData({loading, data} : any) {
                     </tr>
                </thead>
                <tbody className="font-light">
-                    {loading && <LoadingData colSpan={12}/>}
+                    {loading && <LoadingData colSpan={14}/>}
                     {Object.entries(data).length > 0 ? Object.entries(data).map(([key, value]: any, index) => (
                          <React.Fragment key={`atasan-${key}`}>
                          <tr className="bg-gray-100 dark:bg-slate-900 font-semibold">

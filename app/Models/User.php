@@ -52,4 +52,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(SatuanKerja::class);
     }
+
+    public function isAdmin(): bool
+    {
+        return $this->hasAnyRole(['DEVELOPER', 'ADMIN']);
+    }
 }

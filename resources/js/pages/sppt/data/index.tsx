@@ -40,7 +40,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Index({ gate }: IndexProps) {
+export default function Index({ kirim }: any) {
     const title = 'Data'
     const [dialogInfo, setDialogInfo] = useState(false)
     const [loading, setLoading] = useState(false);
@@ -223,6 +223,7 @@ export default function Index({ gate }: IndexProps) {
                         <Info
                             open={dialogInfo}
                             setOpen={setDialogInfo}
+                            kirim={kirim}
                             data={dataInfoPajakBumiBangunan}
                         />
                     </CardContent>

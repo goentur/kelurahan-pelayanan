@@ -23,7 +23,10 @@ class DataController extends Controller implements HasMiddleware
 
     public function index()
     {
-        return inertia('sppt/data/index');
+        $kirim = [
+            'admin' => auth()->user()->isAdmin(),
+        ];
+        return inertia('sppt/data/index', compact('kirim'));
     }
 
     public function data(DataRequest $request)
