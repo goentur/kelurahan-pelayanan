@@ -55,6 +55,8 @@ class PenyampaianController extends Controller implements HasMiddleware
     public function index()
     {
         $gate = $this->gate();
+        $statusPenyampaian = true;
+        $statusTidakPenyampaian = true;
         $today = Carbon::today();
         $tanggal = JenisLapor::select('id', 'no_urut', 'tanggal_awal', 'tanggal_akhir')
             ->where('jenis', PenyampaianTipe::TERSAMPAIKAN)
@@ -62,7 +64,15 @@ class PenyampaianController extends Controller implements HasMiddleware
             ->whereDate('tanggal_input_akhir', '>=', $today)
             ->first();
         if (!$tanggal) {
-            return abort(404);
+            $statusPenyampaian = false;
+        }
+        $tanggalTidakTersampiakn = JenisLapor::select('id')
+            ->where('jenis', PenyampaianTipe::TIDAK)
+            ->whereDate('tanggal_input_awal', '<=', $today)
+            ->whereDate('tanggal_input_akhir', '>=', $today)
+            ->first();
+        if (!$tanggalTidakTersampiakn) {
+            $statusTidakPenyampaian = false;
         }
         $pesan = null;
         if ($tanggal->no_urut > 1) {
@@ -93,11 +103,15 @@ class PenyampaianController extends Controller implements HasMiddleware
                 ? $today->format('Y-m-d')
                 : $akhir->format('Y-m-d');
         });
+        $status = [
+            'tersampaikan' => $statusPenyampaian,
+            'tidak' => $statusTidakPenyampaian,
+        ];
         // $tanggal = [
         //     'tanggal_awal' => date('Y-m-d'),
         //     'tanggal_akhir' => date('Y-m-d'),
         // ];
-        return inertia('transaksi/penyampaian/index', compact('gate', 'tanggal', 'pesan'));
+        return inertia('transaksi/penyampaian/index', compact('gate', 'tanggal', 'pesan', 'status'));
     }
 
     public function data(DataRequest $request)

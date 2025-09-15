@@ -25,6 +25,10 @@ type DataTableProps = {
     loading: boolean;
 	tanggal: {tanggal_awal : Date, tanggal_akhir : Date};
     dataPenyampaianKeterangan: any[];
+    statusForm : {
+        tersampaikan : boolean,
+        tidak : boolean,
+    }
 };
 type TidakTersampaikan = {
   id: string;
@@ -53,7 +57,7 @@ const filterTipe = [
     },
 ]
 
-export default function DataTable({ gate, dataTable, infoDataTabel, setInfoDataTabel, loading, tanggal, dataPenyampaianKeterangan }: DataTableProps) {
+export default function DataTable({ gate, dataTable, infoDataTabel, setInfoDataTabel, loading, tanggal, dataPenyampaianKeterangan,statusForm }: DataTableProps) {
     const [loadingState, setLoadingState] = useState<{ [key: string]: boolean }>({});
     const [selectedItemTabel, setSelectedItemTabel] = useState<{ [key: string]: boolean }>({});
 
@@ -393,7 +397,7 @@ export default function DataTable({ gate, dataTable, infoDataTabel, setInfoDataT
                             )}
                         </td>
                         <td className="border w-1 text-center">
-                            {(gate.create || gate.update) && (!messages[value.id] || messages[value.id]?.message=="SIMPAN") && (
+                            {statusForm.tersampaikan && (gate.create || gate.update) && (!messages[value.id] || messages[value.id]?.message=="SIMPAN") && (
                                 <button
                                     type="button"
                                     onClick={() => handleSelectItem(value.id, true)}
@@ -405,7 +409,7 @@ export default function DataTable({ gate, dataTable, infoDataTabel, setInfoDataT
                             )}
                         </td>
                         <td className="border w-1 text-center">
-                            {(gate.create || gate.update) && (!messages[value.id] || messages[value.id]?.message=="SIMPAN") && ( 
+                            {statusForm.tidak && (gate.create || gate.update) && (!messages[value.id] || messages[value.id]?.message=="SIMPAN") && ( 
                                 <button
                                     type="button"
                                     onClick={() => handleSelectItem(value.id, false)}
@@ -423,7 +427,7 @@ export default function DataTable({ gate, dataTable, infoDataTabel, setInfoDataT
                                     value={editedDataYa[value.id]?.value}
                                     onChange={(v) => handleSelectTersampaikan(value.id, v, value.nama_wp, value.alamat_objek, value.pajak)}
                                     autoOpen={true}
-                                    disabled={!gate.create || !gate.update || loadingDeletePerItem[value.id]}
+                                    disabled={!gate.create || !gate.update || loadingDeletePerItem[value.id] || statusForm.tersampaikan}
                                     placeholder="Pilih tanggal"
                                     tanggal={tanggal}
                                 />
@@ -437,7 +441,7 @@ export default function DataTable({ gate, dataTable, infoDataTabel, setInfoDataT
                                         options={dataPenyampaianKeterangan}
                                         onSelect={(v) => handleSelectItemTidak(value.id, v, value.nama_wp, value.alamat_objek, value.pajak)}
                                         autoOpen={true}
-                                        disabled={!gate.create || !gate.update || loadingDeletePerItem[value.id]}
+                                        disabled={!gate.create || !gate.update || loadingDeletePerItem[value.id] || !statusForm.tidak}
                                     />
                                 </div>
                             ) : null }

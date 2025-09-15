@@ -24,6 +24,10 @@ type IndexProps = {
         tanggal_akhir : Date,
     }
     pesan : string | null
+    status : {
+        tersampaikan : boolean,
+        tidak : boolean,
+    }
 };
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -44,7 +48,7 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: 'transaksi.penyampaian.index',
     },
 ];
-export default function Index({ gate, tanggal, pesan }: IndexProps) {
+export default function Index({ gate, tanggal, pesan, status }: IndexProps) {
     const title = 'Penyampaian'
     const [loading, setLoading] = useState(false);
     const formRefs = useRef<Record<string, HTMLInputElement | null>>({})
@@ -219,7 +223,7 @@ export default function Index({ gate, tanggal, pesan }: IndexProps) {
                                 {loading ? <Loader2 className="animate-spin" /> : <Search/>} Cari
                             </Button>
                         </form>
-                        <DataTable gate={gate} dataTable={dataTable} infoDataTabel={infoDataTabel} setInfoDataTabel={setInfoDataTabel} loading={loading} tanggal={tanggal} dataPenyampaianKeterangan={dataPenyampaianKeterangan} />
+                        <DataTable gate={gate} dataTable={dataTable} infoDataTabel={infoDataTabel} setInfoDataTabel={setInfoDataTabel} loading={loading} tanggal={tanggal} dataPenyampaianKeterangan={dataPenyampaianKeterangan} statusForm={status} />
                         <DataTablePagination infoDataTabel={infoDataTabel} setInfoDataTabel={setInfoDataTabel} linksPagination={linksPagination} />
                     </CardContent>
                 </Card>
