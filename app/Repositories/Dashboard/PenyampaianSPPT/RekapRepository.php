@@ -160,7 +160,7 @@ class RekapRepository
           ])
                ->whereIn('kd_kelurahan', $kdKelurahans)
                ->first();
-          $pembayaran = DB::table('baku_awal as b')
+          $pembayaran = DB::table('penyampaians as b')
                ->leftJoin('pembayaran_sppt as p', function ($join) {
                     $join->on('b.kd_propinsi', '=', 'p.kd_propinsi')
                          ->on('b.kd_dati2', '=', 'p.kd_dati2')
@@ -169,7 +169,7 @@ class RekapRepository
                          ->on('b.kd_blok', '=', 'p.kd_blok')
                          ->on('b.no_urut', '=', 'p.no_urut')
                          ->on('b.kd_jns_op', '=', 'p.kd_jns_op')
-                         ->on('b.thn_pajak_sppt', '=', 'p.thn_pajak_sppt');
+                         ->on('b.tahun', '=', 'p.thn_pajak_sppt');
                })
                ->select(
                     DB::raw("COUNT(DISTINCT 
@@ -188,7 +188,8 @@ class RekapRepository
                     'b.kd_propinsi' => $kelurahanPertama->kd_propinsi,
                     'b.kd_dati2' => $kelurahanPertama->kd_dati2,
                     'b.kd_kecamatan' => $kelurahanPertama->kd_kecamatan,
-                    'b.thn_pajak_sppt' => date('Y'),
+                    'b.tahun' => date('Y'),
+                    'b.tipe' => PenyampaianTipe::TERSAMPAIKAN,
                ])
                ->whereIn('b.kd_kelurahan', $kdKelurahans)
                ->whereBetween('p.tgl_pembayaran_sppt', ['2025-01-01', '2025-09-30'])
