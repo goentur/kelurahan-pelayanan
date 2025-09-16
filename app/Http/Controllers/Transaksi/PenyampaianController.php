@@ -75,42 +75,53 @@ class PenyampaianController extends Controller implements HasMiddleware
             $statusTidakPenyampaian = false;
         }
         $pesan = null;
-        if ($tanggal->no_urut > 1) {
-            $sebelumnya = JenisLapor::select('id', 'tanggal_awal', 'tanggal_akhir', 'tanggal_lapor_akhir')
-                ->where([
-                    'no_urut' => $tanggal->no_urut - 1,
-                    'jenis' => PenyampaianTipe::TERSAMPAIKAN,
-                ])
-                ->first();
-            if ($sebelumnya) {
-                if ($sebelumnya->tanggal_lapor_akhir >= $today) {
-                    $sudahLapor = Penyampaian::where([
-                        'user_id' => auth()->id(),
-                        'jenis_lapor_id' => $sebelumnya->id,
-                        'tahun' => date('Y'),
-                    ])->exists();
-                    if (!$sudahLapor) {
-                        $pesan = 'Apakah Anda tidak bisa menginput pada bulan ini? Jika ya, maka laporkan dulu progres penyampaian SPPT PBB-P2 bulan sebelumnya, sehingga Anda bisa melanjutkan pelaporan. Batas akhir pelaporan: ' . Carbon::parse($sebelumnya->tanggal_lapor_akhir)->translatedFormat('d F Y');
-                        $tanggal = $sebelumnya;
+        if ($tanggal) {
+            if ($tanggal->no_urut > 1) {
+                $sebelumnya = JenisLapor::select('id', 'tanggal_awal', 'tanggal_akhir', 'tanggal_lapor_akhir')
+                    ->where([
+                        'no_urut' => $tanggal->no_urut - 1,
+                        'jenis' => PenyampaianTipe::TERSAMPAIKAN,
+                    ])
+                    ->first();
+                if ($sebelumnya) {
+                    if ($sebelumnya->tanggal_lapor_akhir >= $today) {
+                        $sudahLapor = Penyampaian::where([
+                            'user_id' => auth()->id(),
+                            'jenis_lapor_id' => $sebelumnya->id,
+                            'tahun' => date('Y'),
+                        ])->exists();
+                        if (!$sudahLapor) {
+                            $pesan = 'Apakah Anda tidak bisa menginput pada bulan ini? Jika ya, maka laporkan dulu progres penyampaian SPPT PBB-P2 bulan sebelumnya, sehingga Anda bisa melanjutkan pelaporan. Batas akhir pelaporan: ' . Carbon::parse($sebelumnya->tanggal_lapor_akhir)->translatedFormat('d F Y');
+                            $tanggal = $sebelumnya;
+                        }
                     }
                 }
+                $tanggal = tap($tanggal, function ($t) use ($today) {
+                    $t->tanggal_awal = Carbon::parse($t->tanggal_awal)->format('Y-m-d');
+                    $akhir = Carbon::parse($t->tanggal_akhir);
+                    $t->tanggal_akhir = $akhir->gt($today)
+                        ? $today->format('Y-m-d')
+                        : $akhir->format('Y-m-d');
+                });
+            } else {
+                $tanggal = tap($tanggal, function ($t) use ($today) {
+                    $t->tanggal_awal = Carbon::parse($t->tanggal_awal)->format('Y-m-d');
+                    $akhir = Carbon::parse($t->tanggal_akhir);
+                    $t->tanggal_akhir = $akhir->gt($today)
+                        ? $today->format('Y-m-d')
+                        : $akhir->format('Y-m-d');
+                });
             }
+        } else {
+            $tanggal = [
+                'tanggal_awal' => date('Y-m-d'),
+                'tanggal_akhir' => date('Y-m-d'),
+            ];
         }
-        $tanggal = tap($tanggal, function ($t) use ($today) {
-            $t->tanggal_awal = Carbon::parse($t->tanggal_awal)->format('Y-m-d');
-            $akhir = Carbon::parse($t->tanggal_akhir);
-            $t->tanggal_akhir = $akhir->gt($today)
-                ? $today->format('Y-m-d')
-                : $akhir->format('Y-m-d');
-        });
         $status = [
             'tersampaikan' => $statusPenyampaian,
             'tidak' => $statusTidakPenyampaian,
         ];
-        // $tanggal = [
-        //     'tanggal_awal' => date('Y-m-d'),
-        //     'tanggal_akhir' => date('Y-m-d'),
-        // ];
         return inertia('transaksi/penyampaian/index', compact('gate', 'tanggal', 'pesan', 'status'));
     }
 
