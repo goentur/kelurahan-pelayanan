@@ -91,6 +91,17 @@ class PenyampaianRepository
         try {
             DB::beginTransaction();
             if (!$penyampaian) {
+                $hasExceeded = $this->model::where([
+                    'tahun' => $tahun,
+                    'tipe' => $tipe,
+                ])->limit(87198 + 1)->count();
+                if ($hasExceeded > 87198) {
+                    return [
+                        'status' => false,
+                        'value' => null,
+                        'message' => "GAGAL",
+                    ];
+                }
                 $this->model::create([
                     'user_id' => auth()->id(),
                     'penyampaian_keterangan_id' => null,
