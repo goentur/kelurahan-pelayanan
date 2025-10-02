@@ -8,6 +8,7 @@ Route::middleware(['auth', 'verified'])->prefix('cetak')->name('cetak.')->group(
         Route::middleware('can:cetak-penyampaian-sppt')->controller(PenyampaianSPPTController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::post('tidak-tersampaikan', 'tidakTersampaikan')->name('tidak-tersampaikan');
+            Route::post('tidak-tersampaikan-dengan-keterangan', 'tidakTersampaikanDgKeterangan')->name('tidak-tersampaikan-dengan-keterangan');
             Route::post('tersampaikan', 'tersampaikan')->name('tersampaikan');
         });
     });

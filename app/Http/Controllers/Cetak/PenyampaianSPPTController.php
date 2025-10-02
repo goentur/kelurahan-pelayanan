@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Cetak;
 
 use App\Enums\PenyampaianTipe;
 use App\Exports\Cetak\Penyampaian\Sppt\TersampaikanExport;
+use App\Exports\Cetak\Penyampaian\Sppt\TidakTersampaikanDenganKeteranganExport;
 use App\Exports\Cetak\Penyampaian\Sppt\TidakTersampaikanExport;
 use App\Http\Controllers\Controller;
 use App\Models\JenisLapor;
@@ -38,7 +39,11 @@ class PenyampaianSPPTController extends Controller implements HasMiddleware
 
     public function tidakTersampaikan(Request $request)
     {
-        return (new TidakTersampaikanExport($request->tahun))->download('cetak-penyampaian-sppt-pbb-tahun-' . $request->tahun . '.xlsx');
+        return (new TidakTersampaikanExport($request))->download('cetak-tidak-tersampaikan-sppt-pbb-tahun-' . $request->tahun . '.xlsx');
+    }
+    public function tidakTersampaikanDgKeterangan(Request $request)
+    {
+        return (new TidakTersampaikanDenganKeteranganExport($request))->download('cetak-tidak-tersampaikan-sppt-pbb-dengan-keterangan-tahun-' . $request->tahun . '.xlsx');
     }
     public function tersampaikan(Request $request)
     {

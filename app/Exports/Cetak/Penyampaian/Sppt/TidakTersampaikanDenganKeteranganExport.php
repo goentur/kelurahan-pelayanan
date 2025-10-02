@@ -3,14 +3,13 @@
 namespace App\Exports\Cetak\Penyampaian\Sppt;
 
 use App\Enums\PenyampaianTipe;
-use App\Models\Pendataan\PendataanSpop;
 use App\Models\Penyampaian;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
-class TidakTersampaikanExport implements FromView, ShouldAutoSize
+class TidakTersampaikanDenganKeteranganExport implements FromView, ShouldAutoSize
 {
     use Exportable;
 
@@ -18,7 +17,7 @@ class TidakTersampaikanExport implements FromView, ShouldAutoSize
     public function query()
     {
         $kelurahan = $this->request->kelurahan;
-        return Penyampaian::query()
+        return Penyampaian::query()->with('sppt')
             ->where(['tahun' => $this->request->tahun, 'tipe' => PenyampaianTipe::TIDAK])
             ->when($this->request->kelurahan != 'SEMUA', function ($query) use ($kelurahan) {
                 $query->where('user_id', $kelurahan);
@@ -36,9 +35,9 @@ class TidakTersampaikanExport implements FromView, ShouldAutoSize
 
     public function view(): View
     {
-        return view('exports.cetak.penyampaian.sppt.tidak-tersampaikan', [
+        return view('exports.cetak.penyampaian.sppt.tidak-tersampaikan-dengan-keterangan', [
             'data' => $this->collection(),
-            'title' => "CETAK PENYAMPAIAN SPPT PBB TIDAK TERSAMPAIKAN TAHUN " . $this->request->tahun,
+            'title' => "CETAK PENYAMPAIAN SPPT PBB TIDAK TERSAMPAIKAN DENGAN KETERANGAN TAHUN " . $this->request->tahun,
         ]);
     }
 }

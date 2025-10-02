@@ -26,6 +26,16 @@ class Penyampaian extends Model
             ['kd_propinsi', 'kd_dati2', 'kd_kecamatan', 'kd_kelurahan', 'kd_blok', 'no_urut', 'kd_jns_op', 'tahun']
         );
     }
+
+    public function sppt()
+    {
+        return $this->hasMany(
+            Sppt::class,
+            ['kd_propinsi', 'kd_dati2', 'kd_kecamatan', 'kd_kelurahan', 'kd_blok', 'no_urut', 'kd_jns_op'],
+            ['kd_propinsi', 'kd_dati2', 'kd_kecamatan', 'kd_kelurahan', 'kd_blok', 'no_urut', 'kd_jns_op']
+        )->where('thn_pajak_sppt', '>=', 2008)->with('pembayaranSppt');
+    }
+
     public function datObjekPajak()
     {
         return $this->belongsTo(
@@ -34,6 +44,7 @@ class Penyampaian extends Model
             ['kd_propinsi', 'kd_dati2', 'kd_kecamatan', 'kd_kelurahan', 'kd_blok', 'no_urut', 'kd_jns_op']
         );
     }
+
     public function penyampaianKeterangan()
     {
         return $this->belongsTo(RefPenyampaianKeterangan::class);

@@ -32,10 +32,13 @@ export default function Index({jenisLapor, kelurahan} : any) {
     const title = "Penyampaian SPPT"
     const [loadingTersampikan, setLoadingTersampikan] = useState(false);
     const [loadingTidakTersampikan, setLoadingTidakTersampikan] = useState(false);
+    const [loadingTidakTersampikanDgKeterangan, setLoadingTidakTersampikanDgKeterangan] = useState(false);
     const [data, setData] = useState({
         tahun: '',
         jenisLapor: '',
         kelurahan: '',
+        kelurahanTidakTersampaikan: '',
+        kelurahanTidakTersampaikanDenganKeterangan: '',
     });
     const submitTersampikan = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -77,7 +80,10 @@ export default function Index({jenisLapor, kelurahan} : any) {
         e.preventDefault();
         setLoadingTidakTersampikan(true)
         try {
-            const response = await axios.post(route("cetak.penyampaian-sppt.tidak-tersampaikan"),{tahun : data.tahun},{
+            const response = await axios.post(route("cetak.penyampaian-sppt.tidak-tersampaikan"),{
+                tahun : data.tahun,
+                kelurahan : data.kelurahanTidakTersampaikan
+            },{
                 responseType: 'blob',
             });
             const blob = new Blob([response.data], { type: response.headers['content-type'] });
@@ -103,6 +109,41 @@ export default function Index({jenisLapor, kelurahan} : any) {
              }
         }finally{
              setLoadingTidakTersampikan(false)
+        }
+   };
+    const submitTidakTersampikanDenganKeterangan = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoadingTidakTersampikanDgKeterangan(true)
+        try {
+            const response = await axios.post(route("cetak.penyampaian-sppt.tidak-tersampaikan-dengan-keterangan"),{
+                tahun : data.tahun,
+                kelurahan : data.kelurahanTidakTersampaikanDenganKeterangan
+            },{
+                responseType: 'blob',
+            });
+            const blob = new Blob([response.data], { type: response.headers['content-type'] });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'tidak-tersampaikan-tahun-'+data.tahun+'.xlsx');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        } catch (error:any) {
+             if (error.response && error.response.data instanceof Blob) {
+                  const text = await error.response.data.text();
+                  try {
+                       const json = JSON.parse(text);
+                       alertApp(json.message || 'Terjadi kesalahan pada saat proses data.', 'error');
+                  } catch {
+                       alertApp('Terjadi kesalahan pada saat proses data.', 'error');
+                  }
+             } else {
+                  alertApp(error.message || 'Terjadi kesalahan pada saat proses data.', 'error');
+             }
+        }finally{
+             setLoadingTidakTersampikanDgKeterangan(false)
         }
    };
     return (
@@ -139,7 +180,24 @@ export default function Index({jenisLapor, kelurahan} : any) {
                             <div className="border p-4 rounded shadow">
                                 <h3 className="text-lg font-semibold mb-2">Tidak Tersampaikan</h3>
                                 <hr className="mb-4" />
-                                <Button type="button" onClick={submitTidakTersampikan} disabled={loadingTidakTersampikan || !data.tahun}> {loadingTidakTersampikan ? (<Loader2 className="animate-spin" />) : (<Printer /> )} Cetak</Button>
+                                <Combobox
+                                    label="Kelurahan"
+                                    selectedValue={data.kelurahanTidakTersampaikan}
+                                    options={kelurahanOptions}
+                                    onSelect={(value) => setData((prevData: any) => ({ ...prevData, kelurahanTidakTersampaikan: value }))}
+                                />
+                                <Button type="button" className='mt-2' onClick={submitTidakTersampikan} disabled={loadingTidakTersampikan || !data.tahun || !data.kelurahanTidakTersampaikan}> {loadingTidakTersampikan ? (<Loader2 className="animate-spin" />) : (<Printer /> )} Cetak</Button>
+                            </div>
+                            <div className="border p-4 rounded shadow">
+                                <h3 className="text-lg font-semibold mb-2">Tidak Tersampaikan dengan keterangan</h3>
+                                <hr className="mb-4" />
+                                <Combobox
+                                    label="Kelurahan"
+                                    selectedValue={data.kelurahanTidakTersampaikanDenganKeterangan}
+                                    options={kelurahanOptions}
+                                    onSelect={(value) => setData((prevData: any) => ({ ...prevData, kelurahanTidakTersampaikanDenganKeterangan: value }))}
+                                />
+                                <Button type="button" className='mt-2' onClick={submitTidakTersampikanDenganKeterangan} disabled={loadingTidakTersampikanDgKeterangan || !data.tahun || !data.kelurahanTidakTersampaikanDenganKeterangan}> {loadingTidakTersampikanDgKeterangan ? (<Loader2 className="animate-spin" />) : (<Printer /> )} Cetak</Button>
                             </div>
                         </div>
                     </CardContent>
