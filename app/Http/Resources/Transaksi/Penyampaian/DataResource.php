@@ -32,9 +32,8 @@ class DataResource extends JsonResource
                     if (!blank($this->datObjekPajak->rt_op) && !blank($this->datObjekPajak->rw_op)) {
                          $alamat[] = "RT/RW {$this->datObjekPajak->rt_op}/{$this->datObjekPajak->rw_op}";
                     }
-                    $hasil = trim(implode(' ', array_filter($alamat, fn($part) => !blank($part))));
 
-                    return $hasil ?: '-';
+                    return trim(implode(' ', array_filter($alamat)));
                }),
                'pajak' => Helpers::ribuan($this->pbb_yg_harus_dibayar_sppt),
                'penyampaian' => $this->when(!blank($this->penyampaian), function () {
