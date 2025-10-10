@@ -25,7 +25,7 @@ class TersampaikanRequest extends FormRequest
                'id' => 'required|string',
                'value' => 'required|string',
                'nama_wp' => 'required|string',
-               'alamat_objek' => 'required|string',
+               'alamat_objek' => 'nullable|string',
                'nominal' => 'required|string',
           ];
      }

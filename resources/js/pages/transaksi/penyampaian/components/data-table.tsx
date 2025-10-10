@@ -148,6 +148,7 @@ export default function DataTable({ gate, dataTable, infoDataTabel, setInfoDataT
             [id]: value,
         }));
         const data = { id, value, nama_wp, alamat_objek, nominal };
+        console.log(alamat_objek);
         setDataYangTidakTersampaikan(data);
         if (data) {
             setDialogKeterangan(true);
@@ -425,7 +426,7 @@ export default function DataTable({ gate, dataTable, infoDataTabel, setInfoDataT
                             {selectedItemTabel[value.id] == true ? (
                                 <FormCalendarRange
                                     value={editedDataYa[value.id]?.value}
-                                    onChange={(v) => handleSelectTersampaikan(value.id, v, value.nama_wp, value.alamat_objek ?? '-', value.pajak)}
+                                    onChange={(v) => handleSelectTersampaikan(value.id, v, value.nama_wp, value.alamat_objek, value.pajak)}
                                     autoOpen={true}
                                     disabled={!gate.create || !gate.update || loadingDeletePerItem[value.id] || statusForm.tersampaikan}
                                     placeholder="Pilih tanggal"
@@ -439,7 +440,7 @@ export default function DataTable({ gate, dataTable, infoDataTabel, setInfoDataT
                                         label=""
                                         selectedValue={editedDataTidak[value.id] || ""}
                                         options={dataPenyampaianKeterangan}
-                                        onSelect={(v) => handleSelectItemTidak(value.id, v, value.nama_wp, value.alamat_objek ?? '-', value.pajak)}
+                                        onSelect={(v) => handleSelectItemTidak(value.id, v, value.nama_wp, value.alamat_objek, value.pajak)}
                                         autoOpen={true}
                                         disabled={!gate.create || !gate.update || loadingDeletePerItem[value.id] || !statusForm.tidak}
                                     />

@@ -26,7 +26,7 @@ class TidakTersampaikanRequest extends FormRequest
                'value' => 'required|string',
                'keterangan' => 'required|string|min:10',
                'nama_wp' => 'required|string',
-               'alamat_objek' => 'required|string',
+               'alamat_objek' => 'nullable|string',
                'nominal' => 'required|string',
           ];
      }
