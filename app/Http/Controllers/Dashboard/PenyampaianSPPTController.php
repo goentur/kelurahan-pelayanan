@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\JenisLapor;
 use App\Repositories\Dashboard\PenyampaianSPPT\PenyampianSPPTRepository;
 use App\Repositories\Dashboard\PenyampaianSPPT\RekapRepository;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 
@@ -23,15 +24,16 @@ class PenyampaianSPPTController extends Controller implements HasMiddleware
     public function index()
     {
         $jenisLapor = JenisLapor::select('id', 'nama')->where('jenis', PenyampaianTipe::TERSAMPAIKAN)->orderBy('no_urut')->get();
-        return inertia('dashboard/penyampaian-sppt/index', compact('jenisLapor'));
+        $tahunPajak = date('Y');
+        return inertia('dashboard/penyampaian-sppt/index', compact('jenisLapor', 'tahunPajak'));
     }
 
-    public function data(PenyampianSPPTRepository $penyampianSPPTRepository)
+    public function data(Request $request, PenyampianSPPTRepository $penyampianSPPTRepository)
     {
-        return response()->json($penyampianSPPTRepository->data());
+        return response()->json($penyampianSPPTRepository->data($request));
     }
-    public function rekapData(RekapRepository $rekapRepository)
+    public function rekapData(Request $request, RekapRepository $rekapRepository)
     {
-        return response()->json($rekapRepository->data());
+        return response()->json($rekapRepository->data($request));
     }
 }

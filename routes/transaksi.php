@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Transaksi\GanerateQRISController;
 use App\Http\Controllers\Transaksi\LaporanPenyampaianController;
 use App\Http\Controllers\Transaksi\PenyampaianController;
 use Illuminate\Support\Facades\Route;
@@ -29,5 +30,8 @@ Route::middleware(['auth', 'verified'])->prefix('transaksi')->name('transaksi.')
         Route::post('simpan', 'simpan')->name('simpan');
         Route::post('berdasarkan-kelurahan', 'berdasarkanKelurahan')->name('berdasarkan-kelurahan');
         Route::post('gabungan/{jenisLapor}', 'gabungan')->name('gabungan');
+    });
+    Route::prefix('ganerate-qris')->name('ganerate-qris.')->middleware('can:ganerate-qris')->controller(GanerateQRISController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
     });
 });

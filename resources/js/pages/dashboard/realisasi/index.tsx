@@ -7,6 +7,8 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import RealisasiPerKelurahan from './components/realisasi-per-kelurahan';
 import Realisasi from './components/realisasi';
+import Combobox from '@/components/combobox';
+import { getTahunOptions } from '@/lib/utils';
 
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -25,19 +27,24 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Index({tahun, gate}:any) {
-    const title = "Rekap SPPT PBB-P2 Tahun "+tahun
     const [loadingData, setLoadingData] = useState(false);
     const [loadingDataPerKelurahan, setLoadingDataPerKelurahan] = useState(false);
     const [dataTableRealisasi, setDataTableRealisasi] = useState<[]>([]);
     const [dataTableRealisasiPerKelurahan, setDataTableRealisasiPerKelurahan] = useState<[]>([]);
+    const [data, setData] = useState({
+        tahun: tahun,
+    });
+    const title = "Rekap SPPT PBB-P2 Tahun "+data.tahun
+
     useEffect(() => {
         if(gate.realisasi) getData();
         if(gate.per_kelurahan) getDataPerKelurahan();
-    }, []);
+    }, [data.tahun]);
+
     const getData = async () => {
         setLoadingData(true);
         try {
-            const response = await axios.post(route('dashboard.realisasi.data'));
+            const response = await axios.post(route('dashboard.realisasi.data'),data);
             setDataTableRealisasi(response.data);
         } catch (error:any) {
             alertApp(error.message, 'error');
@@ -48,7 +55,7 @@ export default function Index({tahun, gate}:any) {
     const getDataPerKelurahan = async () => {
         setLoadingDataPerKelurahan(true);
         try {
-            const response = await axios.post(route('dashboard.realisasi.data-per-kelurahan'));
+            const response = await axios.post(route('dashboard.realisasi.data-per-kelurahan'),data);
             setDataTableRealisasiPerKelurahan(response.data);
         } catch (error:any) {
             alertApp(error.message, 'error');
@@ -65,6 +72,9 @@ export default function Index({tahun, gate}:any) {
                         <CardTitle className="text-xl">{title}</CardTitle>
                     </CardHeader>
                     <CardContent>
+                        <div className="mb-5">
+                            <Combobox label="tahun" selectedValue={data.tahun} options={getTahunOptions()} onSelect={(value) =>{ setData((prevData:any) => ({ ...prevData, tahun: value }))}} disabled={loadingDataPerKelurahan || loadingData} />
+                        </div>
                         <RealisasiPerKelurahan gate={gate} loading={loadingDataPerKelurahan} data={dataTableRealisasiPerKelurahan}/>
                         <Realisasi gate={gate} loading={loadingData} data={dataTableRealisasi}/>
                     </CardContent>

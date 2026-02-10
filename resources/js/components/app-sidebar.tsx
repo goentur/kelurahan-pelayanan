@@ -4,7 +4,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpenText, Building, ChartPie, FileCheck, FilePenLine, FileSearch, FileText, Key, LayoutDashboard, Medal, MonitorCog, NotebookPen, Send, UserCheck, UserRoundCog } from 'lucide-react';
+import { BookOpenText, Building, ChartPie, FileCheck, FilePenLine, FileSearch, FileText, Key, LayoutDashboard, Medal, MonitorCog, NotebookPen, QrCodeIcon, Send, UserCheck, UserRoundCog } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavDashboard: NavItem[] = [
@@ -49,6 +49,12 @@ const mainNavTransaksi: NavItem[] = [
         href: "transaksi.laporan-penyampaian.index",
         icon: Send,
         permission: 'laporan-penyampaian-index',
+    },
+    {
+        title: "Ganerate QRIS",
+        href: "transaksi.ganerate-qris.index",
+        icon: QrCodeIcon,
+        permission: 'ganerate-qris',
     },
 ];
 const mainNavPendataan: NavItem[] = [

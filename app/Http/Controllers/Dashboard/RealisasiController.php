@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Dashboard\Realisasi\RealisasiPerKelurahanRepository;
 use App\Repositories\Dashboard\Realisasi\RealisasiRepository;
 use App\Support\Facades\Memo;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 
@@ -42,13 +43,13 @@ class RealisasiController extends Controller implements HasMiddleware
         return inertia('dashboard/realisasi/index', compact('tahun', 'gate'));
     }
 
-    public function data()
+    public function data(Request $request)
     {
-        return response()->json($this->repository->data([1, 2, 3, 4, 5]), 200);
+        return response()->json($this->repository->data($request, [1, 2, 3, 4, 5]), 200);
     }
 
-    public function dataPerKelurahan()
+    public function dataPerKelurahan(Request $request)
     {
-        return response()->json($this->realisasiPerKelurahan->data(), 200);
+        return response()->json($this->realisasiPerKelurahan->data($request), 200);
     }
 }

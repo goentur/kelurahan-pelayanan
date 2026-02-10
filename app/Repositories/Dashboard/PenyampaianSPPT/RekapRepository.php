@@ -14,11 +14,11 @@ class RekapRepository
 {
      public function __construct() {}
 
-     public function data()
+     public function data($request)
      {
           $user = auth()->user();
 
-          return Memo::for3min('tabel-dashboard-rekap-penyampaian-sppt-' . $user->id, function () {
+          return Memo::for3min('tabel-dashboard-rekap-penyampaian-sppt-' . $user->id . '-' . $request->tahun, function () use ($request) {
                $dataAtasan = [];
                $grandTotal = [
                     'baku' => 0,
@@ -50,8 +50,8 @@ class RekapRepository
                     $bawahanData = [];
 
                     foreach ($atasan->bawahan as $bawahan) {
-                         $bakuJumlah = $this->baku($bawahan->kelurahan);
-                         $penyampaian = $this->penyampaian($bawahan->user_id);
+                         $bakuJumlah = $this->baku($request, $bawahan->kelurahan);
+                         $penyampaian = $this->penyampaian($request, $bawahan->user_id);
 
                          $jumlah_tersampaikan = $penyampaian['TERSAMPAIKAN_jumlah'] ?? 0;
                          $nominal_tersampaikan = $penyampaian['TERSAMPAIKAN_nominal'] ?? 0;
@@ -140,7 +140,7 @@ class RekapRepository
           });
      }
 
-     protected function baku($kelurahans)
+     protected function baku($request, $kelurahans)
      {
           if (empty($kelurahans)) {
                return 0;
@@ -156,7 +156,7 @@ class RekapRepository
                'kd_propinsi' => $kelurahanPertama->kd_propinsi,
                'kd_dati2' => $kelurahanPertama->kd_dati2,
                'kd_kecamatan' => $kelurahanPertama->kd_kecamatan,
-               'thn_pajak_sppt' => date('Y'),
+               'thn_pajak_sppt' => $request->tahun,
           ])
                ->whereIn('kd_kelurahan', $kdKelurahans)
                ->first();
@@ -188,7 +188,7 @@ class RekapRepository
                     'b.kd_propinsi' => $kelurahanPertama->kd_propinsi,
                     'b.kd_dati2' => $kelurahanPertama->kd_dati2,
                     'b.kd_kecamatan' => $kelurahanPertama->kd_kecamatan,
-                    'b.tahun' => date('Y'),
+                    'b.tahun' => $request->tahun,
                     'b.tipe' => PenyampaianTipe::TERSAMPAIKAN,
                ])
                ->whereIn('b.kd_kelurahan', $kdKelurahans)
@@ -202,7 +202,7 @@ class RekapRepository
           ];
      }
 
-     protected function penyampaian($userId)
+     protected function penyampaian($request, $userId)
      {
           $result = Penyampaian::select(
                'tipe',
@@ -211,7 +211,7 @@ class RekapRepository
           )
                ->whereIn('tipe', [PenyampaianTipe::TERSAMPAIKAN, PenyampaianTipe::TIDAK])
                ->where('user_id', $userId)
-               ->where('tahun', date('Y'))
+               ->where('tahun', $request->tahun)
                ->groupBy('tipe')
                ->get()
                ->keyBy('tipe');

@@ -1,0 +1,166 @@
+import Combobox from '@/components/combobox'
+import DataTablePagination from '@/components/data-table/pagination'
+import PerPageSelect from '@/components/data-table/per-page-select'
+import FormInput from '@/components/form-input'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { alertApp } from '@/components/utils'
+import AppLayout from '@/layouts/app-layout'
+import { BreadcrumbItem } from '@/types'
+import { Head, useForm } from '@inertiajs/react'
+import axios from 'axios'
+import { Loader2, Search } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import DataTable from './components/data-table'
+import Info from './components/info'
+import Nop from '@/components/nop'
+
+type IndexProps = {
+    gate: {
+        create : boolean,
+        update : boolean,
+    };
+    jenisBuku : {
+        value : string,
+        label : string,
+    }[]
+};
+
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'Beranda',
+        href: 'beranda',
+    },
+    {
+        title: 'Objek Pajak',
+        href: 'sppt.data.index',
+    },
+    {
+        title: 'Data',
+        href: 'sppt.data.index',
+    },
+];
+
+export default function Index({ kirim }: any) {
+    const title = 'Data'
+    const [dialogInfo, setDialogInfo] = useState(false)
+    const [loading, setLoading] = useState(false);
+    const formRefs = useRef<Record<string, HTMLInputElement | null>>({})
+    const [dataTable, setDataTable] = useState<[]>([]);
+    const [dataBerdasarkanUser, setDataBerdasarkanUser] = useState<[]>([]);
+    const [dataInfoPajakBumiBangunan, setDataInfoPajakBumiBangunan] = useState<[]>([]);
+    const [linksPagination, setLinksPagination] = useState([]);
+    const [infoDataTabel, setInfoDataTabel] = useState({
+        page: 1,
+        from: 0,
+        to: 0,
+        total: 0,
+        perPage: 25,
+    });
+    const { data, setData, errors} = useForm({
+        kd_propinsi : '33',
+        kd_dati2 : '75',
+        kd_kecamatan : '',
+        kd_kelurahan : '',
+        kd_blok : '',
+        no_urut : '',
+        nama_wp : '',
+    });
+    useEffect(() => {
+        // getData();
+    }, []);
+    
+    // useEffect(() => {
+    //     if (data.kelurahan) {
+    //         getData();
+    //     }
+    // }, [infoDataTabel.page, infoDataTabel.perPage]);
+
+    const getData = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.post(route('sppt.data.data'), {
+                page: infoDataTabel.page,
+                perPage: infoDataTabel.perPage,
+                kd_propinsi: data.kd_propinsi,
+                kd_dati2: data.kd_dati2,
+                kd_kecamatan: data.kd_kecamatan,
+                kd_kelurahan: data.kd_kelurahan,
+                kd_blok: data.kd_blok,
+                no_urut: data.no_urut,
+                nama_wp: data.nama_wp,
+            });
+            setDataTable(response.data.data);
+            setLinksPagination(response.data.links);
+            setInfoDataTabel((prev) => ({
+                ...prev,
+                page: response.data.current_page,
+                from: response.data.from,
+                to: response.data.to,
+                total: response.data.total,
+                perPage: response.data.per_page,
+            }));
+        } catch (error:any) {
+            alertApp(error.message, 'error');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        infoDataTabel.page = 1
+        // getData()
+    };
+    const handleOnClick = async (id:any) => {
+        try {
+            const response = await axios.post(route('sppt.data.info-pajak-bumi-bangunan'),{
+                id:id,
+            });
+            setDataInfoPajakBumiBangunan(response.data);
+            setDialogInfo(true)
+        } catch (error:any) {
+            alertApp(error.message, 'error');
+        }
+    };
+    return (
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title={title} />
+            <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="text-xl">{title}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <form onSubmit={handleSubmit} className="mb-4 mx-auto">
+                            <div className="grid gap-4 lg:grid-cols-3 md:grid-cols-3">
+                                <Nop 
+                                    data={data}
+                                    setData={setData}
+                                    formRefs={formRefs}
+                                    errors={errors}
+                                    focus='kd_kecamatan'
+                                />
+                                <Button type="submit" className='w-fit' disabled={loading}>
+                                    {loading ? <Loader2 className="animate-spin" /> : <Search/>} Cari
+                                </Button>
+                            </div>
+                        </form>
+                        <hr className='mb-2' />
+                        <div className="w-fit mb-2">
+                            <PerPageSelect onChange={(value) => setInfoDataTabel((prev:any) => ({...prev,page: 1,perPage: value}))}/>
+                        </div>
+                        <DataTable dataTable={dataTable} loading={loading} infoOnClick={(id) => {handleOnClick(id)}} />
+                        <DataTablePagination infoDataTabel={infoDataTabel} setInfoDataTabel={setInfoDataTabel} linksPagination={linksPagination} />
+                        <Info
+                            open={dialogInfo}
+                            setOpen={setDialogInfo}
+                            kirim={kirim}
+                            data={dataInfoPajakBumiBangunan}
+                        />
+                    </CardContent>
+                </Card>
+            </div>
+        </AppLayout>
+    )
+}

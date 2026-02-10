@@ -15,11 +15,11 @@ class PenyampianSPPTRepository
 {
      public function __construct() {}
 
-     public function data()
+     public function data($request)
      {
           $user = auth()->user();
 
-          return Memo::for3min('tabel-dashboard-penyampaian-sppt-' . $user->id, function () {
+          return Memo::for3min('tabel-dashboard-penyampaian-sppt-' . $user->id . '-' . $request->tahun, function () use ($request) {
                $jenisLapor = JenisLapor::select('id', 'nama')
                     ->where('jenis', PenyampaianTipe::TERSAMPAIKAN)
                     ->orderBy('no_urut')
@@ -38,8 +38,8 @@ class PenyampianSPPTRepository
                     $kode = 1;
 
                     foreach ($atasan->bawahan as $bawahan) {
-                         $bakuBawahan = $this->baku($bawahan->kelurahan);
-                         $penyampaian = $this->penyampaian($laporIds, $bawahan->user_id);
+                         $bakuBawahan = $this->baku($request, $bawahan->kelurahan);
+                         $penyampaian = $this->penyampaian($request, $laporIds, $bawahan->user_id);
                          $rekapBawahan = array_replace($laporInit, $penyampaian);
 
                          $total = array_sum($rekapBawahan);
@@ -106,7 +106,7 @@ class PenyampianSPPTRepository
           });
      }
 
-     protected function baku($kelurahans)
+     protected function baku($request, $kelurahans)
      {
           if (empty($kelurahans)) {
                return 0;
@@ -118,18 +118,18 @@ class PenyampianSPPTRepository
                'kd_propinsi' => $kelurahanPertama->kd_propinsi,
                'kd_dati2' => $kelurahanPertama->kd_dati2,
                'kd_kecamatan' => $kelurahanPertama->kd_kecamatan,
-               'thn_pajak_sppt' => date('Y'),
+               'thn_pajak_sppt' => $request->tahun,
           ])
                ->whereIn('kd_kelurahan', $kdKelurahans)
                ->count();
      }
 
-     protected function penyampaian(array $jenisLaporIds, $userId)
+     protected function penyampaian($request, array $jenisLaporIds, $userId)
      {
           return Penyampaian::select('jenis_lapor_id', DB::raw('COUNT(id) as jumlah'))
                ->whereIn('jenis_lapor_id', $jenisLaporIds)
                ->where('user_id', $userId)
-               ->where('tahun', date('Y'))
+               ->where('tahun', $request->tahun)
                ->groupBy('jenis_lapor_id')
                ->pluck('jumlah', 'jenis_lapor_id')
                ->toArray();

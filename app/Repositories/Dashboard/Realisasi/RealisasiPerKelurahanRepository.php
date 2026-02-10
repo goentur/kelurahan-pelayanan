@@ -19,10 +19,10 @@ class RealisasiPerKelurahanRepository
           protected SatuanKerjaRepository $satuanKerja,
      ) {}
 
-     public function data()
+     public function data($request)
      {
           $user = auth()->user();
-          return Memo::for3min('tabel-dashboard-realisasi-perkelurahan-' . $user->id, function () use ($user) {
+          return Memo::for3min('tabel-dashboard-realisasi-perkelurahan-' . $user->id . '-' . $request->tahun, function () use ($request, $user) {
                $satuanKerjas = SatuanKerja::with('bawahan')->when(
                     $user->satuanKerja,
                     fn($query) => $query->where('user_id', $user->id),
@@ -42,10 +42,10 @@ class RealisasiPerKelurahanRepository
 
                          foreach ($bawahan->kelurahan as $kelurahan) {
                               $data = [
-                                   'bakuAwal' => $this->bakuAwal($kelurahan),
-                                   'sppt' => $this->sppt($kelurahan),
-                                   'penyampaian' => $this->penyampaian($kelurahan),
-                                   'pembayaran' => $this->pembayaran($kelurahan),
+                                   'bakuAwal' => $this->bakuAwal($request, $kelurahan),
+                                   'sppt' => $this->sppt($request, $kelurahan),
+                                   'penyampaian' => $this->penyampaian($request, $kelurahan),
+                                   'pembayaran' => $this->pembayaran($request, $kelurahan),
                               ];
 
                               foreach ($data as $key => $value) {
@@ -81,24 +81,24 @@ class RealisasiPerKelurahanRepository
           });
      }
 
-     protected function whereNOP($query, $satuanKerja, $tahunColumn = 'thn_pajak_sppt')
+     protected function whereNOP($request, $query, $satuanKerja, $tahunColumn = 'thn_pajak_sppt')
      {
           return $query->where([
                'kd_propinsi' => $satuanKerja->kd_propinsi,
                'kd_dati2' => $satuanKerja->kd_dati2,
                'kd_kecamatan' => $satuanKerja->kd_kecamatan,
                'kd_kelurahan' => $satuanKerja->kd_kelurahan,
-               $tahunColumn => date('Y'),
+               $tahunColumn => $request->tahun,
           ]);
      }
 
-     protected function querySummary($model, $satuanKerja, $tahunColumn = 'thn_pajak_sppt', $extraWhere = null, $extraQuery = null)
+     protected function querySummary($request, $model, $satuanKerja, $tahunColumn = 'thn_pajak_sppt', $extraWhere = null, $extraQuery = null)
      {
           $query = $model::select(
                DB::raw('COALESCE(SUM(pbb_yg_harus_dibayar_sppt), 0) as jumlah'),
                DB::raw('COALESCE(COUNT(kd_propinsi), 0) as sppt')
           );
-          $this->whereNOP($query, $satuanKerja, $tahunColumn);
+          $this->whereNOP($request, $query, $satuanKerja, $tahunColumn);
           if ($extraWhere) {
                $query->where($extraWhere);
           }
@@ -108,42 +108,42 @@ class RealisasiPerKelurahanRepository
           return $query->first();
      }
 
-     public function bakuAwal($satuanKerja)
+     public function bakuAwal($request, $satuanKerja)
      {
-          return $this->querySummary(BakuAwal::class, $satuanKerja);
+          return $this->querySummary($request, BakuAwal::class, $satuanKerja);
      }
 
-     public function sppt($satuanKerja)
+     public function sppt($request, $satuanKerja)
      {
           $query = Sppt::select(
                DB::raw('COALESCE(SUM(pbb_yg_harus_dibayar_sppt), 0) as jumlah'),
                DB::raw('COALESCE(COUNT(kd_propinsi), 0) as sppt')
           );
-          $this->whereNOP($query, $satuanKerja);
+          $this->whereNOP($request, $query, $satuanKerja);
           return $query->whereIn('status_pembayaran_sppt', [0, 1])
                ->first();
      }
 
-     public function penyampaian($satuanKerja)
+     public function penyampaian($request, $satuanKerja)
      {
           $query = Penyampaian::select(
                DB::raw('COALESCE(SUM(nominal), 0) as jumlah'),
                DB::raw('COALESCE(COUNT(id), 0) as sppt')
           );
-          $this->whereNOP($query, $satuanKerja, 'tahun');
+          $this->whereNOP($request, $query, $satuanKerja, 'tahun');
           return $query->first();
      }
 
-     public function pembayaran($satuanKerja)
+     public function pembayaran($request, $satuanKerja)
      {
           $query = Sppt::select(
                DB::raw('COALESCE(SUM(pbb_yg_harus_dibayar_sppt), 0) as jumlah'),
                DB::raw('COALESCE(COUNT(kd_propinsi), 0) as sppt')
           );
-          $this->whereNOP($query, $satuanKerja);
+          $this->whereNOP($request, $query, $satuanKerja);
           return $query->whereIn('status_pembayaran_sppt', [0, 1])
-               ->whereHas('pembayaranSppt', function ($q) use ($satuanKerja) {
-                    $this->whereNOP($q, $satuanKerja);
+               ->whereHas('pembayaranSppt', function ($q) use ($request, $satuanKerja) {
+                    $this->whereNOP($request, $q, $satuanKerja);
                })
                ->first();
      }
