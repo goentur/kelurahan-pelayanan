@@ -22,7 +22,7 @@ class DataResource extends JsonResource
                $statusTxt = 'BELUM';
           } else if ($jmlBayar < $this->pbb_yg_harus_dibayar_sppt) {
                $statusTxt = 'KURANG BAYAR';
-          } else if ($jmlBayar == $this->pbb_yg_harus_dibayar_sppt) {
+          } else if ($jmlBayar >= $this->pbb_yg_harus_dibayar_sppt) {
                $statusData = true;
                $statusTxt = 'LUNAS';
           }
