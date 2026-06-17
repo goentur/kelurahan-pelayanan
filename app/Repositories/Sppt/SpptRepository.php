@@ -33,7 +33,7 @@ class SpptRepository
                $kd_kelurahan  = $satuanKerja['kelurahan'];
           }
 
-          $query = $this->model::with('datObjekPajak')->select('kd_propinsi', 'kd_dati2', 'kd_kecamatan', 'kd_kelurahan', 'kd_blok', 'no_urut', 'kd_jns_op', 'thn_pajak_sppt', 'nm_wp_sppt', 'jln_wp_sppt', 'blok_kav_no_wp_sppt', 'rw_wp_sppt', 'rt_wp_sppt', 'kelurahan_wp_sppt', 'kota_wp_sppt', 'pbb_yg_harus_dibayar_sppt', 'status_pembayaran_sppt')->where([
+          $query = $this->model::with('datObjekPajak', 'pembayaranSppt')->select('kd_propinsi', 'kd_dati2', 'kd_kecamatan', 'kd_kelurahan', 'kd_blok', 'no_urut', 'kd_jns_op', 'thn_pajak_sppt', 'nm_wp_sppt', 'jln_wp_sppt', 'blok_kav_no_wp_sppt', 'rw_wp_sppt', 'rt_wp_sppt', 'kelurahan_wp_sppt', 'kota_wp_sppt', 'pbb_yg_harus_dibayar_sppt', 'status_pembayaran_sppt')->where([
                'kd_propinsi'   => $kd_propinsi,
                'kd_dati2'      => $kd_dati2,
                'kd_kecamatan'  => $kd_kecamatan,
@@ -50,6 +50,7 @@ class SpptRepository
           }
           $query->orderBy('kd_propinsi')->orderBy('kd_dati2')->orderBy('kd_kecamatan')->orderBy('kd_kelurahan')->orderBy('kd_blok')->orderBy('no_urut')->orderBy('kd_jns_op');
           $result = DataResource::collection($query->paginate($request->perPage ?? 25))->response()->getData(true);
+
           return $result['meta'] + ['data' => $result['data']];
      }
      public function infoPajakBumiBangunan($request)

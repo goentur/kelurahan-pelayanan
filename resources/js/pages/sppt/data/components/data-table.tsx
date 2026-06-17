@@ -38,7 +38,7 @@ export default function DataTable({ dataTable, loading, infoOnClick }: DataTable
                     <td className="px-2 py-1 border">{value.alamat_op}</td>
                     <td className="px-2 py-1 border text-end">{value.pajak}</td>
                     <td className="px-2 py-1 border">
-                        <span className={`px-1 rounded text-white ${value.status.status?'bg-green-500':'bg-red-500'}`}>{value.status.text}</span> 
+                        <span className={`px-1 rounded text-nowrap text-white ${value.status.status?'bg-green-500':'bg-red-500'}`}>{value.status.text}</span> 
                     </td>
                     <td className="px-2 py-1 border">
                         <Button size="icon" onClick={() => infoOnClick(value.id)}>

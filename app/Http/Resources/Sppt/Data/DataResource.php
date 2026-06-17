@@ -15,6 +15,17 @@ class DataResource extends JsonResource
       */
      public function toArray(Request $request): array
      {
+          $jmlBayar = $this->pembayaranSppt?->sum('jml_sppt_yg_dibayar') - $this->pembayaranSppt?->sum('denda_sppt');
+          $statusData = false;
+          $statusTxt = 'TIDAK DIKETAHUI';
+          if ($jmlBayar == 0) {
+               $statusTxt = 'BELUM';
+          } else if ($jmlBayar < $this->pbb_yg_harus_dibayar_sppt) {
+               $statusTxt = 'KURANG BAYAR';
+          } else if ($jmlBayar == $this->pbb_yg_harus_dibayar_sppt) {
+               $statusData = true;
+               $statusTxt = 'LUNAS';
+          }
           return [
                'id' => $this->kd_propinsi . '.' . $this->kd_dati2 . '.' . $this->kd_kecamatan . '.' . $this->kd_kelurahan . '.' . $this->kd_blok . '.' . $this->no_urut . '.' . $this->kd_jns_op,
                'kecamatan' => $this->kd_kecamatan,
@@ -23,6 +34,7 @@ class DataResource extends JsonResource
                'jenis' => $this->kd_jns_op,
                'no' => $this->no_urut,
                'nama' => $this->nm_wp_sppt,
+               'bayar' => $this->pembayaranSppt?->sum('jml_sppt_yg_dibayar'),
                'alamat_wp' => trim(implode(' ', array_filter([
                     $this->jln_wp_sppt,
                     $this->blok_kav_no_wp_sppt,
@@ -43,8 +55,8 @@ class DataResource extends JsonResource
                }),
                'pajak' => Helpers::ribuan($this->pbb_yg_harus_dibayar_sppt),
                'status' => [
-                    'status' => $this->status_pembayaran_sppt == 1 ? true : false,
-                    'text' => $this->status_pembayaran_sppt == 1 ? 'SUDAH' : 'BELUM'
+                    'status' => $statusData,
+                    'text' => $statusTxt
                ],
           ];
      }
